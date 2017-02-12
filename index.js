@@ -19,21 +19,21 @@ var getUserHome = function () {
 };
 
 module.exports = function(options) {
-	var cncrc = path.resolve(getUserHome(), '.cncrc');
-	var config = JSON.parse(fs.readFileSync(cncrc, 'utf8'));
-	var token = generateAccessToken({ id: '', name: 'pendant' }, config.secret, '30d');
+    var cncrc = path.resolve(getUserHome(), '.cncrc');
+    var config = JSON.parse(fs.readFileSync(cncrc, 'utf8'));
+    var token = generateAccessToken({ id: '', name: 'pendant' }, config.secret, '30d');
 
-	socket = io.connect('ws://' + options.socketAddress + ':' + options.socketPort, {
+    socket = io.connect('ws://' + options.socketAddress + ':' + options.socketPort, {
         'query': 'token=' + token
-	});
+    });
     socket.on('connect', () => {
         console.log('[socket.io] Connected to ' + options.socketAddress + ':' + options.socketPort);
 
-		// Open port
-		socket.emit('open', options.port, {
-			baudrate: Number(options.baudrate),
-			controllerType: options.controllerType
-		});
+        // Open port
+        socket.emit('open', options.port, {
+            baudrate: Number(options.baudrate),
+            controllerType: options.controllerType
+        });
     });
 
     socket.on('error', () => {
@@ -48,12 +48,12 @@ module.exports = function(options) {
         console.log('[socket.io] Connection close');
     });
 
-	socket.on('serialport:open', function (options) {
-		const { controllerType, port, baudrate, inuse } = options;
-		console.log('[pendant] Connected to port "' + options.port + '" (Baud rate: ' + options.baudrate + ')');
-	});
+    socket.on('serialport:open', function (options) {
+        const { controllerType, port, baudrate, inuse } = options;
+        console.log('[pendant] Connected to port "' + options.port + '" (Baud rate: ' + options.baudrate + ')');
+    });
 
-	socket.on('Grbl:state', function(state) {
+    socket.on('Grbl:state', function(state) {
         console.log('[Grbl]', state.status.raw || '');
-	});
+    });
 };
