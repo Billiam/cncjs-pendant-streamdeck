@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+var program = require('commander');
+var serialport = require('serialport');
+var pkg = require('../package.json');
+var serverMain = require('../index');
+
+program
+	.version(pkg.version)
+	.usage('-p <port> [options]')
+	.option('-l, --list', 'list available ports then exit')
+	.option('-p, --port <port>', 'path or name of serial port')
+	.option('-b, --baudrate <baudrate>', 'baud rate (default: 115200)', 115200)
+	.option('--socket-address <address>', 'socket address or hostname (default: localhost)', 'localhost')
+	.option('--socket-port <port>', 'socket port (default: 8000)', 8000)
+	.option('--controller-type <type>', 'controller type: Grbl|Smoothie|TinyG (default: Grbl)', 'Grbl');
+
+if (process.argv.length > 1) {
+	program.parse(process.argv);
+}
+
+if (program.list) {
+	serialport.list(function(err, ports) {
+		if (err) {
+			console.error(err);
+			process.exit(1);
+		}
+		ports.forEach(function(port) {
+			console.log(port.comName);
+		});
+	});
+	return;
+}
+
+if (!program.port) {
+    program.outputHelp();
+    process.exit(1);
+}
+
+serverMain({
+    port: program.port,
+    baudrate: program.baudrate,
+    socketAddress: program.socketAddress,
+    socketPort: program.socketPort,
+    controllerType: program.controllerType
+});

@@ -1,0 +1,34 @@
+{
+  "name": "cncjs-pendant-boilerplate",
+  "version": "0.1.0",
+  "description": "A bare minimum example to develop a cncjs pendant.",
+  "main": "./index.js",
+  "bin": {
+    "cncjs-pendant-boilerplate": "./bin/cncjs-pendant-boilerplate"
+  },
+  "preferGlobal": true,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cncjs/cncjs-pendant-boilerplate.git"
+  },
+  "keywords": [
+    "cncjs",
+    "pendant",
+    "boilerplate"
+  ],
+  "author": "Cheton Wu <cheton@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cncjs/cncjs-pendant-boilerplate/issues"
+  },
+  "homepage": "https://github.com/cncjs/cncjs-pendant-boilerplate#readme",
+  "dependencies": {
+    "commander": "^2.9.0",
+    "jsonwebtoken": "^7.2.1",
+    "serialport": "^4.0.7",
+    "socket.io-client": "^1.7.2"
+  }
+}
