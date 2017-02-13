@@ -53,7 +53,11 @@ module.exports = function(options) {
         console.log('[pendant] Connected to port "' + options.port + '" (Baud rate: ' + options.baudrate + ')');
     });
 
-    socket.on('Grbl:state', function(state) {
-        console.log('[Grbl]', state.status.raw || '');
+    socket.on('serialport:read', function(data) {
+        console.log(data);
+    });
+
+    socket.on('serialport:write', function(data) {
+        console.log('> ' + data);
     });
 };
