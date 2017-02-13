@@ -1,12 +1,13 @@
 #!/usr/bin/env node
 
-var fs = require('fs');
-var path = require('path');
-var io = require('socket.io-client');
-var jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
+const io = require('socket.io-client');
+const jwt = require('jsonwebtoken');
+const get = require('lodash.get');
 
-var generateAccessToken = function(payload, secret, expiration) {
-    var token = jwt.sign(payload, secret, {
+const generateAccessToken = function(payload, secret, expiration) {
+    const token = jwt.sign(payload, secret, {
         expiresIn: expiration
     });
 
@@ -14,20 +15,39 @@ var generateAccessToken = function(payload, secret, expiration) {
 };
 
 // Get secret key from the config file and generate an access token
-var getUserHome = function () {
+const getUserHome = function() {
     return process.env[(process.platform === 'win32') ? 'USERPROFILE' : 'HOME'];
 };
 
-module.exports = function(options) {
-    var cncrc = path.resolve(getUserHome(), '.cncrc');
-    var config = JSON.parse(fs.readFileSync(cncrc, 'utf8'));
-    var token = generateAccessToken({ id: '', name: 'pendant' }, config.secret, '30d');
+module.exports = function(options, callback) {
+    options = options || {};
+    options.secret = get(options, 'secret', process.env['CNCJS_SECRET']);
+    options.baudrate = get(options, 'baudrate', 115200);
+    options.socketAddress = get(options, 'socketAddress', 'localhost');
+    options.socketPort = get(options, 'socketPort', 8000);
+    options.controllerType = get(options, 'controllerType', 'Grbl');
+    options.accessTokenLifetime = get(options, 'accessTokenLifetime', '30d');
+
+    if (!options.secret) {
+        const cncrc = path.resolve(getUserHome(), '.cncrc');
+        try {
+            const config = JSON.parse(fs.readFileSync(cncrc, 'utf8'));
+            options.secret = config.secret;
+        } catch (err) {
+            console.error(err);
+            process.exit(1);
+        }
+    }
+
+    const token = generateAccessToken({ id: '', name: 'cncjs-pendant' }, options.secret, options.accessTokenLifetime);
+    const url = 'ws://' + options.socketAddress + ':' + options.socketPort + '?token=' + token;
 
     socket = io.connect('ws://' + options.socketAddress + ':' + options.socketPort, {
         'query': 'token=' + token
     });
+
     socket.on('connect', () => {
-        console.log('[socket.io] Connected to ' + options.socketAddress + ':' + options.socketPort);
+        console.log('Connected to ' + url);
 
         // Open port
         socket.emit('open', options.port, {
@@ -36,8 +56,8 @@ module.exports = function(options) {
         });
     });
 
-    socket.on('error', () => {
-        console.error('[socket.io] Error');
+    socket.on('error', (err) => {
+        console.error('Connection error.');
         if (socket) {
             socket.destroy();
             socket = null;
@@ -45,19 +65,28 @@ module.exports = function(options) {
     });
 
     socket.on('close', () => {
-        console.log('[socket.io] Connection close');
+        console.log('Connection closed.');
     });
 
-    socket.on('serialport:open', function (options) {
-        const { controllerType, port, baudrate, inuse } = options;
-        console.log('[pendant] Connected to port "' + options.port + '" (Baud rate: ' + options.baudrate + ')');
+    socket.on('serialport:open', function(options) {
+        options = options || {};
+
+        console.log('Connected to port "' + options.port + '" (Baud rate: ' + options.baudrate + ')');
+
+        callback(null, socket);
+    });
+
+    socket.on('serialport:error', function(options) {
+        callback(new Error('Error opening serial port "' + options.port + '"'));
     });
 
     socket.on('serialport:read', function(data) {
-        console.log(data);
+        console.log((data || '').trim());
     });
 
+    /*
     socket.on('serialport:write', function(data) {
-        console.log('> ' + data);
+        console.log((data || '').trim());
     });
+    */
 };

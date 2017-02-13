@@ -2,24 +2,37 @@
 
 var program = require('commander');
 var serialport = require('serialport');
+var inquirer = require('inquirer');
+var vorpal = require('vorpal')();
 var pkg = require('../package.json');
 var serverMain = require('../index');
+var options = {};
 
 program
 	.version(pkg.version)
-	.usage('-p <port> [options]')
+	.usage('-s <secret> -p <port> [options]')
 	.option('-l, --list', 'list available ports then exit')
+    .option('-s, --secret', 'the secret key stored in the ~/.cncrc file')
 	.option('-p, --port <port>', 'path or name of serial port')
 	.option('-b, --baudrate <baudrate>', 'baud rate (default: 115200)', 115200)
 	.option('--socket-address <address>', 'socket address or hostname (default: localhost)', 'localhost')
 	.option('--socket-port <port>', 'socket port (default: 8000)', 8000)
-	.option('--controller-type <type>', 'controller type: Grbl|Smoothie|TinyG (default: Grbl)', 'Grbl');
+	.option('--controller-type <type>', 'controller type: Grbl|Smoothie|TinyG (default: Grbl)', 'Grbl')
+    .option('--access-token-lifetime <lifetime>', 'access token lifetime in seconds or a time span string (default: 30d)', '30d')
 
-if (process.argv.length > 1) {
-	program.parse(process.argv);
-}
+program.parse(process.argv);
 
-if (program.list) {
+var options = {
+    secret: program.secret,
+    port: program.port,
+    baudrate: program.baudrate,
+    socketAddress: program.socketAddress,
+    socketPort: program.socketPort,
+    controllerType: program.controllerType,
+    accessTokenLifetime: program.accessTokenLifetime
+};
+
+if (options.list) {
 	serialport.list(function(err, ports) {
 		if (err) {
 			console.error(err);
@@ -32,15 +45,53 @@ if (program.list) {
 	return;
 }
 
-if (!program.port) {
-    program.outputHelp();
-    process.exit(1);
+var createServer = function(options) {
+    serverMain(options, function(err, socket) {
+        vorpal
+            .mode('command')
+            .description('Enters the command-line mode.')
+            .delimiter(options.controllerType + '>')
+            .init(function(args, callback) {
+                this.log('You can now directly enter commands. To exit, type `exit`.');
+                callback();
+            })
+            .action(function(command, callback) {
+                var line = command + '\n';
+                socket.emit('write', options.port, line);
+                callback();
+            });
+
+        console.log('');
+        console.log('Type "help" to display supported options:');
+
+        vorpal
+            .delimiter('pendant$')
+            .show();
+    });
+};
+
+if (options.port) {
+    createServer(options);
+    return;
 }
 
-serverMain({
-    port: program.port,
-    baudrate: program.baudrate,
-    socketAddress: program.socketAddress,
-    socketPort: program.socketPort,
-    controllerType: program.controllerType
+serialport.list(function(err, ports) {
+    if (err) {
+        console.error(err);
+        process.exit(1);
+    }
+    const choices = ports.map(function(port) {
+        return port.comName;
+    });
+
+    inquirer.prompt([{
+        type: 'list',
+        name: 'port',
+        message: 'Specify which port you want to use?',
+        choices: choices
+    }]).then(function(answers) {
+        options.port = answers.port;
+
+        createServer(options);
+    });
 });
