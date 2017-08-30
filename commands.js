@@ -9,8 +9,12 @@ module.exports = [
                 const gcode = fs.readFileSync(name, 'utf8');
                 const context = {};
 
-                callback(null, 'command', 'gcode:load', name, gcode, context, function() {
-                    // Nothing to do
+                callback(null, 'command', 'gcode:load', name, gcode, context, function(err, state) {
+                    if (err) {
+                        return;
+                    }
+
+                    // console.log(state);
                 });
             } catch (err) {
                 callback(err);
