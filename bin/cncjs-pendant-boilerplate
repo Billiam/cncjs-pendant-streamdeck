@@ -36,15 +36,14 @@ var options = {
 };
 
 if (options.list) {
-	serialport.list(function(err, ports) {
-		if (err) {
-			console.error(err);
-			process.exit(1);
-		}
+	serialport.list().then(function(ports) {
 		ports.forEach(function(port) {
-			console.log(port.comName);
+			console.log(port.path);
 		});
-	});
+	}).catch((err) => {
+        console.error(err)
+        process.exit(1)
+    })
 	return;
 }
 
@@ -157,13 +156,9 @@ if (options.port) {
     return;
 }
 
-serialport.list(function(err, ports) {
-    if (err) {
-        console.error(err);
-        process.exit(1);
-    }
+serialport.list().then(function (ports) {
     const choices = ports.map(function(port) {
-        return port.comName;
+        return port.path;
     });
 
     inquirer.prompt([{
@@ -176,4 +171,7 @@ serialport.list(function(err, ports) {
 
         createServer(options);
     });
-});
+}).catch((err) => {
+    console.error(err)
+    process.exit(1)
+})
