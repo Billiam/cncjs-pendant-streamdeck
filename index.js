@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const io = require('socket.io-client');
 const jwt = require('jsonwebtoken');
-const get = require('lodash.get');
+const get = require('lodash/get');
 
 const generateAccessToken = function(payload, secret, expiration) {
     const token = jwt.sign(payload, secret, {
