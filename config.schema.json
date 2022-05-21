@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://billiam.github.io/cncjs-pendant-grid/config.schema.json",
+  "title": "Config",
+  "description": "Grid UI and CNC configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "cncjs": {
+      "description": "CNCJS connection and port information",
+      "additionalProperties": false,
+      "properties": {
+        "secret": {
+          "type": "string"
+        },
+        "socketAddress": {
+          "type": "string"
+        },
+        "socketPort": {
+          "type": "integer"
+        },
+        "port": {
+          "description": "Machine connection port",
+          "type": "string"
+        },
+        "baudRate": {
+          "type": "integer"
+        },
+        "controllerType": {
+          "type": "string",
+          "enum": ["Grbl"]
+        }
+      }
+    },
+    "ui": {
+      "description": "Grid dimension configuration",
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "columns": {
+          "type": "integer"
+        },
+        "rows": {
+          "type": "integer"
+        },
+        "bgColor": {
+          "type": "string"
+        },
+        "activeBgColor": {
+          "type": "string"
+        }
+      }
+    },
+    "machine": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "axes": {
+          "description": "Array of usable axes",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["x","y","z","a","b","c"]
+          }
+        }
+      }
+    },
+    "buttons": {
+      "type": "object",
+      "patternProperties": {
+        "^.+$": {
+          "description": "Description of a single button",
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "target": {
+              "description": "Scene name to change to",
+              "type": "string"
+            },
+            "icon": {
+              "type": "string"
+            },
+            "action": {
+              "type": "string",
+              "enum": ["macro", "goToScene", "backScene", "jog", "smoothJog"]
+            },
+            "text": {
+              "type": "string"
+            },
+            "arguments": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "bgColor": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "scenes": {
+      "type": "object",
+      "description": "A named scene with a grid of buttons",
+      "patternProperties": {
+        "^.+$": {
+          "description": "Nested array describing rows of button IDs as strings",
+          "properties": {
+            "buttons": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
