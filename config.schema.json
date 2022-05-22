@@ -5,6 +5,9 @@
   "description": "Grid UI and CNC configuration",
   "type": "object",
   "additionalProperties": false,
+  "definitions": {
+    "color": { "type": ["integer","string"] }
+  },
   "properties": {
     "cncjs": {
       "description": "CNCJS connection and port information",
@@ -44,10 +47,16 @@
           "type": "integer"
         },
         "bgColor": {
-          "type": "string"
+          "$ref": "#/definitions/color"
         },
-        "activeBgColor": {
-          "type": "string"
+        "textColor": {
+          "$ref": "#/definitions/color"
+        },
+        "palette": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
         }
       }
     },
@@ -77,14 +86,19 @@
               "description": "Scene name to change to",
               "type": "string"
             },
-            "icon": {
-              "type": "string"
-            },
             "action": {
               "type": "string",
-              "enum": ["macro", "goToScene", "backScene", "jog", "smoothJog"]
+              "enum": ["macro", "goToScene", "backScene", "jog", "smoothJog", "jogDistance"]
             },
             "text": {
+              "type": "string"
+            },
+            "description": {
+              "description": "Used as alt text for images if possible",
+              "type": "string"
+            },
+            "icon": {
+              "description": "Path to icon, relative to the 'app/public/icons' directory",
               "type": "string"
             },
             "arguments": {
@@ -94,7 +108,7 @@
               }
             },
             "bgColor": {
-              "type": "string"
+              "$ref": "#/definitions/color"
             }
           }
         }
@@ -112,7 +126,7 @@
               "items": {
                 "type": "array",
                 "items": {
-                  "type": "string"
+                  "type": ["string", "null"]
                 }
               }
             }
