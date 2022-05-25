@@ -6,7 +6,105 @@
   "type": "object",
   "additionalProperties": false,
   "definitions": {
-    "color": { "type": ["integer", "string"] }
+    "color": { "type": ["integer", "string"] },
+    "axis": { "type": "string", "enum": ["a", "b", "c", "x", "y", "z"] },
+    "sign": { "type": "string", "enum": ["+", "-"] }
+  },
+  "buttonSchemas": {
+    "jog": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "enum": ["jog", "smoothJog"]
+        },
+        "arguments": {
+          "items": [
+            {
+              "$ref": "#/definitions/sign"
+            },
+            {
+              "$ref": "#/definitions/axis"
+            }
+          ]
+        }
+      }
+    },
+    "jogInterval": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "enum": ["jogSpeed", "jogDistance"],
+          "arguments": {
+            "items": [
+              {
+                "$ref": "#/definitions/sign"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "navigation": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "enum": ["navigate", "setScene", "swapScene"],
+          "arguments": {
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "gcode": {
+      "id": "gcodeType",
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "gcode",
+          "arguments": {
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "macro": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "macro",
+          "arguments": {
+            "items": [
+              {
+                "type": "string"
+              }
+            ]
+          }
+        }
+      }
+    },
+    "noArguments": {
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "enum": ["backScene", "fullscreen"]
+        },
+        "arguments": false
+      }
+    },
+    "info": {
+      "properties": {
+        "action": false,
+        "arguments": false
+      }
+    }
   },
   "properties": {
     "cncjs": {
@@ -68,8 +166,7 @@
           "description": "Array of usable axes",
           "type": "array",
           "items": {
-            "type": "string",
-            "enum": ["x", "y", "z", "a", "b", "c"]
+            "$ref": "#/definitions/axis"
           }
         }
       }
@@ -102,6 +199,7 @@
                 "smoothJog"
               ]
             },
+            "arguments": {},
             "text": {
               "type": "string"
             },
@@ -113,16 +211,19 @@
               "description": "Path to icon, relative to the 'app/public/icons' directory",
               "type": "string"
             },
-            "arguments": {
-              "type": "array",
-              "items": {
-                "type": "string"
-              }
-            },
             "bgColor": {
               "$ref": "#/definitions/color"
             }
-          }
+          },
+          "oneOf": [
+            { "$ref": "#/buttonSchemas/jog" },
+            { "$ref": "#/buttonSchemas/jogInterval" },
+            { "$ref": "#/buttonSchemas/navigation" },
+            { "$ref": "#/buttonSchemas/gcode" },
+            { "$ref": "#/buttonSchemas/macro" },
+            { "$ref": "#/buttonSchemas/noArguments" },
+            { "$ref": "#/buttonSchemas/info" }
+          ]
         }
       }
     },
