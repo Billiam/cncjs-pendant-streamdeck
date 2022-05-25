@@ -6,7 +6,7 @@
   "type": "object",
   "additionalProperties": false,
   "definitions": {
-    "color": { "type": ["integer","string"] }
+    "color": { "type": ["integer", "string"] }
   },
   "properties": {
     "cncjs": {
@@ -69,7 +69,7 @@
           "type": "array",
           "items": {
             "type": "string",
-            "enum": ["x","y","z","a","b","c"]
+            "enum": ["x", "y", "z", "a", "b", "c"]
           }
         }
       }
@@ -88,7 +88,19 @@
             },
             "action": {
               "type": "string",
-              "enum": ["macro", "goToScene", "backScene", "jog", "smoothJog", "jogDistance"]
+              "enum": [
+                "backScene",
+                "fullscreen",
+                "jog",
+                "jogDistance",
+                "jogSpeed",
+                "gcode",
+                "macro",
+                "navigate",
+                "setScene",
+                "swapScene",
+                "smoothJog"
+              ]
             },
             "text": {
               "type": "string"
