@@ -1,4 +1,5 @@
 import actionBus from '@/services/action-bus'
+import ackBus from '@/services/ack-bus'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 
@@ -44,73 +45,137 @@ export default (socket, options) => {
     })
   }
 
-  const smoothJogFrequency = 200
+  const smoothJogFrequency = 150
   const jogState = {
     timer: null,
     speed: null,
     axes: {},
+    jogging: false,
   }
 
-  const smoothJogIteration = () => {
-    if (!jogState.speed) {
-      return
+  const promiseTimer = (delay) => {
+    return new Promise((resolve) => {
+      setTimeout(resolve, delay)
+    })
+  }
+
+  const getAxisComponents = (speeds, magnitude) => {
+    // calculate incremental distances for multiaxis movement
+    // TODO: consider minimum acceleration, direction changes
+
+    //may be simpler to map axes without distance and then apply magnitude multiplier later
+    const active = speeds
+      .map(([key, value]) => {
+        return value !== 0 && [key, value]
+      })
+      .filter(Boolean)
+
+    const [baseKey, baseVal] = active[0]
+    if (active.length === 1) {
+      console.debug('Single axis', baseKey, baseVal * magnitude)
     }
 
-    const distance = jogState.speed * (smoothJogFrequency / 60000)
-    const jogAxes = Object.entries(jogState.axes)
-      .map(([axis, direction]) => {
-        const signedDistance = +(direction * distance).toFixed(6)
-        return `${axis}${signedDistance}`
-      })
+    const ratioSquareSum =
+      active.reduce((total, [, val]) => total + val ** 2, 0) / baseVal ** 2
+    const baseDistance = Math.sqrt(magnitude ** 2 / ratioSquareSum)
+
+    return active.map(([key, speed]) => {
+      return [key, speed * baseDistance]
+    }, {})
+  }
+
+  const promiseAck = () => {
+    return new Promise((resolve) => {
+      ackBus.once('ok', resolve)
+    })
+  }
+
+  const smoothJogReady = (delay) => {
+    return Promise.all([promiseTimer(delay), promiseAck()])
+  }
+
+  // todo: make configurable
+  const axisSpeeds = {
+    x: 1,
+    y: 1,
+    z: 0.25,
+    a: 1,
+    b: 1,
+    c: 1,
+  }
+
+  const smoothJogIteration = async ({ reducedDelay = false }) => {
+    if (!jogState.jogging) {
+      return
+    }
+    clearTimeout(jogState.cancelTimer)
+
+    const activeAxes = Object.entries(jogState.axes)
+    if (activeAxes.length === 0) {
+      clearSmoothJog()
+      return
+    }
+    const jogIncrementDistance = jogState.speed * (smoothJogFrequency / 60000)
+    const axisDistances = getAxisComponents(activeAxes, jogIncrementDistance)
+    const jogAxes = axisDistances
+      .map(([axis, distance]) => `${axis}${distance}`)
       .join(' ')
 
     if (!jogAxes) {
       clearSmoothJog()
       return
     }
-
-    const jogGcode = `$J=G91 ${jogAxes} F${jogState.speed}`
+    const throttledSpeed =
+      jogState.speed * Math.max(...activeAxes.map(([, val]) => Math.abs(val)))
+    const jogGcode = `$J=G91 ${jogAxes} F${throttledSpeed}`
+    jogState.ack = false
     gcode(jogGcode)
-    jogState.timer = setTimeout(smoothJogIteration, smoothJogFrequency)
+
+    jogState.cancelTimer = setTimeout(smoothJogTimeout, 1000)
+    // slightly reduce the delay for first request to ensure jog overlap
+    const delay = smoothJogFrequency - (reducedDelay ? 50 : 0)
+    smoothJogReady(delay).then(smoothJogIteration)
+  }
+
+  const smoothJogTimeout = () => {
+    clearSmoothJog()
   }
 
   const smoothJog = (direction, axis) => {
     const directionModifier = direction === '-' ? -1 : 1
 
     // TODO: speed modifier from config
-    const speedModifier = axis === 'z' ? 0.25 : 1
+    const speedModifier = axisSpeeds[axis]
     const v = directionModifier * speedModifier
 
     if (jogState.axes[axis] != null) {
-      console.log({ exists: jogState, axis })
       if (v !== jogState.axes[axis]) {
         delete jogState.axes[axis]
       }
       // may need to stop jogging here
       return
     }
+
     jogState.axes[axis] = v
     jogState.speed = cnc.jogSpeed
 
-    if (jogState.timer == null) {
-      smoothJogIteration()
-    } else {
-      console.log('skipping timer')
+    if (!jogState.jogging) {
+      jogState.jogging = true
+      smoothJogIteration({ reducedDelay: true })
     }
   }
 
   const clearSmoothJog = () => {
-    clearTimeout(jogState.timer)
-    jogState.timer = null
+    jogState.jogging = false
     jogState.speed = 0
   }
 
   const stopSmoothJog = (axis) => {
+    // console.log('Stop requested')
     delete jogState.axes[axis]
     if (Object.keys(jogState.axes).length === 0) {
       clearSmoothJog()
     }
-    console.log('Stopped jogging', { jogState })
   }
 
   // todo: separate service to bind bus to actions
@@ -119,7 +184,6 @@ export default (socket, options) => {
   })
 
   actionBus.on('smoothJog', ({ direction, axis }) => {
-    console.log('smoothJog on')
     smoothJog(direction, axis)
   })
 
