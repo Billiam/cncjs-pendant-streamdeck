@@ -10,6 +10,13 @@ export const useUiStore = defineStore({
     textColor: 1,
     palette: ['#000', '#fff'],
     bgColor: 2,
+    progressColor: 4,
+    pos: 'wpos',
+    input: {
+      value: '',
+      previous: 0,
+      type: '',
+    },
   }),
 
   getters: {
@@ -19,6 +26,26 @@ export const useUiStore = defineStore({
   },
 
   actions: {
+    addInput(chars) {
+      const inputTest = /^-?(0|[1-9]\d*)?(?:\.\d*)?$/
+      // trim leading zeroes followed by non-zeroes
+      const newValue = (this.input.value + chars).replace(/^0+(?=[1-9]|0)/, '')
+      if (inputTest.test(newValue)) {
+        this.input.value = newValue
+      }
+    },
+    toggleInputSign() {
+      if (this.input.value.startsWith('-')) {
+        this.input.value = this.input.value.slice(1)
+      } else {
+        this.input.value = '-' + this.input.value
+      }
+    },
+    startInput(value, type) {
+      this.input.value = ''
+      this.input.previous = value
+      this.input.type = type
+    },
     setGrid(rows, columns) {
       this.columns = columns
       this.rows = rows
@@ -26,8 +53,8 @@ export const useUiStore = defineStore({
     setBgColor(color) {
       this.bgColor = color
     },
-    setActiveBgColor(color) {
-      this.activeBgColor = color
+    setProgressColor(color) {
+      this.progressColor = color
     },
     setPalette(colors) {
       this.palette = colors

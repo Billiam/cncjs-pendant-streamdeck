@@ -23,47 +23,71 @@ export default () => {
     store.ui.goBack()
   }
 
-  const swapScene = (cfg) => {
-    store.ui.swapScene(cfg.arguments[0])
+  const swapScene = (scene) => {
+    store.ui.swapScene(scene)
   }
 
-  const jog = (cfg) => {
-    const [direction, axis] = cfg.arguments
+  const navigate = (scene) => {
+    store.ui.goToScene(scene)
+  }
+
+  const enterWcs = (axis) => {
+    const label = `${store.cnc.modal.wcs} ${axis.toUpperCase()} offset`
+    store.ui.startInput(store.cnc.wpos[axis], label)
+    store.ui.goToScene('numpad')
+  }
+
+  const enterPosition = (axis) => {
+    const label = `Go to ${store.cnc.modal.wcs} ${axis.toUpperCase()}`
+    store.ui.startInput(store.cnc.wpos[axis], label)
+    store.ui.goToScene('numpad')
+  }
+
+  const input = (chars) => {
+    store.ui.addInput(chars)
+  }
+
+  const inputCommand = (command) => {
+    const input = store.ui.input
+    if (command === 'backspace') {
+      input.value = input.value.slice(0, -1)
+    } else if (command === 'toggleSign') {
+      input.value = input.value.startsWith('-')
+        ? input.value.slice(1)
+        : '-' + input.value
+    }
+  }
+
+  const jog = (direction, axis) => {
     actionBus.emit('jog', { direction, axis })
   }
 
-  const jogDistance = (cfg) => {
-    if (cfg.arguments[0] === '-') {
+  const jogDistance = (sign) => {
+    if (sign === '-') {
       store.cnc.decreaseJogDistance()
     } else {
       store.cnc.increaseJogDistance()
     }
   }
 
-  const jogSpeed = (cfg) => {
-    if (cfg.arguments[0] === '-') {
+  const jogSpeed = (sign) => {
+    if (sign === '-') {
       store.cnc.decreaseJogSpeed()
     } else {
       store.cnc.increaseJogSpeed()
     }
   }
 
-  const navigate = (cfg) => {
-    store.ui.goToScene(cfg.arguments[0])
-  }
-
-  const smoothJog = (cfg) => {
-    const [direction, axis] = cfg.arguments
+  const startSmoothJog = (direction, axis) => {
     actionBus.emit('smoothJog', { direction, axis })
   }
 
-  const stopSmoothJog = (cfg) => {
-    const [direction, axis] = cfg.arguments
+  const stopSmoothJog = (direction, axis) => {
     actionBus.emit('stopSmoothJog', { direction, axis })
   }
 
-  const gcode = (cfg) => {
-    actionBus.emit('gcode', cfg.arguments[0])
+  const gcode = (code) => {
+    actionBus.emit('gcode', code)
   }
   const fullscreen = () => {
     if (document.fullscreenElement) {
@@ -72,34 +96,58 @@ export default () => {
       document.documentElement.requestFullscreen()
     }
   }
-
-  const clickMap = {
-    backScene,
+  const actions = {
+    startSmoothJog,
+    stopSmoothJog,
+    gcode,
+    input,
+    inputCommand,
     jog,
     jogDistance,
     jogSpeed,
+    enterWcs,
+    enterPosition,
+
+    fullscreen,
     navigate,
     swapScene,
-    gcode,
-    fullscreen,
-  }
-  const downMap = {
-    smoothJog,
-  }
-  const upMap = {
-    smoothJog: stopSmoothJog,
+    backScene,
   }
 
-  const fetchHandler = (map, cfg) => {
-    const action = map[cfg?.action]
-    if (action) {
-      return () => action(cfg)
+  const ensureHandler = (cfg) => {
+    if (!cfg.actions) {
+      return
+    }
+    const isSmoothJog = cfg.actions.find((el) => {
+      return el?.action === 'startSmoothJog'
+    })
+    if (isSmoothJog) {
+      return stopSmoothJog
     }
   }
 
+  const getHandlers = (cfg) => {
+    if (!cfg.actions) {
+      return {}
+    }
+
+    return cfg.actions.reduce((grouped, element) => {
+      if (element.action) {
+        const action = actions[element.action]
+        if (action) {
+          const event = element.event ?? 'down'
+          grouped[event] ??= []
+          grouped[event].push({
+            action,
+            arguments: element.arguments,
+          })
+        }
+      }
+      return grouped
+    }, {})
+  }
   return {
-    clickHandler: (cfg) => fetchHandler(clickMap, cfg),
-    downHandler: (cfg) => fetchHandler(downMap, cfg),
-    upHandler: (cfg) => fetchHandler(upMap, cfg),
+    getHandlers,
+    ensureHandler: (cfg) => ensureHandler(cfg),
   }
 }

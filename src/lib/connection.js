@@ -5,25 +5,18 @@ const getToken = () => {
   if (query.has('token')) {
     return query.get('token')
   }
-  console.log({ l: localStorage.getItem('cnc') })
   const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
   return cncConfig?.state?.session?.token || ''
 }
-
+console.log('reloaded file')
 export default async (options, callback = () => {}) => {
-  options.secret = options.secret || ''
   options.baudrate = options.baudrate || 115200
   options.socketAddress = options.socketAddress || 'localhost'
   options.socketPort = options.socketPort || 8000
   options.controllerType = options.controllerType || 'Grbl'
   options.accessTokenLifetime = options.accessTokenLifetime || '30d'
-
-  if (!options.secret) {
-    console.error(new Error('Secret has not been set'))
-    process.exit(1)
-  }
+  console.log('Reloaded socket1')
   const token = getToken()
-  console.log({ token })
   const url = `ws://${options.socketAddress}/`
   let socket = io.connect(url, {
     // path: '/socket.io/',
@@ -78,7 +71,7 @@ export default async (options, callback = () => {}) => {
   })
 
   socket.on('serialport:read', function (data) {
-    console.debug((data || '').trim())
+    console.debug('serialport:read', (data || '').trim())
   })
   socket.on('feeder:status', function (data) {
     console.debug('feeder:status', data)
@@ -92,6 +85,10 @@ export default async (options, callback = () => {}) => {
   socket.on('Grbl:settings', function (data) {
     console.debug('grbl:settings', data)
   })
+  socket.on('gcode:load', function (name, gcode) {
+    console.debug('gcode:load', name, gcode)
+  })
+
   socket.on('workflow:state', function (data) {
     console.debug('workflow:state', data)
   })
