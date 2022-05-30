@@ -1,6 +1,7 @@
 <script>
 import ButtonHandler from '@/services/button-handler'
 import vPointerUpOutside from '@/directives/pointer-up-outside'
+import vPointerHold from '@/directives/pointer-hold'
 const buttonHandler = ButtonHandler()
 </script>
 
@@ -15,6 +16,8 @@ const cnc = useCncStore()
 const ui = useUiStore()
 const { bgColor, textColor, progressColor } = storeToRefs(ui)
 
+const color = Color()
+
 const props = defineProps({
   config: {
     type: Object,
@@ -24,11 +27,9 @@ const props = defineProps({
 
 const active = ref(false)
 const holding = ref(false)
-let holdTimer
 let skipUpEvent = false
 
-const color = Color()
-
+// Text content
 const textTemplate = computed(() => {
   return compile(props.config.text, { whitespace: 'preserve' })
 })
@@ -36,6 +37,11 @@ const textString = computed(() => {
   return textTemplate.value({ cnc, ui }, {})
 })
 
+const fontSize = computed(() => {
+  return `${props.config.textSize || 1}rem`
+})
+
+// color configuration
 const cellBgColor = computed(() =>
   color.normalizeColor(props.config.bgColor || bgColor.value)
 )
@@ -46,32 +52,29 @@ const cellProgressColor = computed(() =>
 const cellActiveColor = computed(() => color.highlightColor(cellBgColor.value))
 const cellTextColor = computed(() => color.normalizeColor(textColor.value))
 
+// state toggling
 const setActive = () => {
   active.value = true
 }
-
 const unsetActive = () => {
   active.value = false
 }
 const setHold = () => {
-  if (!configHoldActions.value.length) {
-    return
-  }
   holding.value = true
-  holdTimer = setTimeout(executeHoldHandler, 500)
+  skipUpEvent = false
 }
 const unsetHold = () => {
-  clearTimeout(holdTimer)
   holding.value = false
   skipUpEvent = false
 }
-
-const executeHoldHandler = () => {
+const onHold = () => {
   active.value = false
+  holding.value = false
   skipUpEvent = true
   callActions(configHoldActions.value)
 }
 
+// dynamic event binding
 const events = computed(() => {
   return buttonHandler.getHandlers(props.config)
 })
@@ -82,7 +85,7 @@ const configHoldActions = computed(() => events.value.hold ?? [])
 const configEnsureActions = computed(() => {
   return buttonHandler.ensureHandler(props.config)
 })
-
+const hasHoldAction = computed(() => configHoldActions.value.length > 0)
 const callActions = (actionSet) => {
   actionSet.forEach((config) => {
     config.action(...(config.arguments || []))
@@ -93,19 +96,15 @@ const downHandler = computed(() => {
   return () => {
     setActive()
     callActions(configDownActions.value)
-    setHold()
   }
 })
 
 const upHandler = computed(() => {
   return () => {
     const wasActive = active.value
-    const wasSkipEvent = skipUpEvent
-
     unsetActive()
-    unsetHold()
 
-    if (wasSkipEvent) {
+    if (skipUpEvent) {
       skipUpEvent = false
       return
     }
@@ -115,16 +114,11 @@ const upHandler = computed(() => {
   }
 })
 
-const fontSize = computed(() => {
-  return `${props.config.textSize || 1}rem`
-})
-
 const hasButton = computed(() => {
   return Object.keys(events.value).length > 0
 })
 
 const cancelClick = () => {
-  unsetHold()
   const wasActive = active.value
   active.value = false
 
@@ -149,12 +143,16 @@ onBeforeUnmount(() => {
   <div class="cell" draggable="false">
     <button
       v-if="hasButton"
+      v-pointer-up-outside="cancelClick"
+      v-pointer-hold="
+        hasHoldAction && { down: setHold, up: unsetHold, complete: onHold }
+      "
       @pointerdown="downHandler()"
       @pointerup="upHandler()"
-      v-pointer-up-outside="cancelClick"
       @touchstart.prevent
       class="button no-touch"
       :class="{ active, holding }"
+      ref="button"
     >
       <img
         class="icon centered-decoration"
@@ -226,9 +224,8 @@ onBeforeUnmount(() => {
   aspect-ratio: 1/1;
 }
 .progress-bar-meter {
-  stroke: red;
-  animation: progress-animation 500ms linear;
-  animation-delay: 200ms;
+  animation: progress-animation 350ms linear;
+  animation-delay: 150ms;
   fill: none;
   stroke-width: 10px;
   stroke-linecap: round;

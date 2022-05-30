@@ -1,16 +1,18 @@
+const storageKey = Symbol()
+
 const vPointerUpOutside = {
   mounted: (el, binding) => {
-    el.pointerUpOutside = (event) => {
+    el[storageKey] = (event) => {
       const handler = binding.value
 
       if (!el.contains(event.target)) {
         handler(event)
       }
     }
-    document.body.addEventListener('pointerup', el.pointerUpOutside)
+    document.body.addEventListener('pointerup', el[storageKey])
   },
   beforeUnmount: (el) => {
-    document.body.removeEventListener('pointerup', el.pointerUpOutside)
+    document.body.removeEventListener('pointerup', el[storageKey])
   },
 }
 export default vPointerUpOutside
