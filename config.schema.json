@@ -8,14 +8,63 @@
   "definitions": {
     "color": { "type": ["integer", "string"] },
     "axis": { "type": "string", "enum": ["a", "b", "c", "x", "y", "z"] },
-    "sign": { "type": "string", "enum": ["+", "-"] }
+    "sign": { "type": "string", "enum": ["+", "-"] },
+    "action": {
+      "required": ["action"],
+      "properties": {
+        "action": {
+          "type": "string",
+          "enum": [
+            "backScene",
+            "fullscreen",
+            "gcode",
+            "input",
+            "inputCommand",
+            "jog",
+            "jogDistance",
+            "jogSpeed",
+            "macro",
+            "navigate",
+            "setScene",
+            "startSmoothJog",
+            "stopSmoothJog",
+            "swapScene",
+            "enterWcs",
+            "enterPosition"
+          ]
+        },
+        "arguments": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "event": {
+          "enum": ["down", "up", "hold"],
+          "default": "down"
+        }
+      },
+      "oneOf": [
+        { "$ref": "#/actionSchemas/gcode" },
+        { "$ref": "#/actionSchemas/info" },
+        { "$ref": "#/actionSchemas/input" },
+        { "$ref": "#/actionSchemas/inputCommand" },
+        { "$ref": "#/actionSchemas/jog" },
+        { "$ref": "#/actionSchemas/jogInterval" },
+        { "$ref": "#/actionSchemas/macro" },
+        { "$ref": "#/actionSchemas/navigation" },
+        { "$ref": "#/actionSchemas/noArguments" },
+        { "$ref": "#/actionSchemas/enterWcs" },
+        { "$ref": "#/actionSchemas/enterPosition" }
+      ]
+    }
   },
-  "buttonSchemas": {
+  "actionSchemas": {
     "jog": {
       "required": ["action", "arguments"],
       "properties": {
         "action": {
-          "enum": ["jog", "smoothJog"]
+          "enum": ["jog", "startSmoothJog", "stopSmoothJog"]
         },
         "arguments": {
           "items": [
@@ -60,7 +109,6 @@
       }
     },
     "gcode": {
-      "id": "gcodeType",
       "required": ["action", "arguments"],
       "properties": {
         "action": {
@@ -87,6 +135,66 @@
               }
             ]
           }
+        }
+      }
+    },
+    "input": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "input"
+        },
+        "arguments": {
+          "items": [
+            {
+              "type": "string"
+            }
+          ]
+        }
+      }
+    },
+    "inputCommand": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "inputCommand"
+        },
+        "arguments": {
+          "items": [
+            {
+              "enum": ["backspace", "toggleSign"]
+            }
+          ]
+        }
+      }
+    },
+    "enterWcs": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "enterWcs"
+        },
+        "arguments": {
+          "items": [
+            {
+              "$ref": "#/definitions/axis"
+            }
+          ]
+        }
+      }
+    },
+    "enterPosition": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "enterPosition"
+        },
+        "arguments": {
+          "items": [
+            {
+              "$ref": "#/definitions/axis"
+            }
+          ]
         }
       }
     },
@@ -150,6 +258,9 @@
         "textColor": {
           "$ref": "#/definitions/color"
         },
+        "progressColor": {
+          "$ref": "#/definitions/color"
+        },
         "palette": {
           "type": "array",
           "items": {
@@ -183,25 +294,17 @@
               "description": "Scene name to change to",
               "type": "string"
             },
-            "action": {
-              "type": "string",
-              "enum": [
-                "backScene",
-                "fullscreen",
-                "jog",
-                "jogDistance",
-                "jogSpeed",
-                "gcode",
-                "macro",
-                "navigate",
-                "setScene",
-                "swapScene",
-                "smoothJog"
-              ]
+            "actions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/action"
+              }
             },
-            "arguments": {},
             "text": {
               "type": "string"
+            },
+            "textSize": {
+              "type": "number"
             },
             "description": {
               "description": "Used as alt text for images if possible",
@@ -214,16 +317,7 @@
             "bgColor": {
               "$ref": "#/definitions/color"
             }
-          },
-          "oneOf": [
-            { "$ref": "#/buttonSchemas/jog" },
-            { "$ref": "#/buttonSchemas/jogInterval" },
-            { "$ref": "#/buttonSchemas/navigation" },
-            { "$ref": "#/buttonSchemas/gcode" },
-            { "$ref": "#/buttonSchemas/macro" },
-            { "$ref": "#/buttonSchemas/noArguments" },
-            { "$ref": "#/buttonSchemas/info" }
-          ]
+          }
         }
       }
     },

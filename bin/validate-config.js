@@ -87,6 +87,22 @@ const logicValidation = (config) => {
     }
   })
 
+  // validate global colors exist in palette
+  ;['textColor', 'bgColor', 'progressColor'].forEach((colorKey) => {
+    if (typeof config.ui?.[colorKey] !== 'number') {
+      return
+    }
+    const color = config.ui[colorKey]
+    if (color < 0 || color > paletteCount) {
+      const errorPath = ['ui', colorKey]
+      errors.push({
+        path: errorPath,
+        property: `instance.${errorPath.join('.')}`,
+        message: `${color} does not exist in the palette`,
+      })
+    }
+  })
+
   // validate colors exist in palette
   Object.entries(config.buttons || {}).forEach(([button, data]) => {
     if (typeof data.bgColor !== 'number') {
