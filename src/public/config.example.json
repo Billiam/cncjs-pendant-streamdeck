@@ -1,0 +1,466 @@
+{
+  "cncjs": {
+    "socketAddress": "",
+    "socketPort": 80,
+    "port": "/dev/ttyACM0",
+    "baudRate": 115200,
+    "controllerType": "Grbl"
+  },
+  "ui": {
+    "columns": 5,
+    "rows": 3,
+    "palette": [
+      "#181818",
+      "#FFFFFF",
+      "#EF476F",
+      "#FFC233",
+      "#06D6A0",
+      "#118AB2",
+      "#073B4C",
+      "#74387e"
+    ],
+    "textColor": 1,
+    "bgColor": 0,
+    "progressColor": 3
+  },
+  "machine": { "axes": ["x", "y", "z"] },
+  "buttons": {
+    "0": {
+      "icon": "fontawesome/0.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["0"] }]
+    },
+    "1": {
+      "icon": "fontawesome/1.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["1"] }]
+    },
+    "2": {
+      "icon": "fontawesome/2.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["2"] }]
+    },
+    "3": {
+      "icon": "fontawesome/3.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["3"] }]
+    },
+    "4": {
+      "icon": "fontawesome/4.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["4"] }]
+    },
+    "5": {
+      "icon": "fontawesome/5.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["5"] }]
+    },
+    "6": {
+      "icon": "fontawesome/6.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["6"] }]
+    },
+    "7": {
+      "icon": "fontawesome/7.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["7"] }]
+    },
+    "8": {
+      "icon": "fontawesome/8.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["8"] }]
+    },
+    "9": {
+      "icon": "fontawesome/9.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["9"] }]
+    },
+    "back": {
+      "description": "back",
+      "actions": [{ "action": "backScene", "event": "up" }],
+      "bgColor": 5,
+      "icon": "system-uicons/exit_left.png"
+    },
+    "fullscreen": {
+      "actions": [{ "action": "fullscreen" }],
+      "icon": "system-uicons/expand.png"
+    },
+    "homeScene": {
+      "actions": [
+        { "action": "setScene", "event": "up", "arguments": ["home"] }
+      ],
+      "icon": "system-uicons/home_door.png"
+    },
+    "homing": {
+      "actions": [{ "action": "gcode", "arguments": ["fh"] }],
+      "icon": "system-uicons/home_door.png"
+    },
+    "initialTool": {
+      "text": "Initial tool",
+      "actions": [{ "action": "macro", "arguments": ["Initial Tool"] }]
+    },
+    "jogDistance": {
+      "text": "Distance\n{{ cnc.jogDistance }} {{cnc.distanceUnit }}",
+      "textSize": 2,
+      "bgColor": 2
+    },
+    "jogDistanceDown": {
+      "description": "Increase jog distance",
+      "actions": [{ "action": "jogDistance", "arguments": ["-"] }],
+      "icon": "system-uicons/minus.png",
+      "bgColor": 2
+    },
+    "jogDistanceUp": {
+      "description": "Increase jog distance",
+      "actions": [{ "action": "jogDistance", "arguments": ["+"] }],
+      "icon": "system-uicons/plus.png",
+      "bgColor": 2
+    },
+    "jogScene": {
+      "description": "jog",
+      "actions": [
+        { "action": "navigate", "arguments": ["jog"], "event": "up" }
+      ],
+      "icon": "system-uicons/move.png",
+      "bgColor": 4
+    },
+    "jogSpeed": {
+      "text": "Speed\n{{ cnc.jogSpeed }} {{cnc.distanceUnit }}/min",
+      "bgColor": 2
+    },
+    "jogSpeedDown": {
+      "description": "Increase jog speed",
+      "actions": [{ "action": "jogSpeed", "arguments": ["-"] }],
+      "icon": "system-uicons/minus.png",
+      "bgColor": 2
+    },
+    "jogSpeedUp": {
+      "description": "Increase jog speed",
+      "actions": [{ "action": "jogSpeed", "arguments": ["+"] }],
+      "icon": "system-uicons/plus.png",
+      "bgColor": 2
+    },
+    "jogTypeSmooth": {
+      "icon": "fluent-ui/bezier_curve_square.png",
+      "bgColor": 7,
+      "actions": [
+        { "action": "swapScene", "arguments": ["jog"], "event": "up" }
+      ]
+    },
+    "jogTypeStep": {
+      "icon": "fluent-ui/steps.png",
+      "bgColor": 7,
+      "actions": [
+        { "action": "swapScene", "arguments": ["smoothJog"], "event": "up" }
+      ]
+    },
+    "jogXMinus": {
+      "description": "-X",
+      "actions": [{ "action": "jog", "arguments": ["-", "x"] }],
+      "icon": "system-uicons/chevron_left_circle.png",
+      "bgColor": 4
+    },
+    "jogXPlus": {
+      "description": "+X",
+      "actions": [{ "action": "jog", "arguments": ["+", "x"] }],
+      "icon": "system-uicons/chevron_right_circle.png",
+      "bgColor": 4
+    },
+    "jogYMinus": {
+      "description": "-y",
+      "actions": [{ "action": "jog", "arguments": ["-", "y"] }],
+      "icon": "system-uicons/chevron_down_circle.png",
+      "bgColor": 4
+    },
+    "jogYPlus": {
+      "description": "+y",
+      "actions": [{ "action": "jog", "arguments": ["+", "y"] }],
+      "icon": "system-uicons/chevron_up_circle.png",
+      "bgColor": 4
+    },
+    "jogZMinus": {
+      "description": "-z",
+      "actions": [{ "action": "jog", "arguments": ["-", "z"] }],
+      "icon": "system-uicons/push_down.png",
+      "bgColor": 4
+    },
+    "jogZPlus": {
+      "description": "+z",
+      "actions": [{ "action": "jog", "arguments": ["+", "z"] }],
+      "icon": "system-uicons/pull_up.png",
+      "bgColor": 4
+    },
+    "machinePosition": {
+      "text": "Machine Pos\nX: {{ cnc.mpos.x }}\nY: {{ cnc.mpos.y }}\nZ: {{ cnc.mpos.z }}"
+    },
+    "newTool": {
+      "text": "New tool",
+      "actions": [{ "action": "macro", "arguments": ["New tool"] }]
+    },
+    "positionScene": {
+      "description": "position",
+      "actions": [
+        { "action": "navigate", "arguments": ["position"], "event": "up" }
+      ],
+      "icon": "system-uicons/gps.png",
+      "bgColor": 4
+    },
+    "probeXYZ": {
+      "text": "XYZ Probe",
+      "actions": [{ "action": "macro", "arguments": ["XYZ Probe"] }]
+    },
+    "probeZ": {
+      "text": "Probe Z",
+      "actions": [{ "action": "macro", "arguments": ["Z Probe"] }]
+    },
+    "smoothJogXMinus": {
+      "icon": "system-uicons/chevron_left_circle.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["-", "x"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["-", "x"],
+          "event": "up"
+        }
+      ]
+    },
+    "smoothJogXPlus": {
+      "icon": "system-uicons/chevron_right_circle.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["+", "x"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["+", "x"],
+          "event": "up"
+        }
+      ]
+    },
+    "smoothJogYMinus": {
+      "icon": "system-uicons/chevron_down_circle.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["-", "y"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["-", "y"],
+          "event": "up"
+        }
+      ]
+    },
+    "smoothJogYPlus": {
+      "icon": "system-uicons/chevron_up_circle.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["+", "y"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["+", "y"],
+          "event": "up"
+        }
+      ]
+    },
+    "smoothJogZMinus": {
+      "icon": "system-uicons/push_down.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["-", "z"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["-", "z"],
+          "event": "up"
+        }
+      ]
+    },
+    "smoothJogZPlus": {
+      "icon": "system-uicons/pull_up.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "startSmoothJog", "arguments": ["+", "z"], "modal": true },
+        {
+          "action": "stopSmoothJog",
+          "arguments": ["+", "z"],
+          "event": "up"
+        }
+      ]
+    },
+    "statusScene": {
+      "description": "status",
+      "icon": "fluent-ui/gauge.png",
+      "actions": [
+        { "action": "navigate", "arguments": ["status"], "event": "up" }
+      ]
+    },
+    "workPosition": {
+      "text": "Work Pos\nX: {{ cnc.wpos.x }}\nY: {{ cnc.wpos.y }}\nZ: {{ cnc.wpos.z }}"
+    },
+    "zeroScene": {
+      "icon": "fluent-ui/target_edit.png",
+      "bgColor": 5,
+      "actions": [
+        { "action": "navigate", "arguments": ["zero"], "event": "up" }
+      ]
+    },
+    "wcsXLabel": {
+      "icon": "default/crosshair_x.png",
+      "bgColor": 4,
+      "actions": [{ "action": "enterWcs", "arguments": ["x"], "event": "up" }]
+    },
+    "wcsYLabel": {
+      "icon": "default/crosshair_y.png",
+      "bgColor": 3,
+      "actions": [{ "action": "enterWcs", "arguments": ["y"], "event": "up" }]
+    },
+    "wcsZLabel": {
+      "icon": "default/crosshair_z.png",
+      "bgColor": 2,
+      "actions": [{ "action": "enterWcs", "arguments": ["z"], "event": "up" }]
+    },
+    "zeroX": {
+      "icon": "default/crosshair_0.png",
+      "bgColor": 4,
+      "actions": [{ "action": "gcode", "arguments": ["g10 L20 P1 X0"] }]
+    },
+    "zeroY": {
+      "icon": "default/crosshair_0.png",
+      "bgColor": 3,
+      "actions": [{ "action": "gcode", "arguments": ["g10 L20 P1 Y0"] }]
+    },
+    "zeroZ": {
+      "icon": "default/crosshair_0.png",
+      "bgColor": 2,
+      "actions": [{ "action": "gcode", "arguments": ["g10 L20 P1 Z0"] }]
+    },
+    "positionXLabel": {
+      "icon": "default/arrow_x.png",
+      "bgColor": 4,
+      "actions": [
+        { "action": "enterPosition", "arguments": ["x"], "event": "up" }
+      ]
+    },
+    "positionYLabel": {
+      "icon": "default/arrow_y.png",
+      "bgColor": 3,
+      "actions": [
+        { "action": "enterPosition", "arguments": ["y"], "event": "up" }
+      ]
+    },
+    "positionZLabel": {
+      "icon": "default/arrow_z.png",
+      "bgColor": 2,
+      "actions": [
+        { "action": "enterPosition", "arguments": ["z"], "event": "up" }
+      ]
+    },
+    "goZeroX": {
+      "icon": "default/arrow_0.png",
+      "bgColor": 4,
+      "actions": [{ "action": "gcode", "arguments": [] }]
+    },
+    "goZeroY": {
+      "icon": "default/arrow_0.png",
+      "bgColor": 3,
+      "actions": [{ "action": "gcode", "arguments": [] }]
+    },
+    "goZeroZ": {
+      "icon": "default/arrow_0.png",
+      "bgColor": 2,
+      "actions": [{ "action": "gcode", "arguments": [] }]
+    },
+    "backspace": {
+      "icon": "system-uicons/backspace.png",
+      "bgColor": 2,
+      "actions": [{ "action": "inputCommand", "arguments": ["backspace"] }]
+    },
+    "period": {
+      "icon": "default/period.png",
+      "bgColor": 6,
+      "actions": [{ "action": "input", "arguments": ["."] }]
+    },
+    "periodSign": {
+      "icon": "default/period_plus_minus.png",
+      "bgColor": 6,
+      "actions": [
+        { "action": "input", "arguments": ["."], "event": "up" },
+        {
+          "action": "inputCommand",
+          "arguments": ["toggleSign"],
+          "event": "hold"
+        }
+      ]
+    },
+    "confirm": { "icon": "fluent-ui/checkmark_circle.png", "bgColor": 4 },
+    "cancel": {
+      "icon": "fluent-ui/dismiss_circle.png",
+      "bgColor": 2,
+      "actions": [{ "action": "backScene", "event": "up" }]
+    },
+    "numpadValue": {
+      "text": "{{ ui.input.type }}:\n{{ ui.input.value }}\nwas: {{ ui.input.previous }}"
+    }
+  },
+  "scenes": {
+    "home": {
+      "buttons": [
+        [
+          "statusScene",
+          "jogScene",
+          "positionScene",
+          "zeroScene",
+          "workPosition"
+        ],
+        [],
+        ["homing", null, null, null, "fullscreen"]
+      ]
+    },
+    "status": {
+      "buttons": [["back", null, null, "machinePosition", "workPosition"]]
+    },
+    "position": {
+      "buttons": [
+        [
+          "back",
+          "positionXLabel",
+          "positionYLabel",
+          "positionZLabel",
+          "workPosition"
+        ],
+        [null, "goZeroX", "goZeroY", "goZeroZ", null]
+      ]
+    },
+    "jog": {
+      "buttons": [
+        ["back", "jogTypeStep", "zeroScene", "jogDistance", "workPosition"],
+        [null, "jogYPlus", null, "jogDistanceUp", "jogZPlus"],
+        ["jogXMinus", "jogYMinus", "jogXPlus", "jogDistanceDown", "jogZMinus"]
+      ]
+    },
+    "smoothJog": {
+      "buttons": [
+        ["back", "jogTypeSmooth", "zeroScene", "jogSpeed", "workPosition"],
+        [null, "smoothJogYPlus", null, "jogSpeedUp", "smoothJogZPlus"],
+        [
+          "smoothJogXMinus",
+          "smoothJogYMinus",
+          "smoothJogXPlus",
+          "jogSpeedDown",
+          "smoothJogZMinus"
+        ]
+      ]
+    },
+    "zero": {
+      "buttons": [
+        ["back", "wcsXLabel", "wcsYLabel", "wcsZLabel", "workPosition"],
+        [null, "zeroX", "zeroY", "zeroZ", null]
+      ]
+    },
+    "numpad": {
+      "buttons": [
+        ["cancel", "7", "8", "9", "backspace"],
+        ["confirm", "4", "5", "6", "numpadValue"],
+        ["0", "1", "2", "3", "periodSign"]
+      ]
+    }
+  }
+}
