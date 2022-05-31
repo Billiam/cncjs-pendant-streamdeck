@@ -123,7 +123,7 @@ const cancelClick = () => {
   active.value = false
 
   if (wasActive && configEnsureActions.value) {
-    configEnsureActions.value()
+    callActions(configEnsureActions.value)
   }
 }
 
@@ -134,7 +134,7 @@ onBeforeUnmount(() => {
   }
 
   if (configEnsureActions.value) {
-    configEnsureActions.value()
+    callActions(configEnsureActions.value)
   }
 })
 </script>

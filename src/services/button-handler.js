@@ -118,11 +118,16 @@ export default () => {
     if (!cfg.actions) {
       return
     }
-    const isSmoothJog = cfg.actions.find((el) => {
+    const smoothJog = cfg.actions.filter((el) => {
       return el?.action === 'startSmoothJog'
     })
-    if (isSmoothJog) {
-      return stopSmoothJog
+    if (smoothJog.length > 0) {
+      return smoothJog.map((action) => {
+        return {
+          action: stopSmoothJog,
+          arguments: action.arguments,
+        }
+      })
     }
   }
 
