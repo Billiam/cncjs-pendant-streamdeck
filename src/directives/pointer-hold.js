@@ -40,10 +40,12 @@ const vPointerHold = {
     el.addEventListener('pointerdown', (e) => {
       const id = e.pointerId
       pointers.add(id)
-      data.down = true
-      data.timeout = setTimeout(complete, 500)
-      if (binding.value?.down) {
-        binding.value.down(e)
+      if (!data.down) {
+        data.down = true
+        data.timeout = setTimeout(complete, 500)
+        if (binding.value?.down) {
+          binding.value.down(e)
+        }
       }
     })
 
