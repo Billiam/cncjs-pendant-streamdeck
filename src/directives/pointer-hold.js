@@ -10,10 +10,24 @@ const vPointerHold = {
       state.delete(el)
       return
     }
-
+    const pointers = new Set()
     const data = state[el]
 
     data.cancel = (e) => {
+      if (e) {
+        const id = e.pointerId
+        if (!pointers.has(id)) {
+          return
+        }
+        pointers.delete(id)
+      } else {
+        pointers.clear()
+      }
+
+      if (pointers.size > 0) {
+        return
+      }
+
       clearTimeout(data.timeout)
       if (data.down) {
         data.down = false
@@ -24,6 +38,8 @@ const vPointerHold = {
     }
 
     el.addEventListener('pointerdown', (e) => {
+      const id = e.pointerId
+      pointers.add(id)
       data.down = true
       data.timeout = setTimeout(complete, 500)
       if (binding.value?.down) {
