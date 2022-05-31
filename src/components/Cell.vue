@@ -94,8 +94,10 @@ const callActions = (actionSet) => {
 
 const downHandler = computed(() => {
   return () => {
-    setActive()
-    callActions(configDownActions.value)
+    if (!active.value) {
+      setActive()
+      callActions(configDownActions.value)
+    }
   }
 })
 
