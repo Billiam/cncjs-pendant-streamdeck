@@ -38,7 +38,7 @@ const textString = computed(() => {
 })
 
 const fontSize = computed(() => {
-  return `${props.config.textSize || 1}rem`
+  return `${props.config.textSize || 1}em`
 })
 
 // color configuration
