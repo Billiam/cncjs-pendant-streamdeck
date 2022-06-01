@@ -48,7 +48,13 @@ const logicValidation = (config) => {
   const buttonList = Object.keys(config.buttons || {})
   const sceneList = Object.keys(config.scenes || {})
   const errors = []
-  const sceneActions = ['setScene', 'navigate', 'swapScene']
+  const sceneActions = {
+    setScene: 0,
+    navigate: 0,
+    swapScene: 0,
+    enterWcs: 1,
+    enterPosition: 1,
+  }
   const paletteCount = config?.ui?.palette?.length || 0
 
   // validate buttons exist
@@ -74,17 +80,27 @@ const logicValidation = (config) => {
 
   // validate scenes exist
   Object.entries(config.buttons || {}).forEach(([button, data]) => {
-    if (data.action == null || sceneActions.indexOf(data.action) === -1) {
+    if (data.actions == null) {
       return
     }
-    if (data.arguments != null && sceneList.indexOf(data.arguments[0]) === -1) {
-      const errorPath = ['buttons', button, 'arguments[0]']
-      errors.push({
-        path: errorPath,
-        property: `instance.${errorPath.join('.')}`,
-        message: `${action} ${arguments[0]} is not a valid scene name`,
-      })
-    }
+    data.actions.forEach((action) => {
+      if (!sceneActions[action.action]) {
+        return
+      }
+
+      const position = sceneActions[action.action]
+      if (
+        action.arguments?.[position] != null &&
+        sceneList.indexOf(action.arguments[position]) === -1
+      ) {
+        const errorPath = ['buttons', button, `arguments[${position}]`]
+        errors.push({
+          path: errorPath,
+          property: `instance.${errorPath.join('.')}`,
+          message: `"${action.arguments[position]}" is not a valid scene name`,
+        })
+      }
+    })
   })
 
   // validate global colors exist in palette
