@@ -60,28 +60,24 @@ export default (socket, options) => {
   }
 
   const getAxisComponents = (speeds, magnitude) => {
-    // calculate incremental distances for multiaxis movement
     // TODO: consider minimum acceleration, direction changes
 
-    //may be simpler to map axes without distance and then apply magnitude multiplier later
     const active = speeds
       .map(([key, value]) => {
         return value !== 0 && [key, value]
       })
       .filter(Boolean)
 
-    const [baseKey, baseVal] = active[0]
-    if (active.length === 1) {
-      console.debug('Single axis', baseKey, baseVal * magnitude)
-    }
-
-    const ratioSquareSum =
-      active.reduce((total, [, val]) => total + val ** 2, 0) / baseVal ** 2
-    const baseDistance = Math.sqrt(magnitude ** 2 / ratioSquareSum)
-
-    return active.map(([key, speed]) => {
-      return [key, speed * baseDistance]
-    }, {})
+    // D = sqrt(x^2+y^2+z^2)
+    // X = speed * direction * multiplier
+    // Math.sqrt(x^2+y^2+z^2...)
+    const diagonalComponent = Math.sqrt(
+      active.map(([, value]) => value ** 2).reduce((sum, val) => sum + val, 0)
+    )
+    // X = (500 * -1 * 1)/D
+    return active.map(([key, direction]) => {
+      return [key, (direction * magnitude) / diagonalComponent]
+    })
   }
 
   const promiseAck = () => {
@@ -115,8 +111,11 @@ export default (socket, options) => {
       clearSmoothJog()
       return
     }
-    const jogIncrementDistance = jogState.speed * (smoothJogFrequency / 60000)
+    const throttledSpeed =
+      jogState.speed * Math.max(...activeAxes.map(([, val]) => Math.abs(val)))
+    const jogIncrementDistance = throttledSpeed * (smoothJogFrequency / 60000)
     const axisDistances = getAxisComponents(activeAxes, jogIncrementDistance)
+
     const jogAxes = axisDistances
       .map(([axis, distance]) => `${axis}${distance}`)
       .join(' ')
@@ -125,8 +124,7 @@ export default (socket, options) => {
       clearSmoothJog()
       return
     }
-    const throttledSpeed =
-      jogState.speed * Math.max(...activeAxes.map(([, val]) => Math.abs(val)))
+
     const jogGcode = `$J=G91 ${jogAxes} F${throttledSpeed}`
     jogState.ack = false
     gcode(jogGcode)
@@ -187,7 +185,7 @@ export default (socket, options) => {
     smoothJog(direction, axis)
   })
 
-  actionBus.on('stopSmoothJog', ({ direction, axis }) => {
+  actionBus.on('stopSmoothJog', ({ axis }) => {
     stopSmoothJog(axis)
   })
 
