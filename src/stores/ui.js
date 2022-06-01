@@ -16,6 +16,7 @@ export const useUiStore = defineStore({
       value: '',
       previous: 0,
       type: '',
+      callback: () => {},
     },
   }),
 
@@ -41,10 +42,17 @@ export const useUiStore = defineStore({
         this.input.value = '-' + this.input.value
       }
     },
-    startInput(value, type) {
+    startInput(value, type, scene = 'numpad', callback = () => {}) {
       this.input.value = ''
       this.input.previous = value
       this.input.type = type
+      this.input.callback = callback
+      this.goToScene(scene)
+    },
+    completeInput() {
+      this.input.callback(this.input.value)
+      this.input.value = ''
+      this.goBack()
     },
     setGrid(rows, columns) {
       this.columns = columns
@@ -66,6 +74,7 @@ export const useUiStore = defineStore({
     swapScene(scene) {
       this.sceneStack.splice(this.sceneStack.length - 1, 1, scene)
     },
+
     goToScene(scene) {
       if (this.sceneName !== scene) {
         this.sceneStack.push(scene)

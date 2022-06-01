@@ -31,16 +31,21 @@ export default () => {
     store.ui.goToScene(scene)
   }
 
-  const enterWcs = (axis) => {
+  const enterWcs = (axis, scene = 'numpad') => {
     const label = `${store.cnc.modal.wcs} ${axis.toUpperCase()} offset`
-    store.ui.startInput(store.cnc.wpos[axis], label)
-    store.ui.goToScene('numpad')
+    store.ui.startInput(store.cnc.wpos[axis], label, scene, (result) => {
+      gcode(`G10 L20 P1 ${axis}${result}`)
+    })
   }
 
-  const enterPosition = (axis) => {
+  const enterPosition = (axis, scene = 'numpad') => {
     const label = `Go to ${store.cnc.modal.wcs} ${axis.toUpperCase()}`
-    store.ui.startInput(store.cnc.wpos[axis], label)
-    store.ui.goToScene('numpad')
+    store.ui.startInput(store.cnc.wpos[axis], label, scene, (result) => {
+      gcode(`G0 ${axis}${result}`)
+    })
+  }
+  const completeInput = () => {
+    store.ui.completeInput()
   }
 
   const input = (chars) => {
@@ -112,6 +117,7 @@ export default () => {
     navigate,
     swapScene,
     backScene,
+    completeInput,
   }
 
   const ensureHandler = (cfg) => {
