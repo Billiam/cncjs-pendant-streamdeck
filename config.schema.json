@@ -16,6 +16,9 @@
           "type": "string",
           "enum": [
             "backScene",
+            "completeInput",
+            "enterPosition",
+            "enterWcs",
             "fullscreen",
             "gcode",
             "input",
@@ -28,9 +31,7 @@
             "setScene",
             "startSmoothJog",
             "stopSmoothJog",
-            "swapScene",
-            "enterWcs",
-            "enterPosition"
+            "swapScene"
           ]
         },
         "arguments": {
@@ -228,7 +229,7 @@
       "required": ["action"],
       "properties": {
         "action": {
-          "enum": ["backScene", "fullscreen"]
+          "enum": ["backScene", "fullscreen", "completeInput"]
         },
         "arguments": false
       }
@@ -331,6 +332,20 @@
             },
             "textSize": {
               "type": "number"
+            },
+            "textAlignment": {
+              "type": "string",
+              "enum": [
+                "top left",
+                "top center",
+                "top right",
+                "left",
+                "center",
+                "right",
+                "bottom left",
+                "bottom center",
+                "bottom right"
+              ]
             },
             "description": {
               "description": "Used as alt text for images if possible",
