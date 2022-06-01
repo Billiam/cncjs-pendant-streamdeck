@@ -1,7 +1,7 @@
 <script>
 import ButtonHandler from '@/services/button-handler'
-import vPointerUpOutside from '@/directives/pointer-up-outside'
 import vPointerHold from '@/directives/pointer-hold'
+import vMultiPointer from '@/directives/multi-pointer'
 const buttonHandler = ButtonHandler()
 </script>
 
@@ -86,6 +86,7 @@ const configEnsureActions = computed(() => {
   return buttonHandler.ensureHandler(props.config)
 })
 const hasHoldAction = computed(() => configHoldActions.value.length > 0)
+
 const callActions = (actionSet) => {
   actionSet.forEach((config) => {
     config.action(...(config.arguments || []))
@@ -145,12 +146,14 @@ onBeforeUnmount(() => {
   <div class="cell" draggable="false">
     <button
       v-if="hasButton"
-      v-pointer-up-outside="cancelClick"
       v-pointer-hold="
         hasHoldAction && { down: setHold, up: unsetHold, complete: onHold }
       "
-      @pointerdown="downHandler()"
-      @pointerup="upHandler()"
+      v-multi-pointer="{
+        down: downHandler,
+        up: upHandler,
+        cancel: cancelClick,
+      }"
       @touchstart.prevent
       class="button no-touch"
       :class="{ active, holding }"

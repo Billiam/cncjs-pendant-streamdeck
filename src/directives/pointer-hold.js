@@ -27,7 +27,7 @@ const vPointerHold = {
       if (pointers.size > 0) {
         return
       }
-
+      document.body.removeEventListener('pointerup', data.cancel)
       clearTimeout(data.timeout)
       if (data.down) {
         data.down = false
@@ -40,16 +40,16 @@ const vPointerHold = {
     el.addEventListener('pointerdown', (e) => {
       const id = e.pointerId
       pointers.add(id)
-      if (!data.down) {
-        data.down = true
-        data.timeout = setTimeout(complete, 500)
-        if (binding.value?.down) {
-          binding.value.down(e)
-        }
+      if (data.down) {
+        return
+      }
+      data.down = true
+      document.body.addEventListener('pointerup', data.cancel)
+      data.timeout = setTimeout(complete, 500)
+      if (binding.value?.down) {
+        binding.value.down(e)
       }
     })
-
-    document.body.addEventListener('pointerup', data.cancel)
 
     const complete = (e) => {
       if (binding.value?.complete) {
