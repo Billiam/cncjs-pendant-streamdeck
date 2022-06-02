@@ -1,6 +1,5 @@
-import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
-import actionBus from '@/services/action-bus'
+import { useCncStore } from '@/stores/cnc'
 
 const lazyStore = () => {
   return {
@@ -16,7 +15,7 @@ const lazyStore = () => {
 }
 
 // map configuration to actions
-export default () => {
+export default (actionBus) => {
   const store = lazyStore()
 
   const backScene = () => {
@@ -121,11 +120,11 @@ export default () => {
   }
 
   const ensureHandler = (cfg) => {
-    if (!cfg.actions) {
+    if (!cfg) {
       return
     }
-    const smoothJog = cfg.actions.filter((el) => {
-      return el?.action === 'startSmoothJog'
+    const smoothJog = cfg.filter((action) => {
+      return action?.action === 'startSmoothJog'
     })
     if (smoothJog.length > 0) {
       return smoothJog.map((action) => {
@@ -138,19 +137,19 @@ export default () => {
   }
 
   const getHandlers = (cfg) => {
-    if (!cfg.actions) {
+    if (!cfg) {
       return {}
     }
 
-    return cfg.actions.reduce((grouped, element) => {
-      if (element.action) {
-        const action = actions[element.action]
+    return cfg.reduce((grouped, action) => {
+      if (action.action) {
+        const callback = actions[action.action]
         if (action) {
-          const event = element.event ?? 'down'
+          const event = action.event ?? 'down'
           grouped[event] ??= []
           grouped[event].push({
-            action,
-            arguments: element.arguments,
+            action: callback,
+            arguments: action.arguments,
           })
         }
       }

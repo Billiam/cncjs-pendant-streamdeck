@@ -1,9 +1,7 @@
-import actionBus from '@/services/action-bus'
-import ackBus from '@/services/ack-bus'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 
-export default (socket, options) => {
+export default (socket, options, actionBus, ackBus) => {
   const ui = useUiStore()
   const cnc = useCncStore()
 

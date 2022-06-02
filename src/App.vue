@@ -2,6 +2,8 @@
 import Scene from '@/components/Scene.vue'
 import FixedHeight from '@/components/FixedHeight.vue'
 
+import Bus from '@/services/bus'
+import ButtonHandler from '@/services/button-handler'
 import CncActions from '@/lib/cnc-actions'
 import openConnection from '@/lib/connection'
 import StateFeeder from '@/lib/state-feeder'
@@ -9,11 +11,18 @@ import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeMount } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, provide } from 'vue'
 
 const uiStore = useUiStore()
 const buttonStore = useButtonStore()
 const sceneStore = useScenesStore()
+
+const ackBus = Bus()
+const actionBus = Bus()
+
+let currentSocket
+let stateFeeder
+let cncActions
 
 const { rows, columns } = storeToRefs(uiStore)
 
@@ -21,13 +30,17 @@ const scene = computed(() => {
   return sceneStore.scenes[uiStore.sceneName]
 })
 
+provide('buttonHandler', ButtonHandler(actionBus))
+
 onBeforeMount(async () => {
   const response = await fetch('config.json')
   const config = await response.json()
 
+  // initialize stores from config data
   buttonStore.setButtons(Object.freeze(config.buttons))
   sceneStore.setScenes(Object.freeze(config.scenes))
 
+  // TODO: make home scene configurable or add validation for home
   uiStore.setScene('home')
 
   uiStore.setPalette(config.ui.palette)
@@ -37,16 +50,21 @@ onBeforeMount(async () => {
   uiStore.setProgressColor(config.ui.progressColor)
 
   openConnection(config.cncjs, (err, { socket, options }) => {
-    console.log({ err })
+    currentSocket = socket
     if (err) {
       console.error(err)
       return
     }
 
-    StateFeeder(socket)
-
-    const cncActions = CncActions(socket, options)
+    stateFeeder = StateFeeder(socket, ackBus)
+    cncActions = CncActions(socket, options, actionBus, ackBus)
   })
+})
+
+onBeforeUnmount(() => {
+  actionBus.clear()
+  ackBus.clear()
+  currentSocket?.off()
 })
 </script>
 

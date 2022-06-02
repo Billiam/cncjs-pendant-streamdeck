@@ -2,7 +2,7 @@
 import ButtonHandler from '@/services/button-handler'
 import vPointerHold from '@/directives/pointer-hold'
 import vMultiPointer from '@/directives/multi-pointer'
-const buttonHandler = ButtonHandler()
+import { inject } from 'vue'
 </script>
 
 <script setup>
@@ -12,6 +12,8 @@ import { computed, ref, onBeforeUnmount } from 'vue'
 
 const cnc = useCncStore()
 const ui = useUiStore()
+
+const buttonHandler = inject('buttonHandler')
 
 const props = defineProps({
   actions: {
@@ -58,7 +60,6 @@ const configEnsureActions = computed(() => {
   return buttonHandler.ensureHandler(props.actions)
 })
 const hasHoldAction = computed(() => configHoldActions.value.length > 0)
-
 const callActions = (actionSet) => {
   actionSet.forEach((config) => {
     config.action(...(config.arguments || []))

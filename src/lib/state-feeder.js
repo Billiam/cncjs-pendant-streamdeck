@@ -1,6 +1,6 @@
 import { useCncStore } from '@/stores/cnc'
 
-export default (socket) => {
+export default (socket, ackBus) => {
   const cnc = useCncStore()
 
   socket.on('Grbl:state', (data) => {

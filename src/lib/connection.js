@@ -8,7 +8,7 @@ const getToken = () => {
   const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
   return cncConfig?.state?.session?.token || ''
 }
-console.log('reloaded file')
+
 export default async (options, callback = () => {}) => {
   options.baudrate = options.baudrate || 115200
   options.socketAddress = options.socketAddress || 'localhost'
