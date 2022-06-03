@@ -5,15 +5,17 @@ import FixedHeight from '@/components/FixedHeight.vue'
 import Bus from '@/services/bus'
 import ButtonHandler from '@/services/button-handler'
 import CncActions from '@/lib/cnc-actions'
-import openConnection from '@/lib/connection'
+import Connection from '@/lib/connection'
 import StateFeeder from '@/lib/state-feeder'
 import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
+import { useCncStore } from '@/stores/cnc'
 import { storeToRefs } from 'pinia'
 import { computed, onBeforeMount, onBeforeUnmount, provide } from 'vue'
 
 const uiStore = useUiStore()
+const cncStore = useCncStore()
 const buttonStore = useButtonStore()
 const sceneStore = useScenesStore()
 
@@ -29,6 +31,12 @@ const { rows, columns } = storeToRefs(uiStore)
 const scene = computed(() => {
   return sceneStore.scenes[uiStore.sceneName]
 })
+
+const clearEventlisteners = () => {
+  ackBus.all.clear()
+  actionBus.all.clear()
+  stateFeeder?.destroy()
+}
 
 provide('buttonHandler', ButtonHandler(actionBus))
 
@@ -49,22 +57,26 @@ onBeforeMount(async () => {
   uiStore.setBgColor(config.ui.bgColor)
   uiStore.setProgressColor(config.ui.progressColor)
 
-  openConnection(config.cncjs, (err, { socket, options }) => {
-    currentSocket = socket
-    if (err) {
-      console.error(err)
-      return
-    }
+  const connection = new Connection(config.cncjs)
+  if (import.meta.env.DEV) {
+    connection.debug()
+  }
 
-    stateFeeder = StateFeeder(socket, ackBus)
-    cncActions = CncActions(socket, options, actionBus, ackBus)
-  })
+  let socket
+  try {
+    ;({ socket } = await connection.connect())
+  } catch (err) {
+    console.error(err)
+    return
+  }
+
+  cncStore.setConnected(true)
+  stateFeeder = StateFeeder(socket, ackBus)
+  cncActions = CncActions(socket, connection.options, actionBus, ackBus)
 })
 
 onBeforeUnmount(() => {
-  actionBus.clear()
-  ackBus.clear()
-  currentSocket?.off()
+  clearEventlisteners()
 })
 </script>
 

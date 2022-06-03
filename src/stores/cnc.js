@@ -25,6 +25,7 @@ const listDecrease = (item, list, fallback) =>
 export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
+    connected: false,
     jogDistance: 1,
     jogSpeed: 500,
     wpos: {
@@ -46,10 +47,18 @@ export const useCncStore = defineStore({
     modal: {
       distance: 'G90',
       units: 'G21',
+      wcs: 'G54',
     },
   }),
 
   actions: {
+    setConnected(connected) {
+      this.connected = connected
+      if (!connected) {
+        this.$reset()
+      }
+    },
+
     increaseJogDistance() {
       this.jogDistance = listIncrease(this.jogDistance, this.distances, 1)
     },
