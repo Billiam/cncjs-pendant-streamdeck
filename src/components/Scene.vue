@@ -10,16 +10,27 @@ defineProps({
     required: true,
   },
 })
+const arrayWrap = (n) => {
+  if (Array.isArray(n)) {
+    return n
+  } else {
+    return [n]
+  }
+}
 </script>
 
 <template>
   <div class="scene">
     <template v-for="(_e, r) in rows">
-      <Cell
-        v-for="(_f, c) in columns"
-        :key="`${r}-${c}-${buttons[r]?.[c]}`"
-        :config="buttonConfig[buttons[r]?.[c]]"
-      ></Cell>
+      <template v-for="(_f, c) in columns">
+        <Cell
+          v-for="cell in arrayWrap(buttons[r]?.[c])"
+          :key="`${r}-${c}-${cell}`"
+          :config="buttonConfig[cell]"
+          :row="r"
+          :column="c"
+        ></Cell>
+      </template>
     </template>
   </div>
 </template>

@@ -1,5 +1,4 @@
 import { useCncStore } from '@/stores/cnc'
-
 export default (socket, ackBus) => {
   const cnc = useCncStore()
   const listeners = {
@@ -10,6 +9,7 @@ export default (socket, ackBus) => {
       cnc.setWpos(wpos)
       cnc.setMpos(mpos)
       cnc.setModal(modal)
+      cnc.setRunState(data.status.activeState)
     },
 
     'serialport:read': (data) => {
@@ -17,6 +17,14 @@ export default (socket, ackBus) => {
         case data === 'ok':
           ackBus.emit('ok')
           break
+        case data.startsWith('ALARM:'):
+          cnc.setAlarm(data.substring(6))
+          break
+        case data.includes("'$X' to unlock"):
+          cnc.setLocked()
+          break
+        case data.includes('Unlocked'):
+          cnc.setLocked(false)
       }
     },
     'serialport:change': ({ inuse }) => {

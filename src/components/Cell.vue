@@ -25,12 +25,20 @@ const cnc = useCncStore()
 const ui = useUiStore()
 const { bgColor, textColor, progressColor } = storeToRefs(ui)
 
+const buttonHandler = inject('buttonHandler')
+
 const color = Color()
 
 const props = defineProps({
   config: {
     type: Object,
     default: {},
+  },
+  row: {
+    type: Number,
+  },
+  column: {
+    type: Number,
   },
 })
 
@@ -58,11 +66,22 @@ const textAlignment = computed(
 const textVerticalAlignment = computed(
   () => alignment[props.config.textAlignment]?.v ?? 'center'
 )
+
+const show = computed(() => {
+  return !props.config.if || evaluate({ cnc, ui }, props.config.if)
+})
+
+const enabled = computed(() => buttonHandler.enabled(props.config.actions))
 </script>
 
 <template>
-  <div class="cell" draggable="false">
-    <cell-button :actions="config.actions">
+  <div
+    class="cell"
+    draggable="false"
+    :class="{ disabled: !enabled }"
+    v-if="show"
+  >
+    <cell-button :actions="config.actions" :disabled="!enabled">
       <img
         class="icon centered-decoration"
         :src="'icons/' + config.icon"
@@ -86,11 +105,36 @@ const textVerticalAlignment = computed(
   overflow: hidden;
 }
 .cell-container {
+  position: relative;
   width: 100%;
   height: 100%;
-  position: relative;
   padding: 2%;
+  display: block;
 }
+.cell.disabled {
+  opacity: 0.3;
+}
+.button {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.cell:not(.disabled) {
+  .button::before {
+    content: '';
+    background: linear-gradient(to bottom, #ffffff33 30%, transparent);
+    position: absolute;
+    top: 3%;
+    left: 3%;
+    right: 3%;
+    height: 20%;
+    border-radius: 5px 5px 0 0;
+  }
+}
+.icon {
+  filter: drop-shadow(2px 3px 0 #00000022);
+}
+
 .text-wrapper {
   position: relative;
   font-size: v-bind(fontSize);
@@ -147,6 +191,7 @@ const textVerticalAlignment = computed(
   stroke-dashoffset: 360;
   transform-origin: 50% 50%;
   transform: rotate(-90deg);
+  filter: drop-shadow(0 0 10px black);
 }
 
 @keyframes progress-animation {
@@ -178,6 +223,13 @@ const textVerticalAlignment = computed(
 }
 .cell {
   background-color: v-bind(cellBgColor);
+  grid-row-start: v-bind(row + 1);
+  grid-row-end: v-bind(row + 1);
+  grid-column-start: v-bind(column + 1);
+  grid-column-end: v-bind(column + 1);
+}
+.cell.disabled {
+  background-color: transparent;
 }
 .button.active {
   background-color: v-bind(cellActiveColor);

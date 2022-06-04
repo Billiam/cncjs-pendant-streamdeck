@@ -20,6 +20,10 @@ const props = defineProps({
     type: Array,
     default: [],
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const active = ref(false)
@@ -91,7 +95,7 @@ const upHandler = computed(() => {
 })
 
 const hasButton = computed(() => {
-  return Object.keys(events.value).length > 0
+  return !props.disabled && Object.keys(events.value).length > 0
 })
 
 const cancelClick = () => {
@@ -131,7 +135,9 @@ onBeforeUnmount(() => {
     :class="{ active, holding }"
     ref="button"
   >
-    <slot></slot>
+    <span class="cell-container">
+      <slot></slot>
+    </span>
     <svg class="progress-bar centered-decoration" viewBox="0 0 100 100">
       <circle
         class="progress-bar-meter"

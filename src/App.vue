@@ -113,27 +113,6 @@ onBeforeUnmount(() => {
   text-align: center;
   border-radius: 5px;
 }
-
-.button {
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  position: relative;
-}
-.button::before {
-  content: '';
-  background-color: #ffffff33;
-  background: linear-gradient(to bottom, #ffffff33 30%, transparent);
-  position: absolute;
-  top: 3%;
-  left: 3%;
-  right: 3%;
-  height: 20%;
-  border-radius: 5px 5px 0 0;
-}
-.icon {
-  filter: drop-shadow(2px 3px 0 #00000022);
-}
 @media (min-width: 30em) and (min-height: 20em) {
   .scene {
     font-size: 1rem;

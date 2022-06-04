@@ -13,6 +13,17 @@ const lazyStore = () => {
     },
   }
 }
+const machineCommands = new Set([
+  'startSmoothJog',
+  'stopSmoothJog',
+  'gcode',
+  'jog',
+  'enterWcs',
+  'enterPosition',
+])
+
+// commands that can be run after reset
+const alarmCommands = new Set(['home', 'unlock'])
 
 // map configuration to actions
 export default (actionBus) => {
@@ -93,6 +104,20 @@ export default (actionBus) => {
   const gcode = (code) => {
     actionBus.emit('gcode', code)
   }
+  const command = (cmd) => {
+    actionBus.emit('command', cmd)
+  }
+  const reset = () => {
+    command('reset')
+  }
+
+  const home = () => {
+    command('homing')
+  }
+  const unlock = () => {
+    command('unlock')
+  }
+
   const fullscreen = () => {
     if (document.fullscreenElement) {
       document.exitFullscreen()
@@ -111,6 +136,9 @@ export default (actionBus) => {
     jogSpeed,
     enterWcs,
     enterPosition,
+    reset,
+    home,
+    unlock,
 
     fullscreen,
     navigate,
@@ -136,6 +164,15 @@ export default (actionBus) => {
     }
   }
 
+  const enabled = (cfg) => {
+    return (
+      store.cnc.ready ||
+      !cfg?.every((action) => machineCommands.has(action.action)) ||
+      (store.cnc.alarm &&
+        cfg.some((action) => alarmCommands.has(action.action)))
+    )
+  }
+
   const getHandlers = (cfg) => {
     if (!cfg) {
       return {}
@@ -158,6 +195,7 @@ export default (actionBus) => {
   }
   return {
     getHandlers,
-    ensureHandler: (cfg) => ensureHandler(cfg),
+    ensureHandler,
+    enabled,
   }
 }
