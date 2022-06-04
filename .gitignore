@@ -2,3 +2,4 @@ node_modules
 .history
 /src/public/config.json
 Thumbs.db*
+/src/dist/

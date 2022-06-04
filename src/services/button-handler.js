@@ -23,7 +23,7 @@ const machineCommands = new Set([
 ])
 
 // commands that can be run after reset
-const alarmCommands = new Set(['home', 'unlock'])
+const alarmCommands = new Set(['homing', 'unlock'])
 
 // map configuration to actions
 export default (actionBus) => {
@@ -111,13 +111,18 @@ export default (actionBus) => {
     command('reset')
   }
 
-  const home = () => {
+  const homing = () => {
     command('homing')
   }
   const unlock = () => {
     command('unlock')
   }
-
+  const hold = () => {
+    command('feedhold')
+  }
+  const unhold = () => {
+    command('cyclestart')
+  }
   const fullscreen = () => {
     if (document.fullscreenElement) {
       document.exitFullscreen()
@@ -126,18 +131,20 @@ export default (actionBus) => {
     }
   }
   const actions = {
-    startSmoothJog,
-    stopSmoothJog,
+    enterPosition,
+    enterWcs,
     gcode,
+    hold,
+    homing,
     input,
     inputCommand,
     jog,
     jogDistance,
     jogSpeed,
-    enterWcs,
-    enterPosition,
     reset,
-    home,
+    startSmoothJog,
+    stopSmoothJog,
+    unhold,
     unlock,
 
     fullscreen,

@@ -31,7 +31,12 @@
             "setScene",
             "startSmoothJog",
             "stopSmoothJog",
-            "swapScene"
+            "swapScene",
+            "hold",
+            "unhold",
+            "homing",
+            "reset",
+            "unlock"
           ]
         },
         "arguments": {
@@ -229,7 +234,16 @@
       "required": ["action"],
       "properties": {
         "action": {
-          "enum": ["backScene", "fullscreen", "completeInput"]
+          "enum": [
+            "backScene",
+            "fullscreen",
+            "completeInput",
+            "hold",
+            "unhold",
+            "reset",
+            "unlock",
+            "homing"
+          ]
         },
         "arguments": false
       }
@@ -357,6 +371,9 @@
             },
             "bgColor": {
               "$ref": "#/definitions/color"
+            },
+            "if": {
+              "type": "string"
             }
           }
         }
@@ -374,7 +391,16 @@
               "items": {
                 "type": "array",
                 "items": {
-                  "type": ["string", "null"]
+                  "type": [
+                    "string",
+                    "null",
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  ]
                 }
               }
             }

@@ -57,6 +57,17 @@ const logicValidation = (config) => {
   }
   const paletteCount = config?.ui?.palette?.length || 0
 
+  const addButtonError = (button, path) => {
+    if (buttonList.indexOf(button) !== -1) {
+      return
+    }
+    errors.push({
+      path,
+      property: `instance.${errorPath.join('.')}`,
+      message: `${button} has not been defined`,
+    })
+  }
+
   // validate buttons exist
   Object.entries(config.scenes || {}).forEach(([scene, data]) => {
     data?.buttons?.forEach((row, rowNum) => {
@@ -68,12 +79,21 @@ const logicValidation = (config) => {
         ) {
           return
         }
+
+        if (Array.isArray(button)) {
+          button.forEach((subButton, subColumn) => {
+            const errorPath = [
+              'scenes',
+              scene,
+              `buttons[${rowNum}][${subColumn}]`,
+            ]
+            addButtonError(subButton, errorPath)
+          })
+          return
+        }
+
         const errorPath = ['scenes', scene, `buttons[${rowNum}]`]
-        errors.push({
-          path: errorPath,
-          property: `instance.${errorPath.join('.')}`,
-          message: `${button} has not been defined`,
-        })
+        addButtonError(button, errorPath)
       })
     })
   })
