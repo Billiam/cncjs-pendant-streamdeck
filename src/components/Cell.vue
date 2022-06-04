@@ -1,12 +1,13 @@
 <script>
 import CellButton from './CellButton.vue'
+import evaluate from 'simple-evaluate'
+import TextTemplate from '@/lib/text-template'
 </script>
-
 <script setup>
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
-import { compile, computed } from 'vue'
+import { computed, inject } from 'vue'
 import Color from '@/lib/color'
 
 const alignment = {
@@ -34,12 +35,8 @@ const props = defineProps({
 })
 
 // Text content
-const textTemplate = computed(() => {
-  return compile(props.config.text, { whitespace: 'preserve' })
-})
-const textString = computed(() => {
-  return textTemplate.value({ cnc, ui }, {})
-})
+const textTemplate = computed(() => TextTemplate(props.config.text))
+const textString = computed(() => textTemplate.value({ cnc, ui }))
 
 const fontSize = computed(() => {
   return `${props.config.textSize || 1}em`
