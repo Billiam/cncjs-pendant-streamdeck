@@ -22,12 +22,30 @@ const listIncrease = (item, list, fallback) =>
 const listDecrease = (item, list, fallback) =>
   changeListPosition(item, list, fallback, -1)
 
+const axisOrder = ['x', 'y', 'z', 'a', 'b', 'c']
+
+export const cncStates = {
+  IDLE: 'Idle',
+  HOLD: 'Hold',
+  ALARM: 'Alarm',
+  JOG: 'Jog',
+  RUNNING: 'Run',
+}
+
 export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
     connected: false,
+    runState: cncStates.IDLE,
+    locked: false,
+
+    alarmReason: '',
+    holdReason: '',
+
     jogDistance: 1,
     jogSpeed: 500,
+    settings: {},
+
     wpos: {
       x: '0.000',
       y: '0.000',
@@ -58,6 +76,23 @@ export const useCncStore = defineStore({
         this.$reset()
       }
     },
+    setRunState(state) {
+      if (Object.values(cncStates).includes(state)) {
+        this.runState = state
+        if (state !== cncStates.ALARM) {
+          this.locked = false
+        }
+      } else {
+        console.error('Unrecognized state', state)
+      }
+    },
+    setVersion(version) {
+      this.version = version
+    },
+
+    setSettings(settings) {
+      this.settings = settings
+    },
 
     increaseJogDistance() {
       this.jogDistance = listIncrease(this.jogDistance, this.distances, 1)
@@ -83,6 +118,17 @@ export const useCncStore = defineStore({
       )
     },
 
+    setHold(reason = '') {
+      this.runState = cncStates.HOLD
+      this.holdholdReason = reason
+    },
+    setAlarm(reason = '') {
+      this.runState = cncStates.ALARM
+      this.alarmReason = reason
+    },
+    setLocked(val = true) {
+      this.locked = val
+    },
     setModal(modal) {
       const changed = this.modal.units !== modal.units
 
@@ -106,5 +152,23 @@ export const useCncStore = defineStore({
     distances: (state) => jogDistances[state.distanceUnit],
     speeds: (state) => jogSpeeds[state.distanceUnit],
     speedFallback: (state) => (state.distanceUnit === 'mm' ? 500 : 75),
+    alarm: (state) => state.runState === cncStates.ALARM,
+    alarmText: (state) =>
+      `${['Alarm', state.alarmReason, state.locked ? 'Locked' : null]
+        .filter(Boolean)
+        .join('\n')}`,
+    accelerations: (state) => {
+      if (!state.settings) {
+        return
+      }
+      return axisOrder
+        .map((axis) => {
+          return state.settings[`$${axisOrder.indexOf(axis) + 121}`]
+        })
+        .filter((x) => x != null)
+    },
+    ready: (state) =>
+      state.connected &&
+      (state.runState === cncStates.IDLE || state.runState === cncStates.JOG),
   },
 })
