@@ -191,7 +191,9 @@ export default (socket, options, actionBus, ackBus) => {
     gcode(code)
   })
 
-  return {
-    jog,
-  }
+  actionBus.on('command', (cmd) => {
+    command(cmd)
+  })
+
+  return {}
 }
