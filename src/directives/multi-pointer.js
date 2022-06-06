@@ -25,20 +25,48 @@ const vMultiPointer = {
       }
 
       data.down = true
-      document.body.addEventListener('pointerup', data.release)
+      document.body.addEventListener('pointerup', data.bodyRelease)
       if (binding.value?.down) {
         binding.value.down(e)
       }
     })
 
+    el.addEventListener('pointerup', (e) => {
+      if (!checkReleaseEvent(e)) {
+        return
+      }
+
+      e.stopPropagation()
+
+      const coordinatesContained =
+        e.offsetY >= 0 &&
+        e.offsetY <= el.offsetHeight &&
+        e.offsetX >= 0 &&
+        e.offsetX <= el.offsetWidth
+
+      if (!coordinatesContained) {
+        data.cancel()
+        return
+      }
+      data.down = false
+      document.body.removeEventListener('pointerup', data.bodyRelease)
+
+      if (binding.value?.up) {
+        binding.value.up(e)
+      }
+    })
+
     data.cancel = () => {
       data.down = false
+
+      document.body.removeEventListener('pointerup', data.bodyRelease)
+
       if (binding.value?.cancel) {
         binding.value.cancel()
       }
     }
 
-    data.release = (e) => {
+    const checkReleaseEvent = (e) => {
       // release when button is not down
       if (!data.down) {
         return
@@ -55,18 +83,15 @@ const vMultiPointer = {
         return
       }
 
-      data.down = false
-      document.body.removeEventListener('pointerup', data.release)
-      const inside = el.contains(e.target)
-      if (inside) {
-        if (binding.value?.up) {
-          binding.value.up(e)
-        }
-      } else {
-        if (binding.value?.cancel) {
-          binding.value.cancel()
-        }
+      return true
+    }
+
+    data.bodyRelease = (e) => {
+      if (!checkReleaseEvent(e)) {
+        return
       }
+
+      data.cancel()
     }
   },
 
@@ -74,7 +99,7 @@ const vMultiPointer = {
     if (state[el].down) {
       state[el].cancel()
     }
-    document.body.removeEventListener('pointerup', state[el]?.release)
+    document.body.removeEventListener('pointerup', state[el]?.bodyRelease)
     state.delete(el)
   },
 }
