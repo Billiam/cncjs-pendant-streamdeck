@@ -1,4 +1,5 @@
 <script setup>
+import AutoFullscreen from '@/components/AutoFullscreen.vue'
 import Scene from '@/components/Scene.vue'
 import FixedHeight from '@/components/FixedHeight.vue'
 
@@ -84,6 +85,7 @@ onBeforeUnmount(() => {
 
 <template>
   <fixed-height></fixed-height>
+  <auto-fullscreen></auto-fullscreen>
   <scene v-if="scene" :buttons="scene.buttons"></scene>
   <h1 v-else>Loading...</h1>
 </template>
@@ -93,14 +95,14 @@ onBeforeUnmount(() => {
 .no-touch {
   touch-action: none;
 }
+.html,
+body,
+#app {
+  height: 100%;
+}
 .scene {
   padding: 1px;
-  touch-action: pan-x pan-y;
-
-  width: 100vw;
-  height: 100vh;
-  height: calc(var(--vh, 1vh) * 100);
-  overflow: hidden;
+  height: 100%;
   font-size: 0.5rem;
   display: grid;
   grid-template-columns: v-bind('"repeat(" + columns + ", minmax(0, 1fr))"');
