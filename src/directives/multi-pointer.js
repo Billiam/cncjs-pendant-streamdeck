@@ -15,6 +15,9 @@ const vMultiPointer = {
     const data = state[el]
 
     el.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) {
+        return
+      }
       const id = e.pointerId
       pointers.add(id)
       if (data.down) {
