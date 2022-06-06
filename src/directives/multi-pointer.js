@@ -36,8 +36,6 @@ const vMultiPointer = {
         return
       }
 
-      e.stopPropagation()
-
       const coordinatesContained =
         e.offsetY >= 0 &&
         e.offsetY <= el.offsetHeight &&
