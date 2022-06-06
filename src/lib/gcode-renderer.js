@@ -38,12 +38,12 @@ const animatedDraw = async (lines, drawLine, duration) => {
 }
 
 const draw = async (lines, drawLine) => {
-  let nextWait = Date.now() + 45
+  let nextWait = Date.now() + 30
   const wait = animatedWait(60)
   for (const line of lines) {
     if (Date.now() > nextWait) {
       await wait()
-      nextWait = Date.now() + 45
+      nextWait = Date.now() + 30
     }
     drawLine(line)
   }
