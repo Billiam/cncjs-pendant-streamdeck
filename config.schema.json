@@ -32,6 +32,7 @@
             "startSmoothJog",
             "stopSmoothJog",
             "swapScene",
+            "togglePreview",
             "hold",
             "unhold",
             "homing",
@@ -236,13 +237,14 @@
         "action": {
           "enum": [
             "backScene",
-            "fullscreen",
             "completeInput",
+            "fullscreen",
             "hold",
-            "unhold",
+            "homing",
             "reset",
-            "unlock",
-            "homing"
+            "togglePreview",
+            "unhold",
+            "unlock"
           ]
         },
         "arguments": false
@@ -298,6 +300,9 @@
         },
         "textColor": {
           "$ref": "#/definitions/color"
+        },
+        "textShadow": {
+          "type": "boolean"
         },
         "progressColor": {
           "$ref": "#/definitions/color"
@@ -371,6 +376,10 @@
             },
             "bgColor": {
               "$ref": "#/definitions/color"
+            },
+            "type": {
+              "type": "string",
+              "enum": ["gcodePreview"]
             },
             "if": {
               "type": "string"

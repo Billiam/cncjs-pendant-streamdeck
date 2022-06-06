@@ -20,8 +20,13 @@ export default () => {
     }
   }
 
+  const contrastColor = (color) => {
+    return tinycolor(color).isLight() ? '#000' : '#fff'
+  }
+
   return {
     highlightColor,
     normalizeColor,
+    contrastColor,
   }
 }

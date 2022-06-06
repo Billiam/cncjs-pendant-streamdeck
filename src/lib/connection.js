@@ -64,8 +64,8 @@ proto.debug = function () {
   socket.on('Grbl:settings', function (data) {
     console.debug('grbl:settings', data)
   })
-  socket.on('gcode:load', function (name, gcode) {
-    console.debug('gcode:load', name, gcode)
+  socket.on('gcode:load', function (name, gcode, context) {
+    console.debug('gcode:load', name, gcode, context)
   })
   socket.on('workflow:state', function (data) {
     console.debug('workflow:state', data)

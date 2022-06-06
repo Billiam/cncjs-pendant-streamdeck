@@ -1,6 +1,10 @@
 import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
+
 export default (socket, ackBus) => {
   const cnc = useCncStore()
+  const gcode = useGcodeStore()
+
   const listeners = {
     'Grbl:state': (data) => {
       const { wpos, mpos } = data.status
@@ -33,6 +37,9 @@ export default (socket, ackBus) => {
     'serialport:open': () => {
       console.log('connected')
       cnc.setConnected(true)
+    },
+    'gcode:load': (file, code) => {
+      gcode.setLoaded(file, code)
     },
   }
 

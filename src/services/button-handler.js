@@ -130,6 +130,14 @@ export default (actionBus) => {
       document.documentElement.requestFullscreen()
     }
   }
+  const togglePreview = (callback) => {
+    callback('togglePreview')
+  }
+
+  const actionTypes = {
+    togglePreview: 'emit',
+  }
+
   const actions = {
     enterPosition,
     enterWcs,
@@ -152,6 +160,8 @@ export default (actionBus) => {
     swapScene,
     backScene,
     completeInput,
+
+    togglePreview,
   }
 
   const ensureHandler = (cfg) => {
@@ -193,6 +203,7 @@ export default (actionBus) => {
           grouped[event] ??= []
           grouped[event].push({
             action: callback,
+            type: actionTypes[action.action],
             arguments: action.arguments,
           })
         }

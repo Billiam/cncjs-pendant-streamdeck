@@ -8,6 +8,7 @@ export const useUiStore = defineStore({
     columns: 5,
     rows: 3,
     textColor: 1,
+    textShadow: false,
     palette: ['#000', '#fff'],
     bgColor: 2,
     progressColor: 4,

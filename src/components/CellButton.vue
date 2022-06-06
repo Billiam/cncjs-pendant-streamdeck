@@ -2,7 +2,8 @@
 import ButtonHandler from '@/services/button-handler'
 import vPointerHold from '@/directives/pointer-hold'
 import vMultiPointer from '@/directives/multi-pointer'
-import { inject } from 'vue'
+
+import { inject, defineEmits } from 'vue'
 </script>
 
 <script setup>
@@ -64,9 +65,19 @@ const configEnsureActions = computed(() => {
   return buttonHandler.ensureHandler(props.actions)
 })
 const hasHoldAction = computed(() => configHoldActions.value.length > 0)
+
+const emit = defineEmits(['togglePreview'])
+const emitCallback = (event) => {
+  emit(event)
+}
+
 const callActions = (actionSet) => {
   actionSet.forEach((config) => {
-    config.action(...(config.arguments || []))
+    if (config.type === 'emit') {
+      config.action(emitCallback, ...(config.arguments || []))
+    } else {
+      config.action(...(config.arguments || []))
+    }
   })
 }
 

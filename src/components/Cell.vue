@@ -1,15 +1,14 @@
 <script>
 import CellButton from './CellButton.vue'
+import GcodePreview from './GcodePreview.vue'
 import evaluate from 'simple-evaluate'
 import TextTemplate from '@/lib/text-template'
-</script>
-<script setup>
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
+import { useGcodeStore } from '@/stores/gcode'
 import { storeToRefs } from 'pinia'
-import { computed, inject } from 'vue'
+import { computed, inject, ref } from 'vue'
 import Color from '@/lib/color'
-
 const alignment = {
   'top left': { v: 'top', h: 'left' },
   'top center': { v: 'top', h: 'center' },
@@ -21,13 +20,18 @@ const alignment = {
   'bottom center': { v: 'bottom', h: 'center' },
   'bottom right': { v: 'bottom', h: 'right' },
 }
+</script>
+<script setup>
 const cnc = useCncStore()
 const ui = useUiStore()
-const { bgColor, textColor, progressColor } = storeToRefs(ui)
+const gcode = useGcodeStore()
+const { bgColor, textColor, textShadow, progressColor, rows, columns } =
+  storeToRefs(ui)
 
 const buttonHandler = inject('buttonHandler')
 
 const color = Color()
+const expanded = ref(false)
 
 const props = defineProps({
   config: {
@@ -42,9 +46,13 @@ const props = defineProps({
   },
 })
 
+const toggleExpanded = () => {
+  expanded.value = !expanded.value
+}
+
 // Text content
 const textTemplate = computed(() => TextTemplate(props.config.text))
-const textString = computed(() => textTemplate.value({ cnc, ui }))
+const textString = computed(() => textTemplate.value({ cnc, ui, gcode }))
 
 const fontSize = computed(() => {
   return `${props.config.textSize || 1}em`
@@ -60,6 +68,9 @@ const cellProgressColor = computed(() =>
 
 const cellActiveColor = computed(() => color.highlightColor(cellBgColor.value))
 const cellTextColor = computed(() => color.normalizeColor(textColor.value))
+const contrastingTextColor = computed(() =>
+  color.contrastColor(cellTextColor.value)
+)
 const textAlignment = computed(
   () => alignment[props.config.textAlignment]?.h ?? 'center'
 )
@@ -68,20 +79,42 @@ const textVerticalAlignment = computed(
 )
 
 const show = computed(() => {
-  return !props.config.if || evaluate({ cnc, ui }, props.config.if)
+  return !props.config.if || evaluate({ cnc, ui, gcode }, props.config.if)
 })
 
 const enabled = computed(() => buttonHandler.enabled(props.config.actions))
+
+const gridPosition = computed(() => {
+  if (expanded.value) {
+    return {
+      startRow: 1,
+      endRow: rows.value + 1,
+      startColumn: 1,
+      endColumn: columns.value + 1,
+    }
+  } else {
+    return {
+      startRow: props.row + 1,
+      endRow: props.row + 1,
+      startColumn: props.column + 1,
+      endColumn: props.column + 1,
+    }
+  }
+})
 </script>
 
 <template>
   <div
     class="cell"
     draggable="false"
-    :class="{ disabled: !enabled }"
+    :class="{ disabled: !enabled, expanded }"
     v-if="show"
   >
-    <cell-button :actions="config.actions" :disabled="!enabled">
+    <cell-button
+      :actions="config.actions"
+      :disabled="!enabled"
+      @toggle-preview="toggleExpanded"
+    >
       <img
         class="icon centered-decoration"
         :src="'icons/' + config.icon"
@@ -89,9 +122,19 @@ const enabled = computed(() => buttonHandler.enabled(props.config.actions))
         v-if="config.icon"
         draggable="false"
       />
+
+      <gcode-preview
+        v-if="config.type === 'gcodePreview'"
+        :expanded="expanded"
+      ></gcode-preview>
+
       <span
         class="text-wrapper"
-        :class="[textAlignment, `vertical-${textVerticalAlignment}`]"
+        :class="[
+          textAlignment,
+          `vertical-${textVerticalAlignment}`,
+          { 'text-shadow': textShadow },
+        ]"
       >
         <span class="button-text" v-if="config.text" v-text="textString"></span>
       </span>
@@ -103,6 +146,10 @@ const enabled = computed(() => buttonHandler.enabled(props.config.actions))
 .cell {
   position: relative;
   overflow: hidden;
+  &.expanded {
+    z-index: 10;
+    border-radius: 0;
+  }
 }
 .cell-container {
   position: relative;
@@ -128,8 +175,17 @@ const enabled = computed(() => buttonHandler.enabled(props.config.actions))
     left: 3%;
     right: 3%;
     height: 20%;
+    max-height: 40px;
     border-radius: 5px 5px 0 0;
   }
+}
+.gcode-preview {
+  position: absolute;
+  left: 5%;
+  top: 5%;
+
+  width: 90%;
+  height: 90%;
 }
 .icon {
   filter: drop-shadow(2px 3px 0 #00000022);
@@ -223,15 +279,18 @@ const enabled = computed(() => buttonHandler.enabled(props.config.actions))
 }
 .cell {
   background-color: v-bind(cellBgColor);
-  grid-row-start: v-bind(row + 1);
-  grid-row-end: v-bind(row + 1);
-  grid-column-start: v-bind(column + 1);
-  grid-column-end: v-bind(column + 1);
+  grid-row-start: v-bind(gridPosition.startRow);
+  grid-row-end: v-bind(gridPosition.endRow);
+  grid-column-start: v-bind(gridPosition.startColumn);
+  grid-column-end: v-bind(gridPosition.endColumn);
 }
 .cell.disabled {
   background-color: transparent;
 }
 .button.active {
   background-color: v-bind(cellActiveColor);
+}
+.text-shadow {
+  text-shadow: v-bind(`0 2px ${contrastingTextColor}`);
 }
 </style>

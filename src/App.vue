@@ -53,6 +53,8 @@ onBeforeMount(async () => {
 
   uiStore.setPalette(config.ui.palette)
   uiStore.setGrid(config.ui.rows, config.ui.columns)
+  uiStore.textColor = config.ui.textColor
+  uiStore.textShadow = config.ui.textShadow
 
   uiStore.setBgColor(config.ui.bgColor)
   uiStore.setProgressColor(config.ui.progressColor)
