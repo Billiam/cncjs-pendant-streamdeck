@@ -21,6 +21,8 @@
             "enterWcs",
             "fullscreen",
             "gcode",
+            "hold",
+            "homing",
             "input",
             "inputCommand",
             "jog",
@@ -28,15 +30,14 @@
             "jogSpeed",
             "macro",
             "navigate",
+            "reset",
             "setScene",
             "startSmoothJog",
             "stopSmoothJog",
             "swapScene",
             "togglePreview",
-            "hold",
+            "toggleShowAbsolutePosition",
             "unhold",
-            "homing",
-            "reset",
             "unlock"
           ]
         },
@@ -243,6 +244,7 @@
             "homing",
             "reset",
             "togglePreview",
+            "toggleShowAbsolutePosition",
             "unhold",
             "unlock"
           ]
@@ -345,6 +347,21 @@
               "items": {
                 "$ref": "#/definitions/action"
               }
+            },
+            "disabled": {
+              "type": "string"
+            },
+            "rows": {
+              "type": "integer",
+              "default": 1
+            },
+            "columns": {
+              "type": "integer",
+              "default": 1
+            },
+            "animated": {
+              "type": "boolean",
+              "default": false
             },
             "text": {
               "type": "string"
