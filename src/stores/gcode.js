@@ -41,14 +41,12 @@ export const useGcodeStore = defineStore({
           {}
         )
       })
-      console.log({ res })
       return Object.freeze(res)
     },
     displayRange() {
       if (!this.dimensions) {
         return
       }
-      console.log({ dim: this.dimensions })
       const res = {}
       ;['min', 'max'].forEach((dimKey) => {
         res[dimKey] = Object.entries(this.dimensions[dimKey]).reduce(

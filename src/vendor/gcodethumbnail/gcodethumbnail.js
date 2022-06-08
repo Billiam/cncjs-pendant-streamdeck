@@ -142,7 +142,6 @@ export function preview(size, colors, settings, canvas) {
   const cH = parseInt(canvas.height, 10)
   const ctx = canvas.getContext('2d')
 
-  console.log({ ratio })
   const drawSettings = {
     lineWidth: ratio * 0.003,
   }
