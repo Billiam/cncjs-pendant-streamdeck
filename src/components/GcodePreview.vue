@@ -16,27 +16,19 @@ const { geometry } = storeToRefs(gcode)
 let mounted = false
 
 const props = defineProps({
-  expanded: {
+  animated: {
     type: Boolean,
     default: false,
   },
 })
 
-watch(
-  () => props.expanded,
-  () => {
-    nextTick(() => {
-      updateRender(props.expanded)
-    })
-  }
-)
 watch(geometry, (current) => {
   if (current) {
     updateRender()
   }
 })
 
-const updateRender = (animate) => {
+const updateRender = (animate = false) => {
   instance.value = Date.now()
 
   if (!(geometry.value && mounted)) {
@@ -69,8 +61,10 @@ const debouncedUpdate = debounce(() => {
 
 onMounted(() => {
   window.addEventListener('resize', debouncedUpdate)
-  mounted = true
-  updateRender()
+  nextTick(() => {
+    mounted = true
+    updateRender(props.animated)
+  })
 })
 
 onUnmounted(() => {

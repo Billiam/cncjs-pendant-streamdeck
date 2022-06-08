@@ -31,7 +31,6 @@ const { bgColor, textColor, textShadow, progressColor, rows, columns } =
 const buttonHandler = inject('buttonHandler')
 
 const color = Color()
-const expanded = ref(false)
 
 const props = defineProps({
   config: {
@@ -45,10 +44,6 @@ const props = defineProps({
     type: Number,
   },
 })
-
-const toggleExpanded = () => {
-  expanded.value = !expanded.value
-}
 
 // Text content
 const textTemplate = computed(() => TextTemplate(props.config.text))
@@ -81,24 +76,21 @@ const textVerticalAlignment = computed(
 const show = computed(() => {
   return !props.config.if || evaluate({ cnc, ui, gcode }, props.config.if)
 })
-
-const enabled = computed(() => buttonHandler.enabled(props.config.actions))
+const configDisabled = computed(() => {
+  return (
+    props.config.disabled && evaluate({ cnc, ui, gcode }, props.config.disabled)
+  )
+})
+const enabled = computed(
+  () => !configDisabled.value && buttonHandler.enabled(props.config.actions)
+)
 
 const gridPosition = computed(() => {
-  if (expanded.value) {
-    return {
-      startRow: 1,
-      endRow: rows.value + 1,
-      startColumn: 1,
-      endColumn: columns.value + 1,
-    }
-  } else {
-    return {
-      startRow: props.row + 1,
-      endRow: props.row + 1,
-      startColumn: props.column + 1,
-      endColumn: props.column + 1,
-    }
+  return {
+    startRow: props.row + 1,
+    endRow: props.row + 1 + (props.config.rows || 1),
+    startColumn: props.column + 1,
+    endColumn: props.column + 1 + (props.config.columns || 1),
   }
 })
 </script>
@@ -107,14 +99,10 @@ const gridPosition = computed(() => {
   <div
     class="cell"
     draggable="false"
-    :class="{ disabled: !enabled, expanded }"
+    :class="{ disabled: !enabled }"
     v-if="show"
   >
-    <cell-button
-      :actions="config.actions"
-      :disabled="!enabled"
-      @toggle-preview="toggleExpanded"
-    >
+    <cell-button :actions="config.actions" :disabled="!enabled">
       <img
         class="icon centered-decoration"
         :src="'icons/' + config.icon"
@@ -125,7 +113,7 @@ const gridPosition = computed(() => {
 
       <gcode-preview
         v-if="config.type === 'gcodePreview'"
-        :expanded="expanded"
+        :animated="config.animated"
       ></gcode-preview>
 
       <span
@@ -146,10 +134,6 @@ const gridPosition = computed(() => {
 .cell {
   position: relative;
   overflow: hidden;
-  &.expanded {
-    z-index: 10;
-    border-radius: 0;
-  }
 }
 .cell-container {
   position: relative;
@@ -165,6 +149,7 @@ const gridPosition = computed(() => {
   display: block;
   width: 100%;
   height: 100%;
+  font-size: inherit;
 }
 .cell:not(.disabled) {
   .button::before {
@@ -283,6 +268,14 @@ const gridPosition = computed(() => {
   grid-row-end: v-bind(gridPosition.endRow);
   grid-column-start: v-bind(gridPosition.startColumn);
   grid-column-end: v-bind(gridPosition.endColumn);
+  z-index: v-bind(
+    10 +
+      (
+        (rows * columns) -
+          (gridPosition.startRow * columns + gridPosition.startColumn)
+      )
+  );
+  position: relative;
 }
 .cell.disabled {
   background-color: transparent;
