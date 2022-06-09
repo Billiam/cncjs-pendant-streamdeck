@@ -402,6 +402,8 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
   //radius is positive or negative
   function findCenter(start, end, parsedCommand, clockwise, crossAxe, inMm) {
     var delta = inMm === false ? 1 : util.MILLIMETER_TO_INCH
+    var zeroPrecision = inMm ? 0.00001 : util.FLOAT_PRECISION
+    var comparePrecision = inMm ? 0.0001 : util.FLOAT_PRECISION
     var center = { x: start.x, y: start.y, z: start.z }
     var distCenterStart, distCenterEnd
     var axes = util.findAxes(crossAxe)
@@ -421,12 +423,15 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
       distCenterEnd = Math.pow(center[axes.re] - end[axes.re], 2)
       distCenterEnd += Math.pow(center[axes.im] - end[axes.im], 2)
       if (
-        util.nearlyEqual(distCenterStart, 0) === true ||
-        util.nearlyEqual(distCenterEnd, 0) === true
+        util.nearlyEqual(distCenterStart, 0, zeroPrecision) === true ||
+        util.nearlyEqual(distCenterEnd, 0, zeroPrecision) === true
       ) {
         return false
       }
-      if (util.nearlyEqual(distCenterStart, distCenterEnd) === false) {
+      if (
+        util.nearlyEqual(distCenterStart, distCenterEnd, comparePrecision) ===
+        false
+      ) {
         return false
       }
     } else {
