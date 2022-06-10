@@ -14,12 +14,15 @@ const lazyStore = () => {
   }
 }
 const machineCommands = new Set([
+  'enterPosition',
+  'enterWcs',
+  'gcode',
+  'homing',
+  'jog',
+  'macro',
+  'play',
   'startSmoothJog',
   'stopSmoothJog',
-  'gcode',
-  'jog',
-  'enterWcs',
-  'enterPosition',
 ])
 
 // commands that can be run after reset
@@ -93,6 +96,27 @@ export default (actionBus) => {
     }
   }
 
+  const run = () => {
+    if (store.cnc.idle) {
+      command('gcode:start')
+      return
+    }
+    if (store.cnc.paused) {
+      command('gcode:resume')
+    }
+  }
+
+  const pause = () => {
+    if (store.cnc.running) {
+      command('gcode:pause')
+    }
+  }
+  const stop = () => {
+    if (store.cnc.paused) {
+      command('gcode:stop', { force: true })
+    }
+  }
+
   const startSmoothJog = (direction, axis) => {
     actionBus.emit('smoothJog', { direction, axis })
   }
@@ -104,8 +128,8 @@ export default (actionBus) => {
   const gcode = (code) => {
     actionBus.emit('gcode', code)
   }
-  const command = (cmd) => {
-    actionBus.emit('command', cmd)
+  const command = (cmd, ...args) => {
+    actionBus.emit('command', { command: cmd, args: args })
   }
   const reset = () => {
     command('reset')
@@ -121,7 +145,11 @@ export default (actionBus) => {
     command('feedhold')
   }
   const unhold = () => {
-    command('cyclestart')
+    if (false) {
+      command('gcode:resume')
+    } else {
+      command('cyclestart')
+    }
   }
   const fullscreen = () => {
     if (document.fullscreenElement) {
@@ -130,13 +158,11 @@ export default (actionBus) => {
       document.documentElement.requestFullscreen()
     }
   }
-  const togglePreview = (callback) => {
-    callback('togglePreview')
+  const toggleShowAbsolutePosition = () => {
+    store.ui.toggleShowAbsolutePosition()
   }
 
-  const actionTypes = {
-    togglePreview: 'emit',
-  }
+  const actionTypes = {}
 
   const actions = {
     enterPosition,
@@ -154,6 +180,9 @@ export default (actionBus) => {
     stopSmoothJog,
     unhold,
     unlock,
+    run,
+    pause,
+    stop,
 
     fullscreen,
     navigate,
@@ -161,7 +190,7 @@ export default (actionBus) => {
     backScene,
     completeInput,
 
-    togglePreview,
+    toggleShowAbsolutePosition,
   }
 
   const ensureHandler = (cfg) => {
@@ -189,25 +218,26 @@ export default (actionBus) => {
         cfg.some((action) => alarmCommands.has(action.action)))
     )
   }
+  const getCallback = (cfg) => {
+    return cfg.action && actions[cfg.action]
+  }
 
   const getHandlers = (cfg) => {
     if (!cfg) {
       return {}
     }
-
     return cfg.reduce((grouped, action) => {
-      if (action.action) {
-        const callback = actions[action.action]
-        if (action) {
-          const event = action.event ?? 'down'
-          grouped[event] ??= []
-          grouped[event].push({
-            action: callback,
-            type: actionTypes[action.action],
-            arguments: action.arguments,
-          })
-        }
+      const callback = getCallback(action)
+      if (!callback) {
+        return grouped
       }
+      const event = action.event ?? 'down'
+      grouped[event] ??= []
+      grouped[event].push({
+        action: callback,
+        type: actionTypes[action.action],
+        arguments: action.arguments,
+      })
       return grouped
     }, {})
   }

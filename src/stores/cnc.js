@@ -31,16 +31,24 @@ export const cncStates = {
   JOG: 'Jog',
   RUNNING: 'Run',
 }
+export const workflowStates = {
+  IDLE: 'idle',
+  PAUSE: 'paused',
+  RUNNING: 'running',
+}
 
 export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
     connected: false,
     runState: cncStates.IDLE,
+    workflowState: workflowStates.IDLE,
     locked: false,
 
     alarmReason: '',
-    holdReason: '',
+    pauseReason: '',
+    pauseMessage: '',
+    errorMessage: '',
 
     jogDistance: 1,
     jogSpeed: 500,
@@ -86,6 +94,17 @@ export const useCncStore = defineStore({
         console.error('Unrecognized state', state)
       }
     },
+    setWorkflowState(state) {
+      if (Object.values(workflowStates).includes(state)) {
+        this.workflowState = state
+        if (state !== workflowStates.PAUSE) {
+          this.clearPause()
+          this.clearError()
+        }
+      } else {
+        console.error('Unrecognized state', state)
+      }
+    },
     setVersion(version) {
       this.version = version
     },
@@ -117,10 +136,20 @@ export const useCncStore = defineStore({
         this.speedFallback
       )
     },
-
-    setHold(reason = '') {
-      this.runState = cncStates.HOLD
-      this.holdholdReason = reason
+    setError(error) {
+      this.errorMessage = error
+    },
+    clearError(error) {
+      this.errorMessage = null
+    },
+    setPause(reason, message) {
+      this.workflowState = workflowStates.PAUSE
+      this.pauseReason = reason
+      this.pauseMessage = message
+    },
+    clearPause() {
+      this.pauseReason = null
+      this.pauseMessage = null
     },
     setAlarm(reason = '') {
       this.runState = cncStates.ALARM
@@ -145,18 +174,31 @@ export const useCncStore = defineStore({
       this.wpos = Object.freeze(wpos)
     },
   },
-
   getters: {
     isRelativeMove: (state) => state.modal.distance === 'G91',
     distanceUnit: (state) => (state.modal.units === 'G21' ? 'mm' : 'in'),
     distances: (state) => jogDistances[state.distanceUnit],
     speeds: (state) => jogSpeeds[state.distanceUnit],
     speedFallback: (state) => (state.distanceUnit === 'mm' ? 500 : 75),
+    hold: (state) => state.runState === cncStates.HOLD,
+    paused: (state) => state.workflowState === workflowStates.PAUSE,
+    idle: (state) => state.workflowState === workflowStates.IDLE,
+    running: (state) => state.workflowState === workflowStates.RUNNING,
     alarm: (state) => state.runState === cncStates.ALARM,
     alarmText: (state) =>
       `${['Alarm', state.alarmReason, state.locked ? 'Locked' : null]
         .filter(Boolean)
         .join('\n')}`,
+    pauseText: (state) => {
+      if (state.pauseReason !== 'M6') {
+        return
+      }
+      const messages = ['Tool change']
+      if (state.pauseMessage && state.pauseMessage !== 'M6') {
+        messages.push(state.pauseMessage.replace(/^M6 \((.*)\)$/, '$1'))
+      }
+      return messages.join('\n')
+    },
     accelerations: (state) => {
       if (!state.settings) {
         return
