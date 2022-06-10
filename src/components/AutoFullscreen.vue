@@ -1,13 +1,13 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
 const deviceOrientation = () => {
-  if (screen?.orientation?.type?.includes('landscape')) {
-    document.documentElement.requestFullscreen()
-  } else {
-    try {
-      document.exitFullscreen()
-    } catch (e) {}
-  }
+  const toggle = screen?.orientation?.type?.includes('landscape')
+    ? document.documentElement.requestFullscreen
+    : document.exitFullscreen
+
+  try {
+    toggle().catch(() => {})
+  } catch (e) {}
 }
 
 onMounted(() => {
