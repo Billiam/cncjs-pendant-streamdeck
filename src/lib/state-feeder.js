@@ -1,5 +1,8 @@
 import { useCncStore } from '@/stores/cnc'
 import { useGcodeStore } from '@/stores/gcode'
+const gcodeWorker = new Worker(new URL('../gcode-worker.js', import.meta.url), {
+  type: 'module',
+})
 
 export default (socket, ackBus) => {
   const cnc = useCncStore()
@@ -35,21 +38,52 @@ export default (socket, ackBus) => {
       cnc.setConnected(inuse)
     },
     'serialport:open': () => {
-      console.log('connected')
       cnc.setConnected(true)
     },
     'gcode:load': (file, code) => {
+      gcodeWorker.postMessage({ name: file, gcode: code })
       gcode.setLoaded(file, code)
+    },
+    'sender:status': (status) => {
+      if (!status.hold) {
+        return
+      }
+      let data, msg, err
+      if (status.holdReason) {
+        ;({ data, msg, err } = status.holdReason)
+      }
+      cnc.setPause(data, msg)
+      if (err) {
+        cnc.setError(msg)
+      }
+    },
+    'workflow:state': (status) => {
+      cnc.setWorkflowState(status)
+    },
+  }
+  const workerListeners = {
+    message: (e) => {
+      console.log({ d: e.data })
+      const { name, geometry } = e.data
+      if (gcode.name === name) {
+        gcode.setGeometry(geometry)
+      }
     },
   }
 
   Object.entries(listeners).forEach(([event, listener]) => {
     socket.on(event, listener)
   })
+  Object.entries(workerListeners).forEach(([event, listener]) => {
+    gcodeWorker.addEventListener(event, listener)
+  })
 
   const destroy = () => {
     Object.entries(listeners).forEach(([event, listener]) => {
       socket.off(event, listener)
+    })
+    Object.entries(workerListeners).forEach(([event, listener]) => {
+      gcodeWorker.removeEventListener(event, listener)
     })
   }
 

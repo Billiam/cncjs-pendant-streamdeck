@@ -110,12 +110,17 @@ body,
   grid-gap: 5px;
   align-items: center;
   justify-items: center;
+
+  min-width: 0;
 }
 .cell {
   width: 100%;
   height: 100%;
   text-align: center;
   border-radius: 5px;
+
+  min-width: 0;
+  overflow: hidden;
 }
 @media (min-width: 30em) and (min-height: 20em) {
   .scene {

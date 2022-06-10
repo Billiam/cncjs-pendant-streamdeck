@@ -13,6 +13,9 @@ export const useUiStore = defineStore({
     bgColor: 2,
     progressColor: 4,
     pos: 'wpos',
+    buttons: {
+      showAbsolutePosition: false,
+    },
     input: {
       value: '',
       previous: 0,
@@ -35,6 +38,9 @@ export const useUiStore = defineStore({
       if (inputTest.test(newValue)) {
         this.input.value = newValue
       }
+    },
+    toggleShowAbsolutePosition() {
+      this.buttons.showAbsolutePosition = !this.buttons.showAbsolutePosition
     },
     toggleInputSign() {
       if (this.input.value.startsWith('-')) {

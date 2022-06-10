@@ -1,6 +1,4 @@
-import { useUiStore } from '@/stores/ui'
 import { defineStore } from 'pinia'
-import { parse } from '@/vendor/gcodetogeometry/gcodetogeometry'
 import { useCncStore } from './cnc'
 const lazyStore = {
   get cnc() {
@@ -13,13 +11,9 @@ export const useGcodeStore = defineStore({
   state: () => ({
     name: null,
     gcode: null,
+    geometry: null,
   }),
   getters: {
-    geometry() {
-      if (this.gcode) {
-        return Object.freeze(parse(this.gcode.replace(/^%.*/gm, '')))
-      }
-    },
     dimensions() {
       // translate default size information to mm
       if (!this.geometry) {
@@ -74,7 +68,13 @@ export const useGcodeStore = defineStore({
   actions: {
     setLoaded(filename, code) {
       this.name = filename
+      if (code !== this.gcode) {
+        this.geometry = null
+      }
       this.gcode = code
+    },
+    setGeometry(geometry) {
+      this.geometry = Object.freeze(geometry)
     },
   },
 })
