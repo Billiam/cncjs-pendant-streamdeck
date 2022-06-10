@@ -66,7 +66,7 @@ const configEnsureActions = computed(() => {
 })
 const hasHoldAction = computed(() => configHoldActions.value.length > 0)
 
-const emit = defineEmits(['togglePreview'])
+const emit = defineEmits([])
 const emitCallback = (event) => {
   emit(event)
 }
@@ -149,14 +149,12 @@ onBeforeUnmount(() => {
     <span class="cell-container">
       <slot></slot>
     </span>
-    <svg class="progress-bar centered-decoration" viewBox="0 0 100 100">
-      <circle
-        class="progress-bar-meter"
-        cx="50"
-        cy="50"
-        r="40"
-        v-if="holding"
-      />
+    <svg
+      v-if="holding"
+      class="progress-bar centered-decoration"
+      viewBox="0 0 100 100"
+    >
+      <circle class="progress-bar-meter" cx="50" cy="50" r="40" />
     </svg>
   </button>
   <div class="cell-container" v-else>
