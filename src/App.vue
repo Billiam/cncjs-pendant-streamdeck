@@ -2,35 +2,48 @@
 import AutoFullscreen from '@/components/AutoFullscreen.vue'
 import Scene from '@/components/Scene.vue'
 import FixedHeight from '@/components/FixedHeight.vue'
+import FileListScene from '@/components/FileListScene.vue'
 
 import Bus from '@/services/bus'
 import ButtonHandler from '@/services/button-handler'
 import CncActions from '@/lib/cnc-actions'
 import Connection from '@/lib/connection'
 import StateFeeder from '@/lib/state-feeder'
+import CncApi from '@/lib/cnc-api'
 import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
 import { useCncStore } from '@/stores/cnc'
+import { useFileListStore } from '@/stores/file-list'
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeMount, onBeforeUnmount, provide } from 'vue'
+import { computed, onBeforeMount, onBeforeUnmount, provide, ref } from 'vue'
 
 const uiStore = useUiStore()
 const cncStore = useCncStore()
+const fileListStore = useFileListStore()
 const buttonStore = useButtonStore()
 const sceneStore = useScenesStore()
 
 const ackBus = Bus()
 const actionBus = Bus()
 
-let currentSocket
 let stateFeeder
 let cncActions
 
 const { rows, columns } = storeToRefs(uiStore)
+const configError = ref(false)
+
+const specialScenes = {
+  gcodeList: {
+    type: FileListScene,
+    buttons: [],
+  },
+}
 
 const scene = computed(() => {
-  return sceneStore.scenes[uiStore.sceneName]
+  return (
+    specialScenes[uiStore.sceneName] ?? sceneStore.scenes[uiStore.sceneName]
+  )
 })
 
 const clearEventlisteners = () => {
@@ -39,12 +52,26 @@ const clearEventlisteners = () => {
   stateFeeder?.destroy()
 }
 
+const getToken = () => {
+  const query = new URLSearchParams(window.location.search)
+  if (query.has('token')) {
+    return query.get('token')
+  }
+  const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
+  return cncConfig?.state?.session?.token || ''
+}
+
 provide('buttonHandler', ButtonHandler(actionBus))
 
 onBeforeMount(async () => {
   const response = await fetch('config.json')
-  const config = await response.json()
-
+  let config
+  try {
+    config = await response.json()
+  } catch (e) {
+    configError.value = true
+    return
+  }
   // initialize stores from config data
   buttonStore.setButtons(Object.freeze(config.buttons))
   sceneStore.setScenes(Object.freeze(config.scenes))
@@ -59,8 +86,11 @@ onBeforeMount(async () => {
 
   uiStore.setBgColor(config.ui.bgColor)
   uiStore.setProgressColor(config.ui.progressColor)
+  const token = getToken()
 
-  const connection = new Connection(config.cncjs)
+  const apiClient = CncApi(token, config.cncjs.socketAddress)
+
+  const connection = new Connection(config.cncjs, token)
   if (import.meta.env.DEV) {
     connection.debug()
   }
@@ -73,6 +103,9 @@ onBeforeMount(async () => {
     return
   }
 
+  fileListStore.setClient(apiClient)
+
+  cncStore.setToken(token)
   cncStore.setConnected(true)
   stateFeeder = StateFeeder(socket, ackBus)
   cncActions = CncActions(socket, connection.options, actionBus, ackBus)
@@ -81,13 +114,21 @@ onBeforeMount(async () => {
 onBeforeUnmount(() => {
   clearEventlisteners()
 })
+const sceneType = computed(
+  () => specialScenes[uiStore.sceneName]?.type ?? Scene
+)
 </script>
 
 <template>
   <fixed-height></fixed-height>
   <auto-fullscreen></auto-fullscreen>
-  <scene v-if="scene" :buttons="scene.buttons"></scene>
-  <h1 v-else>Loading...</h1>
+  <component v-if="scene" :is="sceneType" :buttons="scene.buttons"></component>
+  <div v-else>
+    <h1 v-if="configError">
+      Config file (public/config.json) could not be loaded
+    </h1>
+    <h1 v-else>Loading...</h1>
+  </div>
 </template>
 
 <style>

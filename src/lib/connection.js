@@ -1,16 +1,7 @@
 import io from 'socket.io-client'
 import mitt from 'mitt'
 
-const getToken = () => {
-  const query = new URLSearchParams(window.location.search)
-  if (query.has('token')) {
-    return query.get('token')
-  }
-  const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
-  return cncConfig?.state?.session?.token || ''
-}
-
-const Connection = function (opts) {
+const Connection = function (opts, token) {
   const options = { ...opts }
   options.baudrate ??= 115200
   options.socketAddress ??= 'localhost'
@@ -19,6 +10,7 @@ const Connection = function (opts) {
   options.accessTokenLifetime ??= '30d'
   this.options = options
   this.emitter = mitt()
+  this.token = token
 }
 
 const proto = Connection.prototype
@@ -76,12 +68,11 @@ proto.connect = function () {
   const options = this.options
 
   return new Promise((resolve, reject) => {
-    const token = getToken()
     const url = `ws://${options.socketAddress}/`
 
     const socket = io.connect(url, {
       // path: '/socket.io/',
-      query: `token=${token}`,
+      query: `token=${this.token}`,
       transports: ['websocket'],
     })
 

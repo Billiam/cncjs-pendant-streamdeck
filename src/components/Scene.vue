@@ -1,6 +1,6 @@
 <script setup>
-import { useButtonStore } from '../stores/buttons'
-import { useUiStore } from '../stores/ui'
+import { useButtonStore } from '@/stores/buttons'
+import { useUiStore } from '@/stores/ui'
 const { buttons: buttonConfig } = useButtonStore()
 const { rows, columns } = useUiStore()
 import Cell from './Cell.vue'

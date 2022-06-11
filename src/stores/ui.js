@@ -22,11 +22,38 @@ export const useUiStore = defineStore({
       type: '',
       callback: () => {},
     },
+    fileDetailsPath: null,
+    fileDetails: {},
+    fileDetailsSort: 'alpha_asc',
   }),
 
   getters: {
     sceneName: (state) => {
       return state.sceneStack[state.sceneStack.length - 1]
+    },
+    fileDetailSize: (state) => {
+      if (!state.fileDetails) {
+        return '0'
+      }
+      const size = state.fileDetails.size
+      if (size > 1024) {
+        const digits = size > 5120 ? 0 : 1
+        return `${+(size / 1024).toFixed(digits)}K`
+      } else {
+        return `${size}`
+      }
+    },
+    fileDetailModifiedTime: (state) => {
+      if (!state.fileDetails) {
+        return ''
+      }
+      return new Date(state.fileDetails.mtime).toLocaleString()
+    },
+    fileDetailCreatedTime: (state) => {
+      if (!state.fileDetails) {
+        return ''
+      }
+      return new Date(state.fileDetails.ctime).toLocaleString()
     },
   },
 
@@ -88,9 +115,9 @@ export const useUiStore = defineStore({
       }
     },
 
-    goBack() {
+    goBack(count = 1) {
       if (this.sceneStack.length > 1) {
-        this.sceneStack.pop()
+        this.sceneStack.splice(-count, count)
       }
     },
   },

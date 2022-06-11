@@ -41,6 +41,7 @@ export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
     connected: false,
+    token: null,
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
     locked: false,
@@ -83,6 +84,9 @@ export const useCncStore = defineStore({
       if (!connected) {
         this.$reset()
       }
+    },
+    setToken(token) {
+      this.token = token
     },
     setRunState(state) {
       if (Object.values(cncStates).includes(state)) {
@@ -204,11 +208,21 @@ export const useCncStore = defineStore({
         return
       }
       return axisOrder
-        .map((axis) => {
-          return state.settings[`$${axisOrder.indexOf(axis) + 121}`]
+        .map((axis, i) => {
+          return state.settings[`$${i + 121}`]
         })
         .filter((x) => x != null)
     },
+    axisLimits: (state) => {
+      if (!state.settings) {
+        return {}
+      }
+      return axisOrder.reduce((limits, axis, i) => {
+        limits[axis] = state.settings[`$${i + 130}`]
+        return limits
+      }, {})
+    },
+
     ready: (state) =>
       state.connected &&
       (state.runState === cncStates.IDLE || state.runState === cncStates.JOG),

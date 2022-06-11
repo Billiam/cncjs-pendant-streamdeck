@@ -1,3 +1,4 @@
+import { useFileListStore } from '@/stores/file-list'
 import { useUiStore } from '@/stores/ui'
 import { useCncStore } from '@/stores/cnc'
 
@@ -10,6 +11,10 @@ const lazyStore = () => {
     get cnc() {
       delete this.cnc
       return (this.cnc = useCncStore())
+    },
+    get fileList() {
+      delete this.fileList
+      return (this.fileList = useFileListStore())
     },
   }
 }
@@ -32,8 +37,8 @@ const alarmCommands = new Set(['homing', 'unlock'])
 export default (actionBus) => {
   const store = lazyStore()
 
-  const backScene = () => {
-    store.ui.goBack()
+  const backScene = (count = 1) => {
+    store.ui.goBack(count)
   }
 
   const swapScene = (scene) => {
@@ -145,11 +150,7 @@ export default (actionBus) => {
     command('feedhold')
   }
   const unhold = () => {
-    if (false) {
-      command('gcode:resume')
-    } else {
-      command('cyclestart')
-    }
+    command('cyclestart')
   }
   const fullscreen = () => {
     if (document.fullscreenElement) {
@@ -162,12 +163,80 @@ export default (actionBus) => {
     store.ui.toggleShowAbsolutePosition()
   }
 
+  const fileDetails = (path, file) => {
+    store.ui.fileDetailsPath = path
+    store.ui.fileDetails = file
+
+    navigate('fileDetails')
+  }
+
+  const previousFolder = () => {
+    store.fileList.previousFolder()
+  }
+
+  const loadFolder = (path) => {
+    store.fileList.loadFolder(path)
+  }
+
+  const refreshWatchFolder = async () => {
+    await store.fileList.loadFiles()
+    navigate('gcodeList')
+  }
+
+  const loadFile = (path) => {
+    command('watchdir:load', path)
+  }
+  const loadDetailFile = () => {
+    if (!store.ui.fileDetailsPath) {
+      return
+    }
+    loadFile(store.ui.fileDetailsPath)
+  }
+  const fileListScrollUp = () => {
+    store.fileList.scrollUp()
+  }
+
+  const fileListScrollDown = () => {
+    store.fileList.scrollDown()
+  }
+
+  const sortDetails = (sort) => {
+    store.ui.fileDetailsSort = sort
+  }
+
+  const goto = (x, y, z, a, b, c) => {
+    const limits = store.cnc.axisLimits
+
+    const move = Object.entries({ x, y, z, a, b, c })
+      .map(([axis, position]) => {
+        if (position?.endsWith('%')) {
+          if (limits[axis]) {
+            const absPosition = parseFloat(position) * -0.01 * limits[axis]
+            return `${axis}${absPosition.toFixed(5)}`
+          }
+        } else if (position) {
+          return `${axis}${position}`
+        }
+      })
+      .filter(Boolean)
+      .join(' ')
+
+    actionBus.emit('absolutePosition', move)
+  }
   const actionTypes = {}
 
   const actions = {
+    backScene,
+    completeInput,
     enterPosition,
     enterWcs,
+    fileDetails,
+    loadDetailFile,
+    fileListScrollDown,
+    fileListScrollUp,
+    fullscreen,
     gcode,
+    goto,
     hold,
     homing,
     input,
@@ -175,22 +244,22 @@ export default (actionBus) => {
     jog,
     jogDistance,
     jogSpeed,
+    loadFile,
+    loadFolder,
+    navigate,
+    pause,
+    previousFolder,
+    refreshWatchFolder,
     reset,
+    run,
+    sortDetails,
     startSmoothJog,
+    stop,
     stopSmoothJog,
+    swapScene,
+    toggleShowAbsolutePosition,
     unhold,
     unlock,
-    run,
-    pause,
-    stop,
-
-    fullscreen,
-    navigate,
-    swapScene,
-    backScene,
-    completeInput,
-
-    toggleShowAbsolutePosition,
   }
 
   const ensureHandler = (cfg) => {

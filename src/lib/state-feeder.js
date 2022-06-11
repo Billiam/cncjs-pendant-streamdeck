@@ -40,6 +40,10 @@ export default (socket, ackBus) => {
     'serialport:open': () => {
       cnc.setConnected(true)
     },
+    'Grbl:settings': ({ parameters, settings, version }) => {
+      cnc.setSettings(settings)
+      cnc.setVersion(version)
+    },
     'gcode:load': (file, code) => {
       gcodeWorker.postMessage({ name: file, gcode: code })
       gcode.setLoaded(file, code)
@@ -63,7 +67,6 @@ export default (socket, ackBus) => {
   }
   const workerListeners = {
     message: (e) => {
-      console.log({ d: e.data })
       const { name, geometry } = e.data
       if (gcode.name === name) {
         gcode.setGeometry(geometry)

@@ -15,7 +15,7 @@ export default (socket, options, actionBus, ackBus) => {
   }
 
   const withRelative = (callback) => {
-    if (ui.isRelativeMove) {
+    if (cnc.isRelativeMove) {
       callback()
     } else {
       gcode('G91')
@@ -25,7 +25,7 @@ export default (socket, options, actionBus, ackBus) => {
   }
 
   const withAbsolute = (callback) => {
-    if (ui.isRelativeMove) {
+    if (cnc.isRelativeMove) {
       gcode('G90')
       callback()
       gcode('G91')
@@ -193,6 +193,14 @@ export default (socket, options, actionBus, ackBus) => {
 
   actionBus.on('command', (evt) => {
     command(evt.command, ...(evt.args || []))
+  })
+
+  actionBus.on('absolutePosition', (evt) => {
+    if (!evt) {
+      return
+    }
+
+    gcode(`G53 G0 ${evt}`)
   })
 
   return {}

@@ -118,13 +118,14 @@ const gridPosition = computed(() => {
 
       <span
         class="text-wrapper"
+        v-if="config.text"
         :class="[
           textAlignment,
           `vertical-${textVerticalAlignment}`,
           { 'text-shadow': textShadow },
         ]"
       >
-        <span class="button-text" v-if="config.text" v-text="textString"></span>
+        <span class="button-text" v-text="textString"></span>
       </span>
     </cell-button>
   </div>
@@ -149,12 +150,13 @@ const gridPosition = computed(() => {
   display: block;
   width: 100%;
   height: 100%;
+  padding: 0;
   font-size: inherit;
 }
 .cell:not(.disabled) {
   .button::before {
     content: '';
-    background: linear-gradient(to bottom, #ffffff33 30%, transparent);
+    background: linear-gradient(to bottom, #ffffff55 30%, transparent);
     position: absolute;
     top: 3%;
     left: 3%;
@@ -177,6 +179,7 @@ const gridPosition = computed(() => {
 }
 
 .text-wrapper {
+  padding: 0 5px;
   position: relative;
   font-size: v-bind(fontSize);
   line-height: 1.2;

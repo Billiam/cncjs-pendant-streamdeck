@@ -1,5 +1,7 @@
 node_modules
 .history
 /src/public/config.json
+/src/pubilc/icons/custom/*
+!/src/public/icons/custom/.gitkeep
 Thumbs.db*
 /src/dist/
