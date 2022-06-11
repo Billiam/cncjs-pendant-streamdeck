@@ -1,6 +1,7 @@
 import { useFileListStore } from '@/stores/file-list'
 import { useUiStore } from '@/stores/ui'
 import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
 
 const lazyStore = () => {
   return {
@@ -15,6 +16,10 @@ const lazyStore = () => {
     get fileList() {
       delete this.fileList
       return (this.fileList = useFileListStore())
+    },
+    get gcode() {
+      delete this.gcode
+      return (this.gcode = useGcodeStore())
     },
   }
 }
@@ -116,9 +121,16 @@ export default (actionBus) => {
       command('gcode:pause')
     }
   }
+
   const stop = () => {
     if (store.cnc.paused) {
       command('gcode:stop', { force: true })
+    }
+  }
+
+  const clearGcode = () => {
+    if (store.cnc.idle && store.gcode.gcode) {
+      command('gcode:unload', 'cake')
     }
   }
 
@@ -227,6 +239,7 @@ export default (actionBus) => {
 
   const actions = {
     backScene,
+    clearGcode,
     completeInput,
     enterPosition,
     enterWcs,

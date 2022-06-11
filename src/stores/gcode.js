@@ -66,6 +66,9 @@ export const useGcodeStore = defineStore({
     },
   },
   actions: {
+    unload() {
+      this.$reset()
+    },
     setLoaded(filename, code) {
       this.name = filename
       if (code !== this.gcode) {

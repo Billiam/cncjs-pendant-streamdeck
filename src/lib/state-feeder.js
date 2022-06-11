@@ -48,6 +48,9 @@ export default (socket, ackBus) => {
       gcodeWorker.postMessage({ name: file, gcode: code })
       gcode.setLoaded(file, code)
     },
+    'gcode:unload': () => {
+      gcode.unload()
+    },
     'sender:status': (status) => {
       if (!status.hold) {
         return

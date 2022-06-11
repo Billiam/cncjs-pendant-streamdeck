@@ -59,6 +59,9 @@ proto.debug = function () {
   socket.on('gcode:load', function (name, gcode, context) {
     console.debug('gcode:load', name, gcode, context)
   })
+  socket.on('gcode:unload', function () {
+    console.debug('gcode:unload')
+  })
   socket.on('workflow:state', function (data) {
     console.debug('workflow:state', data)
   })
