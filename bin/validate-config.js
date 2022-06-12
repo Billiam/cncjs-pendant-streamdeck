@@ -46,8 +46,9 @@ const logicValidation = (config) => {
   }
 
   const buttonList = Object.keys(config.buttons || {})
-  const sceneList = Object.keys(config.scenes || {})
+  const sceneList = Object.keys(config.scenes || {}) + ['gcodeList']
   const errors = []
+  const warnings = []
   const sceneActions = {
     setScene: 0,
     navigate: 0,
@@ -56,6 +57,8 @@ const logicValidation = (config) => {
     enterPosition: 1,
   }
   const paletteCount = config?.ui?.palette?.length || 0
+  const referencedScenes = new Set(['fileDetails', 'numpad'])
+  const referencedButtons = new Set(['gcodeFile', 'gcodeFolder', 'sortScene'])
 
   const addButtonError = (button, path) => {
     if (buttonList.indexOf(button) !== -1) {
@@ -129,16 +132,17 @@ const logicValidation = (config) => {
     if (data.actions == null) {
       return
     }
+
     data.actions.forEach((action) => {
-      if (!sceneActions[action.action]) {
+      if (sceneActions[action.action] == null) {
         return
       }
-
       const position = sceneActions[action.action]
-      if (
-        action.arguments?.[position] != null &&
-        sceneList.indexOf(action.arguments[position]) === -1
-      ) {
+      if (action.arguments?.[position] == null) {
+        return
+      }
+      referencedScenes.add(action.arguments[position])
+      if (sceneList.indexOf(action.arguments[position]) === -1) {
         const errorPath = ['buttons', button, `arguments[${position}]`]
         errors.push({
           path: errorPath,
@@ -182,20 +186,58 @@ const logicValidation = (config) => {
   })
 
   // find unused buttons
+  Object.entries(config.scenes || {}).forEach(([, data]) => {
+    data?.buttons?.forEach((row) => {
+      row.forEach((button) => {
+        if (Array.isArray(button)) {
+          button.forEach((subButton) => {
+            referencedButtons.add(subButton)
+          })
+        } else {
+          referencedButtons.add(button)
+        }
+      })
+    })
+  })
+  Object.entries(config.buttons || {}).forEach(([button]) => {
+    if (!referencedButtons.has(button)) {
+      const errorPath = ['buttons', button]
+      warnings.push({
+        path: errorPath,
+        property: `instance.${errorPath.join('.')}`,
+        message: `is not used in any scenes`,
+      })
+    }
+  })
 
   // find unused scenes
+  Object.entries(config.scenes || {}).forEach(([scene]) => {
+    if (!referencedScenes.has(scene)) {
+      const errorPath = ['scenes', scene]
+      warnings.push({
+        path: errorPath,
+        property: `instance.${errorPath.join('.')}`,
+        message: `is not used`,
+      })
+    }
+  })
 
-  return errors
+  return { errors, warnings }
 }
 
-const logicErrors = logicValidation(config)
-const allErrors = result.errors.concat(logicErrors)
-
+const { errors, warnings } = logicValidation(config)
+const allErrors = result.errors.concat(errors)
+warnings.forEach((warning) => {
+  console.warn(
+    '\x1b[33m%s\x1b[0m',
+    `${warning.path.join('.')} ${warning.message}`
+  )
+})
 if (allErrors.length > 0) {
   allErrors.forEach((err) => {
-    console.error(`${err.path.join('.')} ${err.message}`)
+    console.error('\x1b[31m%s\x1b[0m', `${err.path.join('.')} ${err.message}`)
   })
   process.exit(1)
 } else {
-  console.log('Looks good!')
+  console.log('\x1b[32m%s\x1b[0m', 'Looks good!')
 }
