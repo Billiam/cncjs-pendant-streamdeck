@@ -1,5 +1,5 @@
 {
-  buildTree = function(first, rest) {
+  function buildTree(first, rest) {
     if(rest.length == 0) {
       return first;
     } else {
