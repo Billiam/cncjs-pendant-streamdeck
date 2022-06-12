@@ -52,6 +52,9 @@ export default (socket, ackBus) => {
       gcode.unload()
     },
     'sender:status': (status) => {
+      cnc.setElapsedTime(status.elapsedTime * 0.001)
+      cnc.setRemainingTime(status.remainingTime * 0.001)
+
       if (!status.hold) {
         return
       }

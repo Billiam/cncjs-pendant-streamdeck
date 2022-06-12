@@ -23,15 +23,21 @@ const lazyStore = () => {
     },
   }
 }
+
 const machineCommands = new Set([
+  'clearGcode',
   'enterPosition',
   'enterWcs',
   'gcode',
+  'goto',
   'homing',
   'jog',
+  'loadDetailFile',
+  'loadGcode',
   'macro',
-  'play',
+  'run',
   'startSmoothJog',
+  'stop',
   'stopSmoothJog',
 ])
 

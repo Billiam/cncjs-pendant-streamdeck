@@ -37,6 +37,9 @@ export const workflowStates = {
   RUNNING: 'running',
 }
 
+const formatDuration = (seconds) => {
+  return new Date(seconds * 1000).toISOString().substring(11, 19)
+}
 export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
@@ -45,6 +48,9 @@ export const useCncStore = defineStore({
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
     locked: false,
+
+    elapsedTime: null,
+    remainingTime: null,
 
     alarmReason: '',
     pauseReason: '',
@@ -87,6 +93,12 @@ export const useCncStore = defineStore({
     },
     setToken(token) {
       this.token = token
+    },
+    setElapsedTime(time) {
+      this.elapsedTime = time
+    },
+    setRemainingTime(time) {
+      this.remainingTime = time
     },
     setRunState(state) {
       if (Object.values(cncStates).includes(state)) {
@@ -189,6 +201,18 @@ export const useCncStore = defineStore({
     idle: (state) => state.workflowState === workflowStates.IDLE,
     running: (state) => state.workflowState === workflowStates.RUNNING,
     alarm: (state) => state.runState === cncStates.ALARM,
+    elapsedTimeText: (state) => {
+      if (!state.elapsedTime) {
+        return ''
+      }
+      return formatDuration(state.elapsedTime)
+    },
+    remainingTimeText: (state) => {
+      if (!state.remainingTime) {
+        return ''
+      }
+      return formatDuration(state.remainingTime)
+    },
     alarmText: (state) =>
       `${['Alarm', state.alarmReason, state.locked ? 'Locked' : null]
         .filter(Boolean)

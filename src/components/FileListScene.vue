@@ -3,6 +3,7 @@ import { useButtonStore } from '@/stores/buttons'
 import { useFileListStore } from '@/stores/file-list'
 import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
+import { useCncStore } from '@/stores/cnc'
 const { buttons: buttonConfig } = useButtonStore()
 const { rows, columns } = useUiStore()
 import { computed, onBeforeMount } from 'vue'
@@ -10,16 +11,31 @@ import Cell from './Cell.vue'
 
 const fileList = useFileListStore()
 const ui = useUiStore()
+const cnc = useCncStore()
 const gcode = useGcodeStore()
 
 const fileButton = (filename, file) => {
   const fullPath = [fileList.path, filename].filter(Boolean).join('/')
   const selected = fullPath === gcode.name
   const configButton = buttonConfig.fileListFile ?? {}
+  const activeActions = cnc.idle
+    ? [
+        {
+          action: 'loadFile',
+          arguments: [fullPath],
+          event: 'up',
+        },
+        {
+          action: 'backScene',
+          event: 'up',
+        },
+      ]
+    : []
+
   const defaultButton = {
     text: filename,
     textAlignment: 'bottom center',
-    bgColor: selected ? 8 : 5,
+    bgColor: selected || !cnc.idle ? 8 : 5,
     icon: 'default/small_document.png',
     actions: [
       {
@@ -27,15 +43,7 @@ const fileButton = (filename, file) => {
         arguments: [fullPath, file],
         event: 'hold',
       },
-      {
-        action: 'loadFile',
-        arguments: [fullPath],
-        event: 'up',
-      },
-      {
-        action: 'backScene',
-        event: 'up',
-      },
+      ...activeActions,
     ],
   }
   return Object.assign(defaultButton, configButton, {
