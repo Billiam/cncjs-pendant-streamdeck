@@ -103,15 +103,17 @@ const upArrow = () => {
 
 const downArrow = () => {
   const configButton = buttonConfig.fileListUpArrow ?? {}
-
+  const firstRowColumnsReserved = 3
+  const columnsReserved = 1
+  const pages =
+    1 +
+    (fileList.files.length - (columns - firstRowColumnsReserved)) /
+      (columns - columnsReserved)
   const defaultButton = {
     icon: 'fluent-ui/caret_down.png',
     bgColor: 7,
     actions: [{ action: 'fileListScrollDown' }],
-    disabled: (
-      fileList.rowOffset + columns >=
-      1 + (fileList.files.length - 3) / (columns - 1)
-    ).toString(),
+    disabled: (fileList.rowOffset + columns >= pages).toString(),
   }
   return Object.assign(defaultButton, configButton)
 }
@@ -155,7 +157,7 @@ const allButtons = computed(() => {
 
   const list = [[null]]
   list[0].push(previousFolder())
-  let reserved = 2
+  let reserved = 3
   let row = 0
 
   while (files.length) {
@@ -173,7 +175,8 @@ const buttons = computed(() => {
   if (!allButtons) {
     return []
   }
-  const pagedList = allButtons.value.slice(fileList.rowOffset, rows) || []
+  const pagedList =
+    allButtons.value.slice(fileList.rowOffset, fileList.rowOffset + rows) || []
   pagedList[0] = [...pagedList[0]]
   pagedList[0][0] = buttonConfig.back
   pagedList[0][columns - 1] = upArrow()
