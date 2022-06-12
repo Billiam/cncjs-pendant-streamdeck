@@ -20,7 +20,7 @@ var parse = function (code) {
    * @return  {string}  The command without the commands and spaces.
    */
   function removeCommentsAndSpaces(command) {
-    var s = command.split('(')[0].split(';')[0] //No need to use regex
+    var s = command.split('(')[0].split(';')[0].split('%')[0] //No need to use regex
     return s.split(/\s/).join('').trim()
   }
   /**
