@@ -64,6 +64,8 @@ const getToken = () => {
 provide('buttonHandler', ButtonHandler(actionBus))
 
 onBeforeMount(async () => {
+  // bootstrap.start()
+
   const response = await fetch('config.json')
   let config
   try {
@@ -112,6 +114,7 @@ onBeforeMount(async () => {
 })
 
 onBeforeUnmount(() => {
+  //bootstrap.cleanup()
   clearEventlisteners()
 })
 const sceneType = computed(
@@ -163,12 +166,12 @@ body,
   min-width: 0;
   overflow: hidden;
 }
-@media (min-width: 30em) and (min-height: 20em) {
+@media (min-width: 30em) and (min-height: 25em) {
   .scene {
     font-size: 1rem;
   }
 }
-@media (min-width: 50em) and (min-height: 35em) {
+@media (min-width: 50em) and (min-height: 45em) {
   .scene {
     font-size: 2rem;
   }
