@@ -31,7 +31,7 @@ integer
   = [0-9]+ { return parseInt(text()); }
 
 number
-  = [\+\-]?[0-9]+([\.][0-9]+)? { return parseFloat(text()); }
+  = [\+\-]?([0-9]+[\.]?[0-9]* / [\.][0-9]+) { return parseFloat(text()); }
 
   expression
     = "[" expr:factor4 "]" {return expr; }
