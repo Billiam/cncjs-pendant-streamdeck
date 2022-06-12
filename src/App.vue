@@ -166,7 +166,7 @@ body,
   min-width: 0;
   overflow: hidden;
 }
-@media (min-width: 30em) and (min-height: 25em) {
+@media (min-width: 30em) and (min-height: 20em) {
   .scene {
     font-size: 1rem;
   }
