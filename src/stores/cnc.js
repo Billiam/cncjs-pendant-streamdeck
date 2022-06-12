@@ -48,7 +48,8 @@ export const useCncStore = defineStore({
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
     locked: false,
-
+    client: null,
+    macros: null,
     elapsedTime: null,
     remainingTime: null,
 
@@ -89,6 +90,9 @@ export const useCncStore = defineStore({
   }),
 
   actions: {
+    setClient(client) {
+      this.client = client
+    },
     setConnected(connected) {
       this.connected = connected
       if (!connected) {
@@ -199,6 +203,28 @@ export const useCncStore = defineStore({
         rapid,
         spindle,
       }
+    },
+    async loadMacros() {
+      console.log('Loading macros')
+      if (!this.client) {
+        return
+      }
+      const macros = await this.client.fetch('macros')
+      if (!macros) {
+        return
+      }
+      this.macros = macros.records.reduce((lookup, macro) => {
+        lookup[macro.name] = macro.id
+        return lookup
+      }, {})
+
+      console.log({ macros: this.macros })
+    },
+    async getMacroId(macroName) {
+      if (!this.macros) {
+        await this.loadMacros()
+      }
+      return this.macros?.[macroName]
     },
   },
   getters: {

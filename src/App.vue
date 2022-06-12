@@ -106,6 +106,7 @@ onBeforeMount(async () => {
   }
 
   fileListStore.setClient(apiClient)
+  cncStore.setClient(apiClient)
 
   cncStore.setToken(token)
   cncStore.setConnected(true)

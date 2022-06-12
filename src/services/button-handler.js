@@ -155,7 +155,17 @@ export default (actionBus) => {
   const reset = () => {
     command('reset')
   }
+  const macro = async (macroId, macroName) => {
+    if (!macroId && macroName) {
+      macroId = await store.cnc.getMacroId(macroName)
+      if (!macroId) {
+        console.error(`Requested macro "${macroName}" could not be found`)
+        return
+      }
+    }
 
+    command('macro:run', macroId)
+  }
   const homing = () => {
     command('homing')
   }
@@ -298,6 +308,7 @@ export default (actionBus) => {
     jogSpeed,
     loadFile,
     loadFolder,
+    macro,
     navigate,
     pause,
     previousFolder,

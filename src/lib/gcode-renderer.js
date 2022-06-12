@@ -13,6 +13,9 @@ export const renderToolpath = (canvas, parsedGcode, settings) => {
   const options = { autosize: true, ...settings }
 
   const drawLine = preview(parsedGcode.size, colors, options, canvas)
+  if (!drawLine) {
+    return
+  }
   if (options.animate) {
     animatedDraw(parsedGcode.lines, drawLine, 4000)
   } else {

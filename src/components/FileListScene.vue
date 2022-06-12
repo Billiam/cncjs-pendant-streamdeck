@@ -145,7 +145,6 @@ const sortMethod = computed(() => {
 const allButtons = computed(() => {
   const sortedFiles = [...fileList.files]
   sortedFiles.sort(sortMethod.value)
-  console.log({ names: sortedFiles.map((n) => n.name) })
   const files = sortedFiles.map((file) => {
     if (file.type === 'd') {
       return folderButton(file.name)
