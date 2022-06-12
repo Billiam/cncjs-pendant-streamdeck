@@ -35,9 +35,7 @@ const machineCommands = new Set([
   'loadDetailFile',
   'loadGcode',
   'macro',
-  'run',
   'startSmoothJog',
-  'stop',
   'stopSmoothJog',
 ])
 
@@ -201,6 +199,37 @@ export default (actionBus) => {
     navigate('gcodeList')
   }
 
+  const toggleFeedrateInterval = () => {
+    store.ui.toggleFeedrateInterval()
+  }
+  const increaseFeedrate = () => {
+    command('feedOverride', store.ui.feedrateInterval)
+  }
+  const decreaseFeedrate = () => {
+    command('feedOverride', -store.ui.feedrateInterval)
+  }
+  const resetFeedrate = () => {
+    command('feedOverride', 0)
+  }
+
+  const toggleSpindleInterval = () => {
+    store.ui.toggleSpindleInterval()
+  }
+  const increaseSpindle = () => {
+    command('spindleOverride', store.ui.spindleInterval)
+  }
+  const decreaseSpindle = () => {
+    command('spindleOverride', -store.ui.spindleInterval)
+  }
+  const resetSpindle = () => {
+    command('spindleOverride', 0)
+  }
+  const setRapids = (speed) => {
+    if (['25', '50', '100'].includes(speed)) {
+      command('rapidOverride', Number(speed))
+    }
+  }
+
   const loadFile = (path) => {
     command('watchdir:load', path)
   }
@@ -247,6 +276,8 @@ export default (actionBus) => {
     backScene,
     clearGcode,
     completeInput,
+    decreaseFeedrate,
+    decreaseSpindle,
     enterPosition,
     enterWcs,
     fileDetails,
@@ -258,6 +289,8 @@ export default (actionBus) => {
     goto,
     hold,
     homing,
+    increaseFeedrate,
+    increaseSpindle,
     input,
     inputCommand,
     jog,
@@ -270,12 +303,17 @@ export default (actionBus) => {
     previousFolder,
     refreshWatchFolder,
     reset,
+    resetFeedrate,
+    resetSpindle,
     run,
+    setRapids,
     sortDetails,
     startSmoothJog,
     stop,
     stopSmoothJog,
     swapScene,
+    toggleFeedrateInterval,
+    toggleSpindleInterval,
     toggleShowAbsolutePosition,
     unhold,
     unlock,

@@ -60,7 +60,11 @@ export const useCncStore = defineStore({
     jogDistance: 1,
     jogSpeed: 500,
     settings: {},
-
+    overrides: {
+      feed: 100,
+      spindle: 100,
+      rapid: 100,
+    },
     wpos: {
       x: '0.000',
       y: '0.000',
@@ -188,6 +192,13 @@ export const useCncStore = defineStore({
     },
     setWpos(wpos) {
       this.wpos = Object.freeze(wpos)
+    },
+    setOverrides(feed, rapid, spindle) {
+      this.overrides = {
+        feed,
+        rapid,
+        spindle,
+      }
     },
   },
   getters: {

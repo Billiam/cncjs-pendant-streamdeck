@@ -4,27 +4,29 @@ export const useUiStore = defineStore({
   id: 'ui',
 
   state: () => ({
-    sceneStack: [],
-    columns: 5,
-    rows: 3,
-    textColor: 1,
-    textShadow: false,
-    palette: ['#000', '#fff'],
     bgColor: 2,
-    progressColor: 4,
-    pos: 'wpos',
     buttons: {
       showAbsolutePosition: false,
     },
+    columns: 5,
+    feedrateInterval: 1,
+    spindleInterval: 1,
+    fileDetailsPath: null,
+    fileDetails: {},
+    fileDetailsSort: 'alpha_asc',
     input: {
       value: '',
       previous: 0,
       type: '',
       callback: () => {},
     },
-    fileDetailsPath: null,
-    fileDetails: {},
-    fileDetailsSort: 'alpha_asc',
+    palette: ['#000', '#fff'],
+    pos: 'wpos',
+    progressColor: 4,
+    rows: 3,
+    sceneStack: [],
+    textColor: 1,
+    textShadow: false,
   }),
 
   getters: {
@@ -88,6 +90,12 @@ export const useUiStore = defineStore({
       this.input.value = ''
       this.goBack()
     },
+    toggleFeedrateInterval() {
+      this.feedrateInterval = this.feedrateInterval === 1 ? 10 : 1
+    },
+    toggleSpindleInterval() {
+      this.spindleInterval = this.spindleInterval === 1 ? 10 : 1
+    },
     setGrid(rows, columns) {
       this.columns = columns
       this.rows = rows
@@ -108,7 +116,6 @@ export const useUiStore = defineStore({
     swapScene(scene) {
       this.sceneStack.splice(this.sceneStack.length - 1, 1, scene)
     },
-
     goToScene(scene) {
       if (this.sceneName !== scene) {
         this.sceneStack.push(scene)
