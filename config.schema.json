@@ -1,65 +1,188 @@
 {
-  "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://billiam.github.io/cncjs-pendant-grid/config.schema.json",
-  "title": "Config",
-  "description": "Grid UI and CNC configuration",
-  "type": "object",
-  "additionalProperties": false,
-  "definitions": {
-    "color": { "type": ["integer", "string"] },
-    "axis": { "type": "string", "enum": ["a", "b", "c", "x", "y", "z"] },
-    "sign": { "type": "string", "enum": ["+", "-"] },
-    "action": {
-      "required": ["action"],
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "actionSchemas": {
+    "back": {
+      "properties": {
+        "action": { "const": "backScene" },
+        "arguments": {
+          "items": [{ "pattern": "^\\d+$", "type": "string" }],
+          "maxItems": 1,
+          "minItems": 0,
+          "type": "array"
+        },
+        "required": ["action"]
+      }
+    },
+    "enterPosition": {
+      "properties": {
+        "action": { "const": "enterPosition" },
+        "arguments": {
+          "items": [
+            { "$ref": "#/definitions/axis" },
+            { "default": "numpad", "type": "string" }
+          ],
+          "maxItems": 2,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "enterWcs": {
+      "properties": {
+        "action": { "const": "enterWcs" },
+        "arguments": {
+          "items": [
+            { "$ref": "#/definitions/axis" },
+            { "default": "numpad", "type": "string" }
+          ],
+          "maxItems": 2,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "gcode": {
       "properties": {
         "action": {
-          "type": "string",
+          "arguments": {
+            "items": [{ "type": "string" }],
+            "maxItems": 1,
+            "minItems": 1
+          },
+          "const": "gcode"
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "info": { "properties": { "action": false, "arguments": false } },
+    "input": {
+      "properties": {
+        "action": { "const": "input" },
+        "arguments": {
+          "items": [{ "type": "string" }],
+          "maxItems": 1,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "inputCommand": {
+      "properties": {
+        "action": { "const": "inputCommand" },
+        "arguments": {
+          "items": [{ "enum": ["backspace", "toggleSign"] }],
+          "maxItems": 1,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "jog": {
+      "properties": {
+        "action": { "enum": ["jog", "startSmoothJog", "stopSmoothJog"] },
+        "arguments": {
+          "items": [
+            { "$ref": "#/definitions/sign" },
+            { "$ref": "#/definitions/axis" }
+          ],
+          "maxItems": 2,
+          "minItems": 2
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "jogInterval": {
+      "properties": {
+        "action": {
+          "arguments": {
+            "items": [{ "$ref": "#/definitions/sign" }],
+            "maxItems": 1,
+            "minItems": 1
+          },
+          "enum": ["jogSpeed", "jogDistance"]
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "macro": {
+      "properties": {
+        "action": {
+          "arguments": {
+            "items": [{ "type": "string" }],
+            "maxItems": 1,
+            "minItems": 1
+          },
+          "const": "macro"
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "navigation": {
+      "properties": {
+        "action": {
+          "arguments": {
+            "items": [{ "type": "string" }],
+            "maxItems": 1,
+            "minItems": 1
+          },
+          "enum": ["navigate", "setScene", "swapScene"]
+        }
+      },
+      "required": ["action", "arguments"]
+    },
+    "noArguments": {
+      "properties": {
+        "action": {
           "enum": [
-            "backScene",
-            "completeInput",
-            "enterPosition",
-            "enterWcs",
-            "fullscreen",
-            "gcode",
-            "pause",
             "clearGcode",
-            "goto",
-            "loadGcode",
+            "completeInput",
+            "fullscreen",
             "hold",
-            "stop",
             "homing",
-            "sortDetails",
-            "input",
-            "inputCommand",
-            "jog",
             "loadDetailFile",
+            "pause",
             "refreshWatchFolder",
-            "run",
-            "jogDistance",
-            "jogSpeed",
-            "macro",
-            "navigate",
             "reset",
-            "setScene",
-            "startSmoothJog",
-            "stopSmoothJog",
-            "swapScene",
+            "run",
+            "stop",
             "toggleShowAbsolutePosition",
             "unhold",
             "unlock"
           ]
         },
+        "arguments": false
+      },
+      "required": ["action"]
+    },
+    "position": {
+      "properties": {
+        "action": { "enum": ["goto"] },
         "arguments": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        },
-        "event": {
-          "enum": ["down", "up", "hold"],
-          "default": "down"
+          "items": { "pattern": "^-?(\\d*)?(\\.\\d*)?%?$", "type": "string" },
+          "maxItems": 6,
+          "minItems": 1
         }
       },
+      "required": ["action", "arguments"]
+    },
+    "sort": {
+      "properties": {
+        "action": { "const": "sortDetails" },
+        "arguments": {
+          "items": {
+            "enum": ["created_desc", "modified_desc", "alpha_asc", "alpha_desc"]
+          },
+          "maxItems": 1,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    }
+  },
+  "additionalProperties": false,
+  "definitions": {
+    "action": {
       "oneOf": [
         { "$ref": "#/actionSchemas/gcode" },
         { "$ref": "#/actionSchemas/info" },
@@ -75,429 +198,169 @@
         { "$ref": "#/actionSchemas/sort" },
         { "$ref": "#/actionSchemas/position" },
         { "$ref": "#/actionSchemas/back" }
-      ]
-    }
-  },
-  "actionSchemas": {
-    "back": {
-      "properties": {
-        "required": ["action"],
-        "action": {
-          "const": "backScene"
-        },
-        "arguments": {
-          "minItems": 0,
-          "maxItems": 1,
-          "type": "array",
-          "items": [
-            {
-              "type": "string",
-              "pattern": "^\\d+$"
-            }
-          ]
-        }
-      }
-    },
-    "position": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "enum": ["goto"]
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 6,
-          "items": {
-            "type": "string",
-            "pattern": "^-?(\\d*)?(\\.\\d*)?%?$"
-          }
-        }
-      }
-    },
-    "jog": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "enum": ["jog", "startSmoothJog", "stopSmoothJog"]
-        },
-        "arguments": {
-          "minItems": 2,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/sign"
-            },
-            {
-              "$ref": "#/definitions/axis"
-            }
-          ]
-        }
-      }
-    },
-    "jogInterval": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "enum": ["jogSpeed", "jogDistance"],
-          "arguments": {
-            "minItems": 1,
-            "maxItems": 1,
-            "items": [
-              {
-                "$ref": "#/definitions/sign"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "navigation": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "enum": ["navigate", "setScene", "swapScene"],
-          "arguments": {
-            "minItems": 1,
-            "maxItems": 1,
-            "items": [
-              {
-                "type": "string"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "gcode": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "gcode",
-          "arguments": {
-            "minItems": 1,
-            "maxItems": 1,
-            "items": [
-              {
-                "type": "string"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "macro": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "macro",
-          "arguments": {
-            "minItems": 1,
-            "maxItems": 1,
-            "items": [
-              {
-                "type": "string"
-              }
-            ]
-          }
-        }
-      }
-    },
-    "input": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "input"
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 1,
-          "items": [
-            {
-              "type": "string"
-            }
-          ]
-        }
-      }
-    },
-    "inputCommand": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "inputCommand"
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 1,
-          "items": [
-            {
-              "enum": ["backspace", "toggleSign"]
-            }
-          ]
-        }
-      }
-    },
-    "enterWcs": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "enterWcs"
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/axis"
-            },
-            {
-              "type": "string",
-              "default": "numpad"
-            }
-          ]
-        }
-      }
-    },
-    "sort": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "sortDetails"
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 1,
-          "items": {
-            "enum": ["created_desc", "modified_desc", "alpha_asc", "alpha_desc"]
-          }
-        }
-      }
-    },
-    "enterPosition": {
-      "required": ["action", "arguments"],
-      "properties": {
-        "action": {
-          "const": "enterPosition"
-        },
-        "arguments": {
-          "minItems": 1,
-          "maxItems": 2,
-          "items": [
-            {
-              "$ref": "#/definitions/axis"
-            },
-            {
-              "type": "string",
-              "default": "numpad"
-            }
-          ]
-        }
-      }
-    },
-    "noArguments": {
-      "required": ["action"],
+      ],
       "properties": {
         "action": {
           "enum": [
-            "stop",
-            "run",
-            "pause",
+            "backScene",
             "clearGcode",
-            "loadDetailFile",
-            "refreshWatchFolder",
             "completeInput",
+            "enterPosition",
+            "enterWcs",
             "fullscreen",
+            "gcode",
+            "goto",
             "hold",
             "homing",
+            "input",
+            "inputCommand",
+            "jog",
+            "jogDistance",
+            "jogSpeed",
+            "loadDetailFile",
+            "loadGcode",
+            "macro",
+            "navigate",
+            "pause",
+            "refreshWatchFolder",
             "reset",
+            "run",
+            "setScene",
+            "sortDetails",
+            "startSmoothJog",
+            "stop",
+            "stopSmoothJog",
+            "swapScene",
             "toggleShowAbsolutePosition",
             "unhold",
             "unlock"
-          ]
+          ],
+          "type": "string"
         },
-        "arguments": false
-      }
+        "arguments": { "items": { "type": "string" }, "type": "array" },
+        "event": { "default": "down", "enum": ["down", "up", "hold"] }
+      },
+      "required": ["action"]
     },
-    "info": {
-      "properties": {
-        "action": false,
-        "arguments": false
-      }
-    }
+    "axis": { "enum": ["a", "b", "c", "x", "y", "z"], "type": "string" },
+    "color": { "type": ["integer", "string"] },
+    "sign": { "enum": ["+", "-"], "type": "string" }
   },
+  "description": "Grid UI and CNC configuration",
   "properties": {
-    "cncjs": {
-      "description": "CNCJS connection and port information",
-      "additionalProperties": false,
-      "properties": {
-        "secret": {
-          "type": "string"
-        },
-        "socketAddress": {
-          "type": "string"
-        },
-        "socketPort": {
-          "type": "integer"
-        },
-        "port": {
-          "description": "Machine connection port",
-          "type": "string"
-        },
-        "baudRate": {
-          "type": "integer"
-        },
-        "controllerType": {
-          "type": "string",
-          "enum": ["Grbl"]
-        }
-      }
-    },
-    "ui": {
-      "description": "Grid dimension configuration",
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "columns": {
-          "type": "integer"
-        },
-        "rows": {
-          "type": "integer"
-        },
-        "bgColor": {
-          "$ref": "#/definitions/color"
-        },
-        "textColor": {
-          "$ref": "#/definitions/color"
-        },
-        "textShadow": {
-          "type": "boolean"
-        },
-        "progressColor": {
-          "$ref": "#/definitions/color"
-        },
-        "palette": {
-          "type": "array",
-          "items": {
-            "type": "string"
-          }
-        }
-      }
-    },
-    "machine": {
-      "type": "object",
-      "additionalProperties": false,
-      "properties": {
-        "axes": {
-          "description": "Array of usable axes",
-          "type": "array",
-          "items": {
-            "$ref": "#/definitions/axis"
-          }
-        }
-      }
-    },
     "buttons": {
-      "type": "object",
       "patternProperties": {
         "^.+$": {
-          "description": "Description of a single button",
-          "type": "object",
           "additionalProperties": false,
+          "description": "Description of a single button",
           "properties": {
-            "target": {
-              "description": "Scene name to change to",
-              "type": "string"
-            },
             "actions": {
-              "type": "array",
-              "items": {
-                "$ref": "#/definitions/action"
-              }
+              "items": { "$ref": "#/definitions/action" },
+              "type": "array"
             },
-            "disabled": {
-              "type": "string"
-            },
-            "rows": {
-              "type": "integer",
-              "default": 1
-            },
-            "columns": {
-              "type": "integer",
-              "default": 1
-            },
-            "animated": {
-              "type": "boolean",
-              "default": false
-            },
-            "text": {
-              "type": "string"
-            },
-            "textSize": {
-              "type": "number"
-            },
-            "textAlignment": {
-              "type": "string",
-              "enum": [
-                "top left",
-                "top center",
-                "top right",
-                "left",
-                "center",
-                "right",
-                "bottom left",
-                "bottom center",
-                "bottom right"
-              ]
-            },
+            "animated": { "default": false, "type": "boolean" },
+            "bgColor": { "$ref": "#/definitions/color" },
+            "columns": { "default": 1, "type": "integer" },
             "description": {
               "description": "Used as alt text for images if possible",
               "type": "string"
             },
+            "disabled": { "type": "string" },
             "icon": {
               "description": "Path to icon, relative to the 'app/public/icons' directory",
               "type": "string"
             },
-            "bgColor": {
-              "$ref": "#/definitions/color"
-            },
-            "type": {
-              "type": "string",
-              "enum": ["gcodePreview"]
-            },
-            "if": {
+            "if": { "type": "string" },
+            "rows": { "default": 1, "type": "integer" },
+            "target": {
+              "description": "Scene name to change to",
               "type": "string"
-            }
-          }
+            },
+            "text": { "type": "string" },
+            "textAlignment": {
+              "enum": [
+                "bottom center",
+                "bottom left",
+                "bottom right",
+                "center",
+                "left",
+                "right",
+                "top center",
+                "top left",
+                "top right"
+              ],
+              "type": "string"
+            },
+            "textSize": { "type": "number" },
+            "type": { "enum": ["gcodePreview"], "type": "string" }
+          },
+          "type": "object"
         }
+      },
+      "type": "object"
+    },
+    "cncjs": {
+      "additionalProperties": false,
+      "description": "CNCJS connection and port information",
+      "properties": {
+        "baudRate": { "type": "integer" },
+        "controllerType": { "enum": ["Grbl"], "type": "string" },
+        "port": { "description": "Machine connection port", "type": "string" },
+        "secret": { "type": "string" },
+        "socketAddress": { "type": "string" },
+        "socketPort": { "type": "integer" }
       }
     },
+    "machine": {
+      "additionalProperties": false,
+      "properties": {
+        "axes": {
+          "description": "Array of usable axes",
+          "items": { "$ref": "#/definitions/axis" },
+          "type": "array"
+        }
+      },
+      "type": "object"
+    },
     "scenes": {
-      "type": "object",
       "description": "A named scene with a grid of buttons",
       "patternProperties": {
         "^.+$": {
           "description": "Nested array describing rows of button IDs as strings",
           "properties": {
             "buttons": {
-              "type": "array",
               "items": {
-                "type": "array",
                 "items": {
                   "type": [
                     "string",
                     "null",
-                    {
-                      "type": "array",
-                      "items": {
-                        "type": "string"
-                      }
-                    }
+                    { "items": { "type": "string" }, "type": "array" }
                   ]
-                }
-              }
+                },
+                "type": "array"
+              },
+              "type": "array"
             }
           }
         }
-      }
+      },
+      "type": "object"
+    },
+    "ui": {
+      "additionalProperties": false,
+      "description": "Grid dimension configuration",
+      "properties": {
+        "bgColor": { "$ref": "#/definitions/color" },
+        "columns": { "type": "integer" },
+        "palette": { "items": { "type": "string" }, "type": "array" },
+        "progressColor": { "$ref": "#/definitions/color" },
+        "rows": { "type": "integer" },
+        "textColor": { "$ref": "#/definitions/color" },
+        "textShadow": { "type": "boolean" }
+      },
+      "type": "object"
     }
-  }
+  },
+  "title": "Config",
+  "type": "object"
 }
