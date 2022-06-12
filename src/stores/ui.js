@@ -14,6 +14,7 @@ export const useUiStore = defineStore({
     fileDetailsPath: null,
     fileDetails: {},
     fileDetailsSort: 'alpha_asc',
+    userFlags: {},
     input: {
       value: '',
       previous: 0,
@@ -102,6 +103,12 @@ export const useUiStore = defineStore({
     },
     setBgColor(color) {
       this.bgColor = color
+    },
+    clearUserFlag(id) {
+      delete this.userFlags[id]
+    },
+    setUserFlag(id, value) {
+      this.userFlags[id] = value
     },
     setProgressColor(color) {
       this.progressColor = color

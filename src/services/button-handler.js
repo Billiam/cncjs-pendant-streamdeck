@@ -280,11 +280,19 @@ export default (actionBus) => {
 
     actionBus.emit('absolutePosition', move)
   }
+  const setUserFlag = (id, value) => {
+    store.ui.setUserFlag(id, value)
+  }
+  const clearUserFlag = (id, value) => {
+    store.ui.clearUserFlag(id, value)
+  }
+
   const actionTypes = {}
 
   const actions = {
     backScene,
     clearGcode,
+    clearUserFlag,
     completeInput,
     decreaseFeedrate,
     decreaseSpindle,
@@ -318,6 +326,7 @@ export default (actionBus) => {
     resetSpindle,
     run,
     setRapids,
+    setUserFlag,
     sortDetails,
     startSmoothJog,
     stop,

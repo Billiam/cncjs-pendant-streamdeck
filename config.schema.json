@@ -136,6 +136,7 @@
         "action": {
           "enum": [
             "clearGcode",
+            "clearUserFlag",
             "completeInput",
             "decreaseFeedrate",
             "decreaseSpindle",
@@ -199,6 +200,19 @@
         }
       },
       "required": ["action", "arguments"]
+    },
+    "userFlag": {
+      "properties": {
+        "action": { "const": "setUserFlag" },
+        "arguments": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 2,
+          "minItems": 2
+        }
+      },
+      "required": ["action", "arguments"]
     }
   },
   "additionalProperties": false,
@@ -219,13 +233,15 @@
         { "$ref": "#/actionSchemas/noArguments" },
         { "$ref": "#/actionSchemas/position" },
         { "$ref": "#/actionSchemas/sort" },
-        { "$ref": "#/actionSchemas/rapids" }
+        { "$ref": "#/actionSchemas/rapids" },
+        { "$ref": "#/actionSchemas/userFlag" }
       ],
       "properties": {
         "action": {
           "enum": [
             "backScene",
             "clearGcode",
+            "clearUserFlag",
             "completeInput",
             "decreaseFeedrate",
             "decreaseSpindle",
@@ -255,6 +271,7 @@
             "run",
             "setRapids",
             "setScene",
+            "setUserFlag",
             "sortDetails",
             "startSmoothJog",
             "stop",
