@@ -2,8 +2,9 @@
   "name": "cncjs-pendant-grid",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite --open --port 3434",
+    "dev": "vite --port 3434",
     "build": "vite build",
+    "configurator": "vite --port 3435 --config vite.configurator.config.js",
     "preview": "vite preview --port 5050",
     "format": "prettier .  --write"
   },
@@ -20,8 +21,11 @@
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^2.3.1",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14",
     "prettier": "^2.6.2",
     "sass": "^1.52.1",
+    "tailwindcss": "^3.1.2",
     "vite": "^2.9.5"
   }
 }
