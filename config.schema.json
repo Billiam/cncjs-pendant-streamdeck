@@ -385,10 +385,10 @@
       "description": "Grid dimension configuration",
       "properties": {
         "bgColor": { "$ref": "#/definitions/color" },
-        "columns": { "type": "integer" },
+        "columns": { "type": "integer", "default": 5 },
         "palette": { "items": { "type": "string" }, "type": "array" },
         "progressColor": { "$ref": "#/definitions/color" },
-        "rows": { "type": "integer" },
+        "rows": { "type": "integer", "default": 3 },
         "textColor": { "$ref": "#/definitions/color" },
         "textShadow": { "type": "boolean" }
       },

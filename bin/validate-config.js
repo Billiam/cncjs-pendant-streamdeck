@@ -99,8 +99,8 @@ const logicValidation = (config) => {
   })
 
   // validate scenes fit in bounds
-  const rows = config.ui.rows || 0
-  const columns = config.ui.columns || 0
+  const rows = config.ui.rows || 3
+  const columns = config.ui.columns || 5
 
   Object.entries(config.scenes || {}).forEach(([scene, data]) => {
     if (data?.buttons?.length > rows) {
