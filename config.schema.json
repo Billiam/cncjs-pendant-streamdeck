@@ -21,11 +21,20 @@
             "enterWcs",
             "fullscreen",
             "gcode",
+            "pause",
+            "clearGcode",
+            "goto",
+            "loadGcode",
             "hold",
+            "stop",
             "homing",
+            "sortDetails",
             "input",
             "inputCommand",
             "jog",
+            "loadDetailFile",
+            "refreshWatchFolder",
+            "run",
             "jogDistance",
             "jogSpeed",
             "macro",
@@ -35,7 +44,6 @@
             "startSmoothJog",
             "stopSmoothJog",
             "swapScene",
-            "togglePreview",
             "toggleShowAbsolutePosition",
             "unhold",
             "unlock"
@@ -63,11 +71,49 @@
         { "$ref": "#/actionSchemas/navigation" },
         { "$ref": "#/actionSchemas/noArguments" },
         { "$ref": "#/actionSchemas/enterWcs" },
-        { "$ref": "#/actionSchemas/enterPosition" }
+        { "$ref": "#/actionSchemas/enterPosition" },
+        { "$ref": "#/actionSchemas/sort" },
+        { "$ref": "#/actionSchemas/position" },
+        { "$ref": "#/actionSchemas/back" }
       ]
     }
   },
   "actionSchemas": {
+    "back": {
+      "properties": {
+        "required": ["action"],
+        "action": {
+          "const": "backScene"
+        },
+        "arguments": {
+          "minItems": 0,
+          "maxItems": 1,
+          "type": "array",
+          "items": [
+            {
+              "type": "string",
+              "pattern": "^\\d+$"
+            }
+          ]
+        }
+      }
+    },
+    "position": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "enum": ["goto"]
+        },
+        "arguments": {
+          "minItems": 1,
+          "maxItems": 6,
+          "items": {
+            "type": "string",
+            "pattern": "^-?(\\d*)?(\\.\\d*)?%?$"
+          }
+        }
+      }
+    },
     "jog": {
       "required": ["action", "arguments"],
       "properties": {
@@ -211,6 +257,21 @@
         }
       }
     },
+    "sort": {
+      "required": ["action", "arguments"],
+      "properties": {
+        "action": {
+          "const": "sortDetails"
+        },
+        "arguments": {
+          "minItems": 1,
+          "maxItems": 1,
+          "items": {
+            "enum": ["created_desc", "modified_desc", "alpha_asc", "alpha_desc"]
+          }
+        }
+      }
+    },
     "enterPosition": {
       "required": ["action", "arguments"],
       "properties": {
@@ -237,13 +298,17 @@
       "properties": {
         "action": {
           "enum": [
-            "backScene",
+            "stop",
+            "run",
+            "pause",
+            "clearGcode",
+            "loadDetailFile",
+            "refreshWatchFolder",
             "completeInput",
             "fullscreen",
             "hold",
             "homing",
             "reset",
-            "togglePreview",
             "toggleShowAbsolutePosition",
             "unhold",
             "unlock"
