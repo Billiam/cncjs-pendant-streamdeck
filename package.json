@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite --open --port 3434",
     "build": "vite build",
+    "cli": "vite build --config=vite.node.config.js --ssr",
     "preview": "vite preview --port 5050",
     "format": "prettier .  --write"
   },
@@ -19,7 +20,11 @@
     "vue": "^3.2.33"
   },
   "devDependencies": {
+    "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.1",
+    "chalk": "^5.0.1",
+    "commander": "^9.3.0",
+    "jsonwebtoken": "^7.2.1",
     "prettier": "^2.6.2",
     "sass": "^1.52.1",
     "vite": "^2.9.5"
