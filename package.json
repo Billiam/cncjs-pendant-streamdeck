@@ -2,13 +2,15 @@
   "name": "cncjs-pendant-grid",
   "version": "0.0.1",
   "scripts": {
-    "dev": "vite --open --port 3434",
+    "dev": "vite --port 3434",
     "build": "vite build",
     "cli": "vite build --config=vite.node.config.js --ssr",
     "preview": "vite preview --port 5050",
     "format": "prettier .  --write"
   },
   "dependencies": {
+    "@elgato-stream-deck/node": "^5.4.0",
+    "@julusian/jpeg-turbo": "^1.1.2",
     "jsonschema": "^1.4.1",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.1",
+    "cation": "^2.3.0",
     "chalk": "^5.0.1",
     "commander": "^9.3.0",
     "jsonwebtoken": "^7.2.1",
