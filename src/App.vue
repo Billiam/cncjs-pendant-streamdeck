@@ -63,11 +63,13 @@ onBeforeUnmount(() => {
   <fixed-height></fixed-height>
   <auto-fullscreen></auto-fullscreen>
   <component v-if="scene" :is="sceneType" :buttons="scene.buttons"></component>
-  <div v-else>
-    <h1 v-if="configError">
-      Config file (public/config.json) could not be loaded
+  <div class="status" v-else>
+    <h1 class="message">
+      <span v-if="configError">
+        Config file (public/config.json) could not be loaded
+      </span>
+      <span v-else>Loading...</span>
     </h1>
-    <h1 v-else>Loading...</h1>
   </div>
 </template>
 
@@ -80,6 +82,16 @@ onBeforeUnmount(() => {
 body,
 #app {
   height: 100%;
+}
+.status {
+  height: 100%;
+}
+.message {
+  text-align: center;
+  position: relative;
+  top: 50%;
+  margin: 0 auto;
+  transform: translateY(-50%);
 }
 .scene {
   padding: 1px;
