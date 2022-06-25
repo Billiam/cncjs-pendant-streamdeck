@@ -16,6 +16,7 @@ export const renderToolpath = (canvas, parsedGcode, settings) => {
   if (!drawLine) {
     return
   }
+
   if (options.animate) {
     animatedDraw(parsedGcode.lines, drawLine, 4000)
   } else {
@@ -41,12 +42,12 @@ const animatedDraw = async (lines, drawLine, duration) => {
 }
 
 const draw = async (lines, drawLine) => {
-  let nextWait = Date.now() + 30
+  let nextWait = Date.now() + 50
   const wait = animatedWait(60)
   for (const line of lines) {
     if (Date.now() > nextWait) {
       await wait()
-      nextWait = Date.now() + 30
+      nextWait = Date.now() + 50
     }
     drawLine(line)
   }
