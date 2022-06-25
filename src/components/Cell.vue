@@ -29,7 +29,6 @@ const { bgColor, textColor, textShadow, progressColor, rows, columns } =
   storeToRefs(ui)
 
 const buttonHandler = inject('buttonHandler')
-
 const color = Color()
 
 const props = defineProps({
@@ -82,7 +81,8 @@ const configDisabled = computed(() => {
   )
 })
 const enabled = computed(
-  () => !configDisabled.value && buttonHandler.enabled(props.config.actions)
+  () =>
+    !configDisabled.value && buttonHandler.value?.enabled(props.config.actions)
 )
 
 const gridPosition = computed(() => {
@@ -287,6 +287,8 @@ const gridPosition = computed(() => {
   background-color: v-bind(cellActiveColor);
 }
 .text-shadow {
-  text-shadow: v-bind(`0 2px ${contrastingTextColor}`);
+  /*text-shadow: v-bind(`0 0.1em #0006`);*/
+  /*-webkit-text-stroke: v-bind(`2px ${contrastingTextColor}`);*/
+  /*paint-order: stroke fill;*/
 }
 </style>

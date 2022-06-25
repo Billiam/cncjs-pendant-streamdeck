@@ -15,7 +15,20 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         vue: 'vue/dist/vue.esm-bundler',
         '@': fileURLToPath(new URL('./src', import.meta.url)),
+        adapter: fileURLToPath(
+          new URL('./src/services/adapter/web.js', import.meta.url)
+        ),
       },
+    },
+    optimizeDeps: {
+      esbuildOptions: {
+        keepNames: true,
+      },
+    },
+    keepNames: true,
+    esbuild: {
+      // needed due to cation doing a method name check
+      keepNames: true,
     },
   }
 

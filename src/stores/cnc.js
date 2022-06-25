@@ -44,6 +44,7 @@ export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
     connected: false,
+    connecting: false,
     token: null,
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
@@ -98,6 +99,10 @@ export const useCncStore = defineStore({
       if (!connected) {
         this.$reset()
       }
+      this.connecting = false
+    },
+    setConnecting(connecting = true) {
+      this.connecting = connecting
     },
     setToken(token) {
       this.token = token
@@ -114,8 +119,8 @@ export const useCncStore = defineStore({
         if (state !== cncStates.ALARM) {
           this.locked = false
         }
-      } else {
-        console.error('Unrecognized state', state)
+      } else if (state) {
+        console.error('Unrecognized run state', state)
       }
     },
     setWorkflowState(state) {
@@ -125,8 +130,8 @@ export const useCncStore = defineStore({
           this.clearPause()
           this.clearError()
         }
-      } else {
-        console.error('Unrecognized state', state)
+      } else if (state) {
+        console.error('Unrecognized workflow state', state)
       }
     },
     setVersion(version) {
@@ -205,7 +210,6 @@ export const useCncStore = defineStore({
       }
     },
     async loadMacros() {
-      console.log('Loading macros')
       if (!this.client) {
         return
       }
@@ -217,8 +221,6 @@ export const useCncStore = defineStore({
         lookup[macro.name] = macro.id
         return lookup
       }, {})
-
-      console.log({ macros: this.macros })
     },
     async getMacroId(macroName) {
       if (!this.macros) {

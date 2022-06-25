@@ -1,11 +1,8 @@
 import { useCncStore } from '@/stores/cnc'
-import { useUiStore } from '@/stores/ui'
 
-export default (socket, options, actionBus, ackBus) => {
-  const ui = useUiStore()
+export default (socket, port, machineConfig, actionBus, ackBus) => {
   const cnc = useCncStore()
-
-  const { port } = options
+  const axisSpeeds = machineConfig?.axisSpeeds || {}
 
   const command = (...args) => {
     socket.emit('command', port, ...args)
@@ -88,16 +85,6 @@ export default (socket, options, actionBus, ackBus) => {
     return Promise.all([promiseTimer(delay), promiseAck()])
   }
 
-  // todo: make configurable
-  const axisSpeeds = {
-    x: 1,
-    y: 1,
-    z: 0.25,
-    a: 1,
-    b: 1,
-    c: 1,
-  }
-
   const smoothJogIteration = async ({ reducedDelay = false }) => {
     if (!jogState.jogging) {
       return
@@ -140,15 +127,13 @@ export default (socket, options, actionBus, ackBus) => {
   const smoothJog = (direction, axis) => {
     const directionModifier = direction === '-' ? -1 : 1
 
-    // TODO: speed modifier from config
-    const speedModifier = axisSpeeds[axis]
+    const speedModifier = axisSpeeds?.[axis] ?? 1
     const v = directionModifier * speedModifier
 
     if (jogState.axes[axis] != null) {
       if (v !== jogState.axes[axis]) {
         delete jogState.axes[axis]
       }
-      // may need to stop jogging here
       return
     }
 

@@ -15,6 +15,23 @@ const Connection = function (opts, token) {
 
 const proto = Connection.prototype
 
+proto.validate = function () {
+  const { socketAddress, port, baudrate, controllerType } = this.options
+
+  const required = {
+    token: this.token,
+    socketAddress,
+    port,
+    baudrate,
+    controllerType,
+  }
+  Object.entries(required).forEach(([key, val]) => {
+    if (!val) {
+      throw new ConnectionError(`${key} is required and was empty`)
+    }
+  })
+}
+
 proto.on = function (...args) {
   this.emitter.on(...args)
 }
@@ -27,6 +44,7 @@ proto.debug = function () {
   if (!this.socket || this.debugging) {
     return
   }
+
   this.debugging = true
   const socket = this.socket
   socket.on('connecting', (a) => {
@@ -37,6 +55,9 @@ proto.debug = function () {
   })
   socket.on('serialport:close', (data) => {
     console.debug('Closed serialport', data)
+  })
+  socket.on('controller:state', (data) => {
+    console.debug('controller:state', data)
   })
   socket.on('close', () => {
     console.debug('Connection closed.')
@@ -67,48 +88,47 @@ proto.debug = function () {
   })
 }
 
+proto.openPort = function (port, baudrate, controllerType) {
+  this.socket.emit('open', port, {
+    baudrate: Number(baudrate),
+    controllerType,
+  })
+}
+
+proto.openSerialPort = function () {
+  const { baudrate, controllerType, port } = this.options
+  this.openPort(port, baudrate, controllerType)
+}
+
 proto.connect = function () {
-  const options = this.options
+  const { socketAddress } = this.options
+  this.validate()
 
   return new Promise((resolve, reject) => {
-    const url = `ws://${options.socketAddress}/`
+    const url = `ws://${socketAddress}/`
 
     const socket = io.connect(url, {
-      // path: '/socket.io/',
       query: `token=${this.token}`,
       transports: ['websocket'],
     })
 
     this.socket = socket
 
-    const openSocket = () => {
-      socket.emit('open', options.port, {
-        baudrate: Number(options.baudrate),
-        controllerType: options.controllerType,
-      })
-    }
-
     socket.on('connect', () => {
-      console.debug('Connected to ' + url)
+      resolve({ socket })
       // Open port
-      openSocket()
+      this.openSerialPort()
     })
 
     socket.on('serialport:open', (options = {}) => {
       this.options = { ...this.options, options }
-      console.log(
-        'Connected to port "' +
-          options.port +
-          '" (Baud rate: ' +
-          options.baudrate +
-          ')'
-      )
-      resolve({ socket })
+      console.log(`Connected to port ${options.port}`)
+      // resolve({ socket })
     })
 
     socket.on('serialport:change', ({ port, inuse }) => {
       if (inuse) {
-        openSocket()
+        this.openSerialPort()
         this.emitter.emit('reconnected', { port })
       } else {
         this.emitter.emit('disconnected')
@@ -128,23 +148,8 @@ proto.connect = function () {
       reject(new Error(`Error opening serial port "${options.port}"`))
     })
 
-    if (this.debugEnabled) {
-      this.debug()
-    }
+    this.debug()
   })
-
-  // const apiUrl = `http://${options.socketAddress}/api/state?token=${token}`
-  // const res = await fetch(apiUrl, {
-  //   mode: 'no-cors', // no-cors, *cors, same-origin
-  // })
-  // const j = await res.text()
-  // console.log({ j })
-
-  /*
-    socket.on('serialport:write', function(data) {
-        console.log((data || '').trim());
-    });
-    */
 }
 
 export default Connection

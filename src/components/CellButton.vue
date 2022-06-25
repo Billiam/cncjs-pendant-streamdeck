@@ -1,5 +1,4 @@
 <script>
-import ButtonHandler from '@/services/button-handler'
 import vPointerHold from '@/directives/pointer-hold'
 import vMultiPointer from '@/directives/multi-pointer'
 
@@ -55,14 +54,14 @@ const onHold = () => {
 
 // dynamic event binding
 const events = computed(() => {
-  return buttonHandler.getHandlers(props.actions)
+  return buttonHandler.value?.getHandlers(props.actions)
 })
 
 const configDownActions = computed(() => events.value.down ?? [])
 const configUpActions = computed(() => events.value.up ?? [])
 const configHoldActions = computed(() => events.value.hold ?? [])
 const configEnsureActions = computed(() => {
-  return buttonHandler.ensureHandler(props.actions)
+  return buttonHandler.value?.ensureHandler(props.actions)
 })
 const hasHoldAction = computed(() => configHoldActions.value.length > 0)
 

@@ -17,11 +17,18 @@ export default defineConfig(({ command, mode }) => {
         treeshake: 'smallest',
         input: {
           cli: path.resolve(__dirname, 'src/cli.js'),
+          'gcode-thread-worker': path.resolve(
+            __dirname,
+            'src/gcode-thread-worker.js'
+          ),
         },
       },
     },
+    esbuild: {
+      keepNames: true,
+    },
     ssr: {
-      noExternal: ['vue', 'chalk'],
+      noExternal: ['vue', 'chalk', 'cation', 'adapter'],
     },
     plugins: [vue(), legacy({ targets: ['node 14'] })],
     root: 'src',

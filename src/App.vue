@@ -3,42 +3,39 @@ import AutoFullscreen from '@/components/AutoFullscreen.vue'
 import Scene from '@/components/Scene.vue'
 import FixedHeight from '@/components/FixedHeight.vue'
 import FileListScene from '@/components/FileListScene.vue'
+import Container from '@/services/container'
+import Bootstrap from '@/services/bootstrap'
+import { getActivePinia } from 'pinia'
 
-import Bus from '@/services/bus'
-import ButtonHandler from '@/services/button-handler'
-import CncActions from '@/lib/cnc-actions'
-import Connection from '@/lib/connection'
-import StateFeeder from '@/lib/state-feeder'
-import CncApi from '@/lib/cnc-api'
-import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
-import { useCncStore } from '@/stores/cnc'
-import { useFileListStore } from '@/stores/file-list'
+
+const container = Container()
+container.register('pinia', getActivePinia, { type: 'method', singleton: true })
+const bootstrap = Bootstrap(container)
+
 import { storeToRefs } from 'pinia'
-import { computed, onBeforeMount, onBeforeUnmount, provide, ref } from 'vue'
+import { computed, onMounted, onBeforeUnmount, provide, ref } from 'vue'
 
 const uiStore = useUiStore()
-const cncStore = useCncStore()
-const fileListStore = useFileListStore()
-const buttonStore = useButtonStore()
 const sceneStore = useScenesStore()
-
-const ackBus = Bus()
-const actionBus = Bus()
 
 let stateFeeder
 let cncActions
 
-const { rows, columns } = storeToRefs(uiStore)
-const configError = ref(false)
-
+// needs to be shared with CLI
 const specialScenes = {
   gcodeList: {
     type: FileListScene,
     buttons: [],
   },
 }
+const sceneType = computed(
+  () => specialScenes[uiStore.sceneName]?.type ?? Scene
+)
+
+const { rows, columns } = storeToRefs(uiStore)
+const configError = ref(false)
 
 const scene = computed(() => {
   return (
@@ -46,81 +43,20 @@ const scene = computed(() => {
   )
 })
 
-const clearEventlisteners = () => {
-  ackBus.all.clear()
-  actionBus.all.clear()
-  stateFeeder?.destroy()
-}
+const buttonHandler = ref()
+container.get('buttonHandler').then((handler) => {
+  buttonHandler.value = handler
+})
+provide('buttonHandler', buttonHandler)
 
-const getToken = () => {
-  const query = new URLSearchParams(window.location.search)
-  if (query.has('token')) {
-    return query.get('token')
-  }
-  const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
-  return cncConfig?.state?.session?.token || ''
-}
-
-provide('buttonHandler', ButtonHandler(actionBus))
-
-onBeforeMount(async () => {
-  // bootstrap.start()
-
-  const response = await fetch('config.json')
-  let config
-  try {
-    config = await response.json()
-  } catch (e) {
-    configError.value = true
-    return
-  }
-  // initialize stores from config data
-  buttonStore.setButtons(Object.freeze(config.buttons))
-  sceneStore.setScenes(Object.freeze(config.scenes))
-
-  // TODO: make home scene configurable or add validation for home
-  uiStore.setScene('home')
-
-  uiStore.setPalette(config.ui.palette)
-  uiStore.setGrid(config.ui.rows, config.ui.columns)
-  uiStore.textColor = config.ui.textColor
-  uiStore.textShadow = config.ui.textShadow
-
-  uiStore.setBgColor(config.ui.bgColor)
-  uiStore.setProgressColor(config.ui.progressColor)
-  const token = getToken()
-
-  const apiClient = CncApi(token, config.cncjs.socketAddress)
-
-  const connection = new Connection(config.cncjs, token)
-  if (import.meta.env.DEV) {
-    connection.debug()
-  }
-
-  let socket
-  try {
-    ;({ socket } = await connection.connect())
-  } catch (err) {
-    console.error(err)
-    return
-  }
-
-  fileListStore.setClient(apiClient)
-  cncStore.setClient(apiClient)
-
-  cncStore.setToken(token)
-  cncStore.setConnected(true)
-  stateFeeder = StateFeeder(socket, ackBus)
-  cncActions = CncActions(socket, connection.options, actionBus, ackBus)
+onMounted(async () => {
+  bootstrap.start()
+  //populate stores
 })
 
 onBeforeUnmount(() => {
-  //bootstrap.cleanup()
-  clearEventlisteners()
+  bootstrap.cleanup()
 })
-const sceneType = computed(
-  () => specialScenes[uiStore.sceneName]?.type ?? Scene
-)
 </script>
 
 <template>

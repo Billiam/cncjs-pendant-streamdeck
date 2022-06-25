@@ -43,7 +43,7 @@ const machineCommands = new Set([
 const alarmCommands = new Set(['homing', 'unlock'])
 
 // map configuration to actions
-export default (actionBus) => {
+export default (actionBus, connectionBus) => {
   const store = lazyStore()
 
   const backScene = (count = 1) => {
@@ -155,6 +155,13 @@ export default (actionBus) => {
   const reset = () => {
     command('reset')
   }
+  const connect = () => {
+    if (!store.cnc.connected) {
+      store.cnc.setConnecting()
+      connectionBus.emit('connect')
+    }
+  }
+
   const macro = async (macroId, macroName) => {
     if (!macroId && macroName) {
       macroId = await store.cnc.getMacroId(macroName)
@@ -294,6 +301,7 @@ export default (actionBus) => {
     clearGcode,
     clearUserFlag,
     completeInput,
+    connect,
     decreaseFeedrate,
     decreaseSpindle,
     enterPosition,

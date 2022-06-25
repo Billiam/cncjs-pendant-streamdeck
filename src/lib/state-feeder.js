@@ -1,8 +1,7 @@
+import { GcodeWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
 import { useCncStore } from '@/stores/cnc'
 import { useGcodeStore } from '@/stores/gcode'
-const gcodeWorker = new Worker(new URL('../gcode-worker.js', import.meta.url), {
-  type: 'module',
-})
+const gcodeWorker = GcodeWorker()
 
 export default (socket, ackBus) => {
   const cnc = useCncStore()
@@ -84,7 +83,7 @@ export default (socket, ackBus) => {
     socket.on(event, listener)
   })
   Object.entries(workerListeners).forEach(([event, listener]) => {
-    gcodeWorker.addEventListener(event, listener)
+    onWorkerEvent(gcodeWorker, event, listener)
   })
 
   const destroy = () => {
@@ -92,7 +91,7 @@ export default (socket, ackBus) => {
       socket.off(event, listener)
     })
     Object.entries(workerListeners).forEach(([event, listener]) => {
-      gcodeWorker.removeEventListener(event, listener)
+      offWorkerEvent(gcodeWorker, event, listener)
     })
   }
 
