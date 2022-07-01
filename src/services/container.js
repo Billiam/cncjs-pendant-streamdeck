@@ -1,10 +1,10 @@
-import bus from '@/services/bus'
+import bus from '@/lib/bus'
 import CncActions from '@/lib/cnc-actions'
 import CncApi from '@/lib/cnc-api'
 import Connection from '@/lib/connection'
 import StateFeeder from '@/lib/state-feeder'
 import ButtonHandler from '@/services/button-handler'
-import MethodProvider from '@/services/container/method-provider'
+import MethodProvider from '@/lib/cation/method-provider'
 import { fetchConfig, getAccessToken, getOptions } from 'adapter'
 import Cation from 'cation/dist/cation'
 

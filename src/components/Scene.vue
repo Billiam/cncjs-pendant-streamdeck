@@ -1,6 +1,8 @@
 <script setup>
 import { useButtonStore } from '@/stores/buttons'
 import { useUiStore } from '@/stores/ui'
+import { arrayWrap } from '@/lib/enumerable'
+
 const { buttons: buttonConfig } = useButtonStore()
 const { rows, columns } = useUiStore()
 import Cell from './Cell.vue'
@@ -10,13 +12,6 @@ defineProps({
     required: true,
   },
 })
-const arrayWrap = (n) => {
-  if (Array.isArray(n)) {
-    return n
-  } else {
-    return [n]
-  }
-}
 </script>
 
 <template>

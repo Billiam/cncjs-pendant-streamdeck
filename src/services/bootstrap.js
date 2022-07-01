@@ -3,7 +3,6 @@ import { useCncStore } from '@/stores/cnc'
 import { useFileListStore } from '@/stores/file-list'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
-
 export default (container) => {
   let stateFeeder
   let cncActions
@@ -33,13 +32,11 @@ export default (container) => {
   }
 
   const initializeStores = async () => {
-    const pinia = await container.get('pinia')
-
-    const uiStore = useUiStore(pinia)
-    const cncStore = useCncStore(pinia)
-    const fileListStore = useFileListStore(pinia)
-    const buttonStore = useButtonStore(pinia)
-    const sceneStore = useScenesStore(pinia)
+    const uiStore = useUiStore()
+    const cncStore = useCncStore()
+    const fileListStore = useFileListStore()
+    const buttonStore = useButtonStore()
+    const sceneStore = useScenesStore()
 
     const config = await container.get('config')
 

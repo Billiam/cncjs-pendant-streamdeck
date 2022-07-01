@@ -11,7 +11,6 @@ import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
 
 const container = Container()
-container.register('pinia', getActivePinia, { type: 'method', singleton: true })
 const bootstrap = Bootstrap(container)
 
 import { storeToRefs } from 'pinia'
@@ -19,9 +18,6 @@ import { computed, onMounted, onBeforeUnmount, provide, ref } from 'vue'
 
 const uiStore = useUiStore()
 const sceneStore = useScenesStore()
-
-let stateFeeder
-let cncActions
 
 // needs to be shared with CLI
 const specialScenes = {
@@ -51,7 +47,6 @@ provide('buttonHandler', buttonHandler)
 
 onMounted(async () => {
   bootstrap.start()
-  //populate stores
 })
 
 onBeforeUnmount(() => {

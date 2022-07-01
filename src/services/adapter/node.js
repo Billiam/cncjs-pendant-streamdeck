@@ -1,11 +1,10 @@
 import jwt from 'jsonwebtoken'
-import chalk from 'chalk'
 import cliOptions from '../cli-options'
 const fsModule = require('fs')
 const path = require('path')
 const { Worker } = require('worker_threads')
 const fs = fsModule.promises
-
+const chalk = require('chalk')
 const getUserHome = function () {
   return process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
 }

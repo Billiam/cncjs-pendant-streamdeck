@@ -8,28 +8,18 @@ import { useUiStore } from '@/stores/ui'
 import { useGcodeStore } from '@/stores/gcode'
 import { storeToRefs } from 'pinia'
 import { computed, inject, ref } from 'vue'
-import Color from '@/lib/color'
-const alignment = {
-  'top left': { v: 'top', h: 'left' },
-  'top center': { v: 'top', h: 'center' },
-  'top right': { v: 'top', h: 'right' },
-  left: { v: 'center', h: 'left' },
-  center: { v: 'center', h: 'center' },
-  right: { v: 'center', h: 'right' },
-  'bottom left': { v: 'bottom', h: 'left' },
-  'bottom center': { v: 'bottom', h: 'center' },
-  'bottom right': { v: 'bottom', h: 'right' },
-}
+import { useText } from '@/lib/cell/text'
+import { useColor } from '@/lib/cell/color'
+import { useVisibility } from '@/lib/cell/visibility'
 </script>
 <script setup>
 const cnc = useCncStore()
 const ui = useUiStore()
 const gcode = useGcodeStore()
-const { bgColor, textColor, textShadow, progressColor, rows, columns } =
-  storeToRefs(ui)
+
+const { textShadow, rows, columns } = storeToRefs(ui)
 
 const buttonHandler = inject('buttonHandler')
-const color = Color()
 
 const props = defineProps({
   config: {
@@ -44,46 +34,18 @@ const props = defineProps({
   },
 })
 
-// Text content
-const textTemplate = computed(() => TextTemplate(props.config.text))
-const textString = computed(() => textTemplate.value({ cnc, ui, gcode }))
-
-const fontSize = computed(() => {
-  return `${props.config.textSize || 1}em`
-})
-
-// color configuration
-const cellBgColor = computed(() =>
-  color.normalizeColor(props.config.bgColor || bgColor.value)
+const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(
+  props.config
 )
-const cellProgressColor = computed(() =>
-  color.normalizeColor(progressColor.value)
-)
-
-const cellActiveColor = computed(() => color.highlightColor(cellBgColor.value))
-const cellTextColor = computed(() => color.normalizeColor(textColor.value))
-const contrastingTextColor = computed(() =>
-  color.contrastColor(cellTextColor.value)
-)
-const textAlignment = computed(
-  () => alignment[props.config.textAlignment]?.h ?? 'center'
-)
-const textVerticalAlignment = computed(
-  () => alignment[props.config.textAlignment]?.v ?? 'center'
-)
-
-const show = computed(() => {
-  return !props.config.if || evaluate({ cnc, ui, gcode }, props.config.if)
-})
-const configDisabled = computed(() => {
-  return (
-    props.config.disabled && evaluate({ cnc, ui, gcode }, props.config.disabled)
-  )
-})
-const enabled = computed(
-  () =>
-    !configDisabled.value && buttonHandler.value?.enabled(props.config.actions)
-)
+const {
+  cellTextColor,
+  contrastingTextColor,
+  fontSize,
+  textAlignment,
+  textVerticalAlignment,
+  textString,
+} = useText(props.config)
+const { show, enabled } = useVisibility(props.config, buttonHandler)
 
 const gridPosition = computed(() => {
   return {
@@ -103,13 +65,7 @@ const gridPosition = computed(() => {
     v-if="show"
   >
     <cell-button :actions="config.actions" :disabled="!enabled">
-      <img
-        class="icon centered-decoration"
-        :src="'icons/' + config.icon"
-        :alt="config.description"
-        v-if="config.icon"
-        draggable="false"
-      />
+      <span class="image centered-decoration" v-if="config.icon"></span>
 
       <gcode-preview
         v-if="config.type === 'gcodePreview'"
@@ -253,8 +209,7 @@ const gridPosition = computed(() => {
   left: 0;
   top: 50%;
   right: 0;
-  max-height: 100%;
-  max-width: 100%;
+  height: 100%;
   width: 100%;
   object-fit: contain;
   transform: translateY(-50%);
@@ -262,6 +217,11 @@ const gridPosition = computed(() => {
 }
 </style>
 <style scoped>
+.image {
+  background: v-bind('`url("icons/${props.config.icon}")`') no-repeat center
+    center;
+  background-size: contain;
+}
 :deep(.progress-bar-meter) {
   stroke: v-bind(cellProgressColor);
 }
