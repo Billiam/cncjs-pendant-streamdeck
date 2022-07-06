@@ -5,10 +5,11 @@ const parentPort = require('worker_threads').parentPort
 // limitations
 parentPort.on('message', (event) => {
   // strip lines beginning with % or containing [
-  const gcode = event.data.gcode.replace(/^%.*/gm, '').replace(/^.*\[.*/gm, '')
-
+  const gcode = event.gcode.replace(/^%.*/gm, '').replace(/^.*\[.*/gm, '')
   parentPort.postMessage({
-    name: event.data.name,
-    geometry: parse(gcode),
+    data: {
+      name: event.name,
+      geometry: parse(gcode),
+    },
   })
 })
