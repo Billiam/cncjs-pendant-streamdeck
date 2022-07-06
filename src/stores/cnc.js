@@ -40,6 +40,13 @@ export const workflowStates = {
 const formatDuration = (seconds) => {
   return new Date(seconds * 1000).toISOString().substring(11, 19)
 }
+const formatAxes = (position, axes) =>
+  axes
+    .map((axis) => {
+      return `${axis.toUpperCase()}:${position[axis].padStart(8, ' ')}`
+    })
+    .join('\n')
+
 export const useCncStore = defineStore({
   id: 'cnc',
   state: () => ({
@@ -88,6 +95,7 @@ export const useCncStore = defineStore({
       units: 'G21',
       wcs: 'G54',
     },
+    axes: ['x', 'y', 'z', 'a', 'b', 'c'],
   }),
 
   actions: {
@@ -132,6 +140,11 @@ export const useCncStore = defineStore({
         }
       } else if (state) {
         console.error('Unrecognized workflow state', state)
+      }
+    },
+    setAxes(axes) {
+      if (axes) {
+        this.axes = Object.freeze(axes)
       }
     },
     setVersion(version) {
@@ -246,6 +259,8 @@ export const useCncStore = defineStore({
       }
       return formatDuration(state.elapsedTime)
     },
+    displayWpos: (state) => formatAxes(state.wpos, state.axes),
+    displayMpos: (state) => formatAxes(state.mpos, state.axes),
     remainingTimeText: (state) => {
       if (!state.remainingTime) {
         return ''
