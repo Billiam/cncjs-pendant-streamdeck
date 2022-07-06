@@ -39,11 +39,11 @@ const scene = computed(() => {
   )
 })
 
-const buttonHandler = ref()
-container.get('buttonHandler').then((handler) => {
-  buttonHandler.value = handler
+const buttonActions = ref()
+container.get('buttonActions').then((handler) => {
+  buttonActions.value = handler
 })
-provide('buttonHandler', buttonHandler)
+provide('buttonActions', buttonActions)
 
 onMounted(async () => {
   bootstrap.start()

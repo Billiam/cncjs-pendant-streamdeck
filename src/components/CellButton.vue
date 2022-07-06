@@ -13,7 +13,7 @@ import { computed, ref, onBeforeUnmount } from 'vue'
 const cnc = useCncStore()
 const ui = useUiStore()
 
-const buttonHandler = inject('buttonHandler')
+const buttonActions = inject('buttonActions')
 
 const props = defineProps({
   actions: {

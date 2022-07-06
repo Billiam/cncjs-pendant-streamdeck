@@ -3,7 +3,7 @@ import CncActions from '@/lib/cnc-actions'
 import CncApi from '@/lib/cnc-api'
 import Connection from '@/lib/connection'
 import StateFeeder from '@/lib/state-feeder'
-import ButtonHandler from '@/services/button-handler'
+import ButtonActions from '@/services/button-actions'
 import MethodProvider from '@/lib/cation/method-provider'
 import { fetchConfig, getAccessToken, getOptions } from 'adapter'
 import Cation from 'cation/dist/cation'
@@ -91,7 +91,7 @@ export default () => {
     type: 'method',
     singleton: true,
   })
-  container.register('buttonHandler', ButtonHandler, {
+  container.register('buttonActions', ButtonActions, {
     args: ['@actionBus', '@connectionBus'],
     type: 'method',
     singleton: true,

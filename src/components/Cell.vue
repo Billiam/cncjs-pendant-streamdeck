@@ -19,7 +19,7 @@ const gcode = useGcodeStore()
 
 const { textShadow, rows, columns } = storeToRefs(ui)
 
-const buttonHandler = inject('buttonHandler')
+const buttonActions = inject('buttonActions')
 
 const props = defineProps({
   config: {
@@ -45,7 +45,7 @@ const {
   textVerticalAlignment,
   textString,
 } = useText(props.config)
-const { show, enabled } = useVisibility(props.config, buttonHandler)
+const { show, enabled } = useVisibility(props.config, buttonActions)
 
 const gridPosition = computed(() => {
   return {

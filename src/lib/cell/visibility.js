@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 import { useEvaluate } from './evaluate'
 
-export const useVisibility = (config, buttonHandler) => {
+export const useVisibility = (config, buttonActions) => {
   const { scopedEvaluate } = useEvaluate()
 
   const show = computed(() => !config.if || scopedEvaluate(config.if))
@@ -11,7 +11,7 @@ export const useVisibility = (config, buttonHandler) => {
   )
 
   const enabled = computed(
-    () => !configDisabled.value && buttonHandler?.value.enabled(config.actions)
+    () => !configDisabled.value && buttonActions.value?.enabled(config.actions)
   )
 
   return { enabled, show }
