@@ -148,7 +148,9 @@ proto.connect = function () {
       reject(new Error(`Error opening serial port "${options.port}"`))
     })
 
-    this.debug()
+    if (import.meta.env.DEV) {
+      this.debug()
+    }
   })
 }
 
