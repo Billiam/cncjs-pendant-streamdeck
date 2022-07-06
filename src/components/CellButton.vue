@@ -6,9 +6,10 @@ import { inject, defineEmits } from 'vue'
 </script>
 
 <script setup>
+import { useButton } from '@/lib/cell/button'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
-import { computed, ref, onBeforeUnmount } from 'vue'
+import { computed, onBeforeUnmount } from 'vue'
 
 const cnc = useCncStore()
 const ui = useUiStore()
@@ -26,112 +27,36 @@ const props = defineProps({
   },
 })
 
-const active = ref(false)
-const holding = ref(false)
-let skipUpEvent = false
+const events = computed(() => {
+  return buttonActions.value?.getHandlers(props.actions)
+})
+const cleanupActions = computed(() => {
+  return buttonActions.value?.ensureHandler(props.actions)
+})
+const {
+  active,
+  cancelClick,
+  clearActivity,
+  configEnsureActions,
+  downHandler,
+  hasButton,
+  hasHoldAction,
+  onHold,
+  holding,
+  setHold,
+  unsetHold,
+  upHandler,
+} = useButton(events, cleanupActions)
 
 // state toggling
-const setActive = () => {
-  active.value = true
-}
-const unsetActive = () => {
-  active.value = false
-}
-const setHold = () => {
-  holding.value = true
-  skipUpEvent = false
-}
-const unsetHold = () => {
-  holding.value = false
-  skipUpEvent = false
-}
-const onHold = () => {
-  active.value = false
-  holding.value = false
-  skipUpEvent = true
-  callActions(configHoldActions.value)
-}
-
-// dynamic event binding
-const events = computed(() => {
-  return buttonHandler.value?.getHandlers(props.actions)
-})
-
-const configDownActions = computed(() => events.value.down ?? [])
-const configUpActions = computed(() => events.value.up ?? [])
-const configHoldActions = computed(() => events.value.hold ?? [])
-const configEnsureActions = computed(() => {
-  return buttonHandler.value?.ensureHandler(props.actions)
-})
-const hasHoldAction = computed(() => configHoldActions.value.length > 0)
-
-const emit = defineEmits([])
-const emitCallback = (event) => {
-  emit(event)
-}
-
-const callActions = (actionSet) => {
-  actionSet.forEach((config) => {
-    if (config.type === 'emit') {
-      config.action(emitCallback, ...(config.arguments || []))
-    } else {
-      config.action(...(config.arguments || []))
-    }
-  })
-}
-
-const downHandler = computed(() => {
-  return () => {
-    if (!active.value) {
-      setActive()
-      callActions(configDownActions.value)
-    }
-  }
-})
-
-const upHandler = computed(() => {
-  return () => {
-    const wasActive = active.value
-    unsetActive()
-
-    if (skipUpEvent) {
-      skipUpEvent = false
-      return
-    }
-    if (wasActive) {
-      callActions(configUpActions.value)
-    }
-  }
-})
-
-const hasButton = computed(() => {
-  return !props.disabled && Object.keys(events.value).length > 0
-})
-
-const cancelClick = () => {
-  const wasActive = active.value
-  active.value = false
-
-  if (wasActive && configEnsureActions.value) {
-    callActions(configEnsureActions.value)
-  }
-}
-
 onBeforeUnmount(() => {
-  unsetHold()
-  if (!active.value) {
-    return
-  }
-
-  if (configEnsureActions.value) {
-    callActions(configEnsureActions.value)
-  }
+  clearActivity()
 })
 </script>
 
 <template>
   <button
-    v-if="hasButton"
+    v-if="!disabled && hasButton"
     v-pointer-hold="
       hasHoldAction && { down: setHold, up: unsetHold, complete: onHold }
     "
