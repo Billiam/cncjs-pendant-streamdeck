@@ -59,14 +59,14 @@ export default (actionBus, connectionBus) => {
   }
 
   const enterWcs = (axis, scene = 'numpad') => {
-    const label = `${store.cnc.modal.wcs} ${axis.toUpperCase()} offset`
+    const label = `${store.cnc.modal.wcs}\n${axis.toUpperCase()} offset`
     store.ui.startInput(store.cnc.wpos[axis], label, scene, (result) => {
       gcode(`G10 L20 P1 ${axis}${result}`)
     })
   }
 
   const enterPosition = (axis, scene = 'numpad') => {
-    const label = `Go to ${store.cnc.modal.wcs} ${axis.toUpperCase()}`
+    const label = `${store.cnc.modal.wcs}\nGo to ${axis.toUpperCase()}`
     store.ui.startInput(store.cnc.wpos[axis], label, scene, (result) => {
       gcode(`G0 ${axis}${result}`)
     })
@@ -246,6 +246,12 @@ export default (actionBus, connectionBus) => {
       command('rapidOverride', Number(speed))
     }
   }
+  const increaseBrightness = () => {
+    store.ui.increaseBrightness()
+  }
+  const decreaseBrightness = () => {
+    store.ui.decreaseBrightness()
+  }
 
   const loadFile = (path) => {
     command('watchdir:load', path)
@@ -302,6 +308,7 @@ export default (actionBus, connectionBus) => {
     clearUserFlag,
     completeInput,
     connect,
+    decreaseBrightness,
     decreaseFeedrate,
     decreaseSpindle,
     enterPosition,
@@ -315,6 +322,7 @@ export default (actionBus, connectionBus) => {
     goto,
     hold,
     homing,
+    increaseBrightness,
     increaseFeedrate,
     increaseSpindle,
     input,
