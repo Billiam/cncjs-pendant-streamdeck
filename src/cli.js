@@ -1,12 +1,158 @@
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
-import { createPinia } from 'pinia'
+import { openStreamDeck } from '@elgato-stream-deck/node'
+import { useButtonStore } from '@/stores/buttons'
+import { useScenesStore } from '@/stores/scenes'
+import { useUiStore } from '@/stores/ui'
+import { computed, ref, watch, watchEffect } from 'vue'
+import { arrayWrap } from '@/lib/enumerable'
+import { createPinia, setActivePinia } from 'pinia'
+import CliButton from '@/lib/cli/button'
+import Sharp from 'sharp'
 
 const container = Container()
-container.register('pinia', createPinia, { type: 'method', singleton: true })
+setActivePinia(createPinia())
 
 const bootstrap = Bootstrap(container)
 
-bootstrap.start()
+const run = async () => {
+  await bootstrap.start()
 
-// TODO: add ssr var to visibility
+  const streamdeck = await openStreamDeck(null, {
+    jpegOptions: { quality: 100, subsampling: 0 },
+  })
+
+  const { buttons: buttonConfig } = useButtonStore()
+  const sceneStore = useScenesStore()
+  const ui = useUiStore()
+  ui.setWeb(false)
+  ui.setIconSize(streamdeck.ICON_PIXELS)
+
+  const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
+
+  renderBuffers.forEach((buffer, index) => {
+    watchEffect(() => {
+      const result = buffer.value
+      if (result) {
+        Sharp(result, { raw: { width: 72, height: 72, channels: 4 } })
+          .jpeg({ quality: 100, chromaSubsampling: '4:4:4' })
+          .toFile(`./debug/${index}.jpg`)
+        streamdeck.fillKeyBuffer(index, result, { format: 'rgba' })
+      } else {
+        streamdeck.clearKey(index)
+      }
+    })
+  })
+
+  // TODO: Extract special file list scene to a thing that just returns buttons
+  // TODO: Extract "buttons" to ui store
+  const buttons = computed(() => {
+    return sceneStore.scenes[ui.sceneName].buttons
+  })
+
+  const buttonActions = ref()
+  container.get('buttonActions').then((actions) => {
+    buttonActions.value = actions
+  })
+
+  const eachButton = (callback) => {
+    buttons.value.forEach((row, r) => {
+      row.forEach((position, c) => {
+        const key = r * ui.columns + c
+        arrayWrap(position).forEach((buttonId) => {
+          if (buttonId == null) {
+            return
+          }
+          callback(key, buttonId)
+        })
+      })
+    })
+  }
+
+  const sceneButtons = computed(() => {
+    //create index of buttons
+    const buttonList = {}
+
+    eachButton((key, buttonId) => {
+      const button = new CliButton(key, buttonConfig[buttonId], buttonActions)
+
+      //iterate over all width/height of button
+      for (let subC = 0; subC < (buttonConfig.columns || 1); subC++) {
+        for (let subR = 0; subR < (buttonConfig.rows || 1); subR++) {
+          const subOffset = subC + subR * ui.columns
+          const subKey = key + subOffset
+          buttonList[subKey] ??= []
+          buttonList[subKey].push({
+            row: subR,
+            column: subC,
+            offset: subOffset,
+            button,
+          })
+        }
+      }
+    })
+
+    return Object.freeze(buttonList)
+  })
+
+  const effectiveButtons = computed(() => {
+    return Object.entries(sceneButtons.value).reduce(
+      (buttonList, [index, buttons]) => {
+        buttonList[index] = buttons
+          .slice()
+          .reverse()
+          .find((buttonPosition) => buttonPosition.button.show.value)
+        return buttonList
+      },
+      {}
+    )
+  })
+  watch(effectiveButtons, (current, previous) => {
+    Object.entries(previous).forEach(([index, button]) => {
+      if (button && button !== current[index]) {
+        // unload button
+        button?.button?.cleanup?.()
+      }
+    })
+  })
+
+  renderBuffers.forEach((buffer, index) => {
+    watchEffect(() => {
+      const button = effectiveButtons.value[index]
+      const newBuffer = button?.button?.buffers?.[button?.offset]?.value
+      // TODO: non-flashing redraw on swapscene only
+      if (
+        !buffer.value ||
+        !button?.button?.show?.value ||
+        (newBuffer && !newBuffer.equals(buffer.value))
+      ) {
+        if (newBuffer && buffer.value) {
+        }
+        buffer.value = newBuffer
+      }
+    })
+  })
+
+  watchEffect(() => {
+    streamdeck.setBrightness(ui.displayBrightness)
+  })
+
+  streamdeck.on('down', (keyIndex) => {
+    const button = effectiveButtons.value[keyIndex]
+    if (!button) {
+      return
+    }
+    button.button.down()
+  })
+
+  streamdeck.on('up', (keyIndex) => {
+    const button = effectiveButtons.value[keyIndex]
+    if (!button) {
+      return
+    }
+    button.button.up()
+    ui.activity()
+  })
+}
+
+run()
