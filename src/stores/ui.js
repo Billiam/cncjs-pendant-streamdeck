@@ -4,16 +4,23 @@ export const useUiStore = defineStore({
   id: 'ui',
 
   state: () => ({
+    active: true,
+    activityTimeout: null,
     bgColor: 2,
+    brightness: 60,
     buttons: {
       showAbsolutePosition: false,
     },
     columns: 5,
+    font: 'monospace',
+    fontSize: 12,
+    lineHeight: 14,
     feedrateInterval: 1,
     spindleInterval: 1,
     fileDetailsPath: null,
     fileDetails: {},
     fileDetailsSort: 'alpha_asc',
+    iconSize: 72,
     userFlags: {},
     input: {
       value: '',
@@ -28,6 +35,8 @@ export const useUiStore = defineStore({
     sceneStack: [],
     textColor: 1,
     textShadow: false,
+    timeout: 0,
+    web: true,
   }),
 
   getters: {
@@ -58,6 +67,7 @@ export const useUiStore = defineStore({
       }
       return new Date(state.fileDetails.ctime).toLocaleString()
     },
+    displayBrightness: (state) => state.brightness,
   },
 
   actions: {
@@ -106,6 +116,34 @@ export const useUiStore = defineStore({
     },
     clearUserFlag(id) {
       delete this.userFlags[id]
+    },
+    setBrightness(brightness) {
+      if (brightness != null) {
+        this.brightness = Math.max(Math.min(100, brightness), 10)
+      }
+    },
+    setIconSize(size) {
+      this.iconSize = size
+    },
+    activity() {
+      this.active = true
+      clearTimeout(this.activityTimeout)
+      this.activityTimeout = setTimeout(this.inactive.bind(this), this.timeout)
+    },
+    inactive() {
+      this.active = false
+    },
+    decreaseBrightness() {
+      this.setBrightness(this.brightness - 10)
+    },
+    increaseBrightness() {
+      this.setBrightness(this.brightness + 10)
+    },
+    setTimeout(timeout) {
+      this.timeout = timeout
+    },
+    setWeb(web) {
+      this.web = !!web
     },
     setUserFlag(id, value) {
       this.userFlags[id] = value

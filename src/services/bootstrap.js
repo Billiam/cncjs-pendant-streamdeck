@@ -43,9 +43,11 @@ export default (container) => {
     // initialize stores from config data
     buttonStore.setButtons(Object.freeze(config.buttons))
     sceneStore.setScenes(Object.freeze(config.scenes))
+    cncStore.setAxes(config.machine?.axes)
 
     // TODO: make home scene configurable or add validation for home
     uiStore.setScene('home')
+    uiStore.setBrightness(config.ui.brightness)
 
     uiStore.setPalette(config.ui.palette)
     uiStore.setGrid(config.ui.rows, config.ui.columns)
@@ -81,7 +83,7 @@ export default (container) => {
   }
 
   return {
-    start,
     cleanup,
+    start,
   }
 }
