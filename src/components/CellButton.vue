@@ -37,7 +37,6 @@ const {
   active,
   cancelClick,
   clearActivity,
-  configEnsureActions,
   downHandler,
   hasButton,
   hasHoldAction,
