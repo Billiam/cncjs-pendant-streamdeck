@@ -74,15 +74,21 @@ const run = async () => {
     const buttonList = {}
 
     eachButton((key, buttonId) => {
-      const button = new CliButton(key, buttonConfig[buttonId], buttonActions)
+      const config = buttonConfig[buttonId]
 
-      //iterate over all width/height of button
-      for (let subC = 0; subC < (buttonConfig.columns || 1); subC++) {
-        for (let subR = 0; subR < (buttonConfig.rows || 1); subR++) {
-          const subOffset = subC + subR * ui.columns
-          const subKey = key + subOffset
-          buttonList[subKey] ??= []
-          buttonList[subKey].push({
+      const button = new CliButton(key, config, {
+        size: streamdeck.ICON_SIZE,
+        buttonActions,
+      })
+
+      //iterate over all rows/columns of button
+      for (let subR = 0; subR < (config.rows ?? 1); subR++) {
+        for (let subC = 0; subC < (config.columns ?? 1); subC++) {
+          const subOffset = subC + subR * (config.columns ?? 1)
+          const globalKey = key + subR + subC * ui.columns
+
+          buttonList[globalKey] ??= []
+          buttonList[globalKey].push({
             row: subR,
             column: subC,
             offset: subOffset,
