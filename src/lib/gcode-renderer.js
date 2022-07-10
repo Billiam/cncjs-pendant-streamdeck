@@ -3,18 +3,18 @@ import { preview } from '@/vendor/gcodethumbnail/gcodethumbnail'
 const animatedWait = (delay) => () => {
   return new Promise((resolve) => setTimeout(resolve, delay))
 }
+const defaultColors = {
+  G0: '#3c7e30',
+  G1: '#9a96ff',
+  G2G3: '#9a96ff',
+}
 export const renderToolpath = (
   canvas,
   parsedGcode,
   settings,
   callback = () => {}
 ) => {
-  const colors = {
-    G0: '#52ff2e',
-    G1: '#9a96ff',
-    G2G3: '#9a96ff',
-  }
-
+  const colors = { ...defaultColors, ...(settings.colors || {}) }
   const options = { autosize: true, ...settings }
 
   const drawLine = preview(parsedGcode.size, colors, options, canvas)

@@ -20,6 +20,7 @@ export const useUiStore = defineStore({
     fileDetailsPath: null,
     fileDetails: {},
     fileDetailsSort: 'alpha_asc',
+    gcodeColors: {},
     iconSize: 72,
     userFlags: {},
     input: {
@@ -124,6 +125,12 @@ export const useUiStore = defineStore({
     },
     setIconSize(size) {
       this.iconSize = size
+    },
+    setGcodeColors(colors) {
+      if (!colors) {
+        return
+      }
+      this.gcodeColors = Object.freeze(colors)
     },
     activity() {
       this.active = true

@@ -61,7 +61,7 @@ export default class CliButton {
       this.config.actions,
       this.buttonActions
     )
-    const { renderGcode } = useGcode(this.config)
+    const { renderGcode, gcodeColors } = useGcode(this.config)
     const { show, enabled } = useVisibility(this.config, this.buttonActions)
     this.show = show
     this.enabled = enabled
@@ -98,6 +98,7 @@ export default class CliButton {
             animate: this.config.animated,
             lineWidth: this.canvas.lineWidth,
             autosize: false,
+            colors: gcodeColors.value,
           },
           updateGcodeLine
         )
