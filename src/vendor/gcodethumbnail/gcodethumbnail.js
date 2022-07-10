@@ -56,6 +56,9 @@ function drawStraightLine(
   const startY = Math.round(height - ratio * (line.start.y - start.y))
   const endX = Math.round(ratio * (line.end.x - start.x))
   const endY = Math.round(height - ratio * (line.end.y - start.y))
+  if (startX === endX && startY === endY) {
+    return
+  }
   ctx.beginPath()
   ctx.moveTo(startX, startY)
   ctx.lineTo(endX, endY)
@@ -143,8 +146,9 @@ export function preview(size, colors, settings, canvas) {
   const ctx = canvas.getContext('2d')
 
   const drawSettings = {
-    lineWidth: ratio * 0.003,
+    lineWidth: Math.max(0.08, ratio * 0.003),
   }
+
   // Cleaning
   ctx.clearRect(0, 0, canvas.width, canvas.height)
   ctx.beginPath()
