@@ -48,6 +48,7 @@ export default class CliButton {
     const {
       cellTextColor,
       contrastingTextColor,
+      font,
       lineHeight,
       svgFontSize: fontSize,
       textSvgAlignment,
@@ -124,6 +125,7 @@ export default class CliButton {
           contrastingTextColor,
           enabled,
           lineHeight,
+          font,
           fontSize,
           gcodeLine,
           renderGcode,

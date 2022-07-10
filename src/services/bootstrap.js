@@ -53,6 +53,7 @@ export default (container) => {
     uiStore.setGrid(config.ui.rows, config.ui.columns)
     uiStore.textColor = config.ui.textColor ?? uiStore.textColor
     uiStore.textShadow = config.ui.textShadow
+    uiStore.font = config.ui.font ?? uiStore.font
     uiStore.fontSize = config.ui.textSize ?? uiStore.fontSize
     uiStore.lineHeight = config.ui.lineHeight ?? uiStore.lineHeight
     uiStore.setGcodeColors(config.ui.gcodeColors)

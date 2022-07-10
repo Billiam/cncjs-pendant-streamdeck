@@ -55,7 +55,7 @@ export const useText = (config) => {
   const svgFontSize = computed(() => {
     return ui.fontSize * config.textSize
   })
-  const { lineHeight } = storeToRefs(ui)
+  const { lineHeight, font } = storeToRefs(ui)
 
   const cellTextColor = computed(() => color.normalizeColor(ui.textColor))
   const contrastingTextColor = computed(() =>
@@ -77,6 +77,7 @@ export const useText = (config) => {
   return {
     cellTextColor,
     contrastingTextColor,
+    font,
     fontSize,
     lineHeight,
     svgFontSize,

@@ -85,7 +85,7 @@ const getRender = async (config, canvas) => {
       <text
         fill="${config.cellTextColor}"
         font-size="${fontSize}px"
-        font-family="ProggyTinyTT"
+        font-family="${config.font}"
         text-anchor="${config.textSvgAlignment}"
         dominant-baseline="${config.textSvgVerticalAlignment}"
         y="${y}"
