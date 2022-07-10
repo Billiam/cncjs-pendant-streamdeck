@@ -10,6 +10,9 @@ export default class ButtonHandler {
 
   // may need to track multiple buttons in the same space
   down(index) {
+    if (!this.hasButton.value) {
+      return
+    }
     if (this.active.value) {
       return
     }
@@ -26,6 +29,9 @@ export default class ButtonHandler {
   }
 
   up(index) {
+    if (!this.hasButton.value) {
+      return
+    }
     if (!this.active.value || !this.buttons.has(index)) {
       return
     }
