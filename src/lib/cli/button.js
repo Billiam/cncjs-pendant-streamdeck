@@ -2,8 +2,11 @@ import { useText } from '@/lib/cell/text'
 import { useVisibility } from '@/lib/cell/visibility'
 import CliButtonHandler from '@/lib/cli/button-handler'
 import buttonRenderer from '@/lib/cli/button-renderer'
+import Canvas from '@/lib/cli/canvas'
 import { useColor } from '@/lib/cell/color'
+import { useGcode } from '@/lib/cell/gcode'
 import { computed, ref, watchEffect } from 'vue'
+import { renderToolpath } from '@/lib/gcode-renderer'
 
 export default class CliButton {
   constructor(index, config, { size, buttonActions }) {
@@ -14,6 +17,7 @@ export default class CliButton {
     ).map(() => ref())
     this.size = size
     this.buttonActions = buttonActions
+    this.watchers = []
     this.setup()
   }
 
@@ -31,6 +35,9 @@ export default class CliButton {
 
   cleanup() {
     this.buttonHandler.cleanup()
+    this.watchers.forEach((watcher) => {
+      watcher()
+    })
   }
 
   setup() {
@@ -46,6 +53,9 @@ export default class CliButton {
       textSvgVerticalAlignment,
       textLines,
     } = useText(this.config)
+
+    const width = (this.config.columns ?? 1) * this.size
+    const height = (this.config.rows ?? 1) * this.size
 
     this.buttonHandler = new CliButtonHandler(
       this.config.actions,
@@ -68,14 +78,39 @@ export default class CliButton {
       return color ?? '#000'
     })
 
+    const gcodeLine = ref()
+    const updateGcodeLine = (index) => {
+      gcodeLine.value = index
+    }
+    if (this.config.type === 'gcodePreview') {
+      if (!this.canvas) {
+        this.canvas = new Canvas(width - 10, height - 10)
+      }
+      const watcher = watchEffect(() => {
+        if (!renderGcode.value) {
+          return
+        }
+
+        renderToolpath(
+          this.canvas.canvas,
+          renderGcode.value,
+          { animate: this.config.animated, lineWidth: this.canvas.lineWidth },
+          updateGcodeLine
+        )
+      })
+      this.watchers.push(watcher)
+    }
+
     this.show = show
 
     watchEffect(() => {
       buttonRenderer(
         {
           ...this.config,
-          index: this.index,
           buttonSize: this.size,
+          height,
+          index: this.index,
+          width,
         },
         {
           color,
@@ -84,11 +119,14 @@ export default class CliButton {
           contrastingTextColor,
           enabled,
           fontSize,
+          gcodeLine,
+          renderGcode,
           textSvgAlignment,
           textSvgVerticalAlignment,
           textLines,
           show,
-        }
+        },
+        this.canvas
       ).then((newBuffers) => {
         this.buffers.forEach((buffer, i) => {
           buffer.value = newBuffers[i] || null

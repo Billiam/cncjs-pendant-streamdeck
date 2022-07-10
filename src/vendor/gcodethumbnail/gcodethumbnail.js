@@ -52,10 +52,10 @@ function drawStraightLine(
   color,
   settings = {}
 ) {
-  const startX = Math.round(ratio * (line.start.x - start.x))
-  const startY = Math.round(height - ratio * (line.start.y - start.y))
-  const endX = Math.round(ratio * (line.end.x - start.x))
-  const endY = Math.round(height - ratio * (line.end.y - start.y))
+  const startX = ratio * (line.start.x - start.x)
+  const startY = height - ratio * (line.start.y - start.y)
+  const endX = ratio * (line.end.x - start.x)
+  const endY = height - ratio * (line.end.y - start.y)
   if (startX === endX && startY === endY) {
     return
   }

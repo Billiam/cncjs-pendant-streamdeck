@@ -3,7 +3,12 @@ import { preview } from '@/vendor/gcodethumbnail/gcodethumbnail'
 const animatedWait = (delay) => () => {
   return new Promise((resolve) => setTimeout(resolve, delay))
 }
-export const renderToolpath = (canvas, parsedGcode, settings) => {
+export const renderToolpath = (
+  canvas,
+  parsedGcode,
+  settings,
+  callback = () => {}
+) => {
   const colors = {
     G0: '#52ff2e',
     G1: '#9a96ff',
@@ -18,37 +23,41 @@ export const renderToolpath = (canvas, parsedGcode, settings) => {
   }
 
   if (options.animate) {
-    animatedDraw(parsedGcode.lines, drawLine, 4000)
+    return animatedDraw(parsedGcode.lines, drawLine, 4000, callback)
   } else {
-    draw(parsedGcode.lines, drawLine)
+    return draw(parsedGcode.lines, drawLine, callback)
   }
 }
 
 function* chunkLines(lines, size = 1) {
-  for (let i = 0; i < lines.length; i += size) {
-    yield lines.slice(i, i + size)
+  for (let i = 0, l = lines.length; i < l; i += size) {
+    yield [i + size, lines.slice(i, i + size)]
   }
 }
 
-const animatedDraw = async (lines, drawLine, duration) => {
+const animatedDraw = async (lines, drawLine, duration, callback) => {
   const fps = 30
-  const linesPerFrame = lines.length / (duration / fps)
-  const wait = animatedWait(1000 / 30)
+  const linesPerFrame = Math.floor(lines.length / ((duration / 1000) * fps))
+  const wait = animatedWait(1000 / fps)
   const gen = chunkLines(lines, linesPerFrame)
-  for (const chunk of gen) {
+  for (const [index, chunk] of gen) {
     chunk.forEach(drawLine)
+    callback(index)
     await wait()
   }
+  callback(lines.length)
 }
 
-const draw = async (lines, drawLine) => {
-  let nextWait = Date.now() + 50
+const draw = async (lines, drawLine, callback) => {
+  let nextWait = Date.now()
   const wait = animatedWait(60)
-  for (const line of lines) {
+  for (const [index, line] of Object.entries(lines)) {
+    drawLine(line)
     if (Date.now() > nextWait) {
+      callback(index)
       await wait()
       nextWait = Date.now() + 50
     }
-    drawLine(line)
   }
+  callback(lines.length)
 }

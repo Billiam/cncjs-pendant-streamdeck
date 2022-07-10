@@ -35,8 +35,8 @@ const getRender = async (config) => {
 
   const inputWidth = columns * inputSize
   const inputHeight = rows * inputSize
-  const outputWidth = columns * outputSize
-  const outputHeight = rows * outputSize
+  const outputWidth = config.width
+  const outputHeight = config.height
   const createConfig = { width: inputWidth, height: inputHeight, channels: 4 }
   if (config.color) {
     createConfig.background = config.color
@@ -105,6 +105,15 @@ const getRender = async (config) => {
     })
   }
 
+  if (config.type === 'gcodePreview') {
+    const { width, height } = canvas.dimensions()
+    finalComposite.push({
+      input: await canvas.buffer(),
+      top: Math.floor((outputHeight - height) / 2),
+      left: Math.floor((outputWidth - width) / 2),
+    })
+  }
+
   if (composite.length) {
     image = sharp(await image.composite(composite).raw().toBuffer(), {
       raw: { width: inputWidth, height: inputHeight, channels: 4 },
@@ -123,9 +132,9 @@ const getRender = async (config) => {
     const grid = []
 
     // new operation before resize following a composition
-    if (finalComposite.length) {
-      image = sharp(await image.toBuffer())
-    }
+    image = sharp(await image.raw().toBuffer(), {
+      raw: { width: outputWidth, height: outputHeight, channels: 4 },
+    })
 
     for (let i = 0; i < columns; i++) {
       for (let j = 0; j < rows; j++) {

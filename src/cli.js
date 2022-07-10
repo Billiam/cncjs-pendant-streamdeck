@@ -26,7 +26,7 @@ const run = async () => {
   const sceneStore = useScenesStore()
   const ui = useUiStore()
   ui.setWeb(false)
-  ui.setIconSize(streamdeck.ICON_PIXELS)
+  ui.setIconSize(streamdeck.ICON_SIZE)
 
   const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
 
@@ -34,7 +34,13 @@ const run = async () => {
     watchEffect(() => {
       const result = buffer.value
       if (result) {
-        Sharp(result, { raw: { width: 72, height: 72, channels: 4 } })
+        Sharp(result, {
+          raw: {
+            width: streamdeck.ICON_SIZE,
+            height: streamdeck.ICON_SIZE,
+            channels: 4,
+          },
+        })
           .jpeg({ quality: 100, chromaSubsampling: '4:4:4' })
           .toFile(`./debug/${index}.jpg`)
         streamdeck.fillKeyBuffer(index, result, { format: 'rgba' })
