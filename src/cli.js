@@ -7,6 +7,7 @@ import { useUiStore } from '@/stores/ui'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { arrayWrap } from '@/lib/enumerable'
 import { createPinia, setActivePinia } from 'pinia'
+import Sleep from '@/lib/cli/sleep'
 import CliButton from '@/lib/cli/button'
 import Sharp from 'sharp'
 
@@ -27,6 +28,35 @@ const run = async () => {
   const ui = useUiStore()
   ui.setWeb(false)
   ui.setIconSize(streamdeck.ICON_SIZE)
+
+  const { ui: uiConfig } = await container.get('config')
+  const sleep = Sleep(uiConfig?.timeout)
+  let fadeoutTimer
+
+  watchEffect(() => {
+    const asleep = sleep.asleep.value
+    ui.asleep = asleep
+    clearInterval(fadeoutTimer)
+    if (asleep) {
+      const startFade = new Date().getTime()
+      const duration = 800 * ui.displayBrightness * 0.01
+      fadeoutTimer = setInterval(() => {
+        const pct =
+          1 -
+          Math.min(
+            1,
+            Math.max((new Date().getTime() - startFade) / duration, 0)
+          )
+
+        streamdeck.setBrightness(Math.floor(ui.displayBrightness * pct))
+        if (pct === 0) {
+          clearInterval(fadeoutTimer)
+        }
+      }, 30)
+    } else {
+      streamdeck.setBrightness(ui.displayBrightness)
+    }
+  })
 
   const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
 
@@ -150,6 +180,11 @@ const run = async () => {
   })
 
   streamdeck.on('down', (keyIndex) => {
+    const isAsleep = ui.asleep
+    sleep.clearSleep()
+    if (isAsleep) {
+      return
+    }
     const button = effectiveButtons.value[keyIndex]
     if (!button) {
       return
@@ -158,6 +193,11 @@ const run = async () => {
   })
 
   streamdeck.on('up', (keyIndex) => {
+    const isAsleep = ui.asleep
+    sleep.clearSleep()
+    if (isAsleep) {
+      return
+    }
     const button = effectiveButtons.value[keyIndex]
     if (!button) {
       return

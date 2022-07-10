@@ -6,6 +6,7 @@ export const useUiStore = defineStore({
   state: () => ({
     active: true,
     activityTimeout: null,
+    asleep: false,
     bgColor: 2,
     brightness: 60,
     buttons: {
