@@ -51,9 +51,11 @@ export default (container) => {
 
     uiStore.setPalette(config.ui.palette)
     uiStore.setGrid(config.ui.rows, config.ui.columns)
-    uiStore.textColor = config.ui.textColor
+    uiStore.textColor = config.ui.textColor ?? uiStore.textColor
     uiStore.textShadow = config.ui.textShadow
-
+    uiStore.fontSize = config.ui.textSize ?? uiStore.fontSize
+    uiStore.lineHeight = config.ui.lineHeight ?? uiStore.lineHeight
+    uiStore.setGcodeColors(config.ui.gcodeColors)
     uiStore.setBgColor(config.ui.bgColor)
     uiStore.setProgressColor(config.ui.progressColor)
 
