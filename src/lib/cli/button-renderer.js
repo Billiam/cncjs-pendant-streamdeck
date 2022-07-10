@@ -66,7 +66,7 @@ const getRender = async (config, canvas) => {
     // TODO: config font
     // TODO: config line height
     const fontSize = 16 * (config.textSize || 1)
-    const lineHeight = 12
+    const lineHeight = config.lineHeight ?? fontSize * 1.1
 
     const spanX = textOffset(config.textSvgAlignment, outputWidth)
     const textSpan = config.textLines.map((line) => {

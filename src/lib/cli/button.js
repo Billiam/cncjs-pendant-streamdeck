@@ -48,7 +48,8 @@ export default class CliButton {
     const {
       cellTextColor,
       contrastingTextColor,
-      fontSize,
+      lineHeight,
+      svgFontSize: fontSize,
       textSvgAlignment,
       textSvgVerticalAlignment,
       textLines,
@@ -56,7 +57,6 @@ export default class CliButton {
 
     const width = (this.config.columns ?? 1) * this.size
     const height = (this.config.rows ?? 1) * this.size
-
     this.buttonHandler = new CliButtonHandler(
       this.config.actions,
       this.buttonActions
@@ -94,7 +94,11 @@ export default class CliButton {
         renderToolpath(
           this.canvas.canvas,
           renderGcode.value,
-          { animate: this.config.animated, lineWidth: this.canvas.lineWidth },
+          {
+            animate: this.config.animated,
+            lineWidth: this.canvas.lineWidth,
+            autosize: false,
+          },
           updateGcodeLine
         )
       })
@@ -118,6 +122,7 @@ export default class CliButton {
           cellTextColor,
           contrastingTextColor,
           enabled,
+          lineHeight,
           fontSize,
           gcodeLine,
           renderGcode,
