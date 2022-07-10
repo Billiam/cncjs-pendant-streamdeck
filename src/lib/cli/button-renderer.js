@@ -1,5 +1,4 @@
 import sharp from 'sharp'
-const cache = {}
 
 const inputSize = 144
 
@@ -24,7 +23,7 @@ const textVOffset = (alignment, height, textHeight) => {
   }
 }
 
-const getRender = async (config) => {
+const getRender = async (config, canvas) => {
   if (!config.show) {
     return []
   }
@@ -157,10 +156,6 @@ const getRender = async (config) => {
   return [outputBuffer]
 }
 
-const createObjectKey = (config) => {
-  return JSON.stringify(config)
-}
-
 // eager load conditional computed values for caching/reactivity
 const effectiveConfig = (config, computed) => {
   const newConfig = { ...config }
@@ -171,17 +166,7 @@ const effectiveConfig = (config, computed) => {
   return newConfig
 }
 
-const withCache = async (key, callback) => {
-  if (cache[key]) {
-    return cache[key]
-  }
-  const result = await callback()
-  cache[key] = result
-  return result
-}
-
-export default (config, computed) => {
+export default (config, computed, canvas) => {
   const combinedConfig = effectiveConfig(config, computed)
-  const key = createObjectKey(combinedConfig)
-  return withCache(key, () => getRender(combinedConfig))
+  return getRender(combinedConfig, canvas)
 }
