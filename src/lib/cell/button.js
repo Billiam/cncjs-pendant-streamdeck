@@ -82,6 +82,8 @@ export const useButton = (events, cleanupActions) => {
     if (cleanupActions.value) {
       callActions(cleanupActions.value)
     }
+    active.value = false
+    holding.value = false
   }
 
   return {
