@@ -2,10 +2,11 @@ import { useText } from '@/lib/cell/text'
 import { useVisibility } from '@/lib/cell/visibility'
 import CliButtonHandler from '@/lib/cli/button-handler'
 import buttonRenderer from '@/lib/cli/button-renderer'
+import animation from '@/lib/cli/animate'
 import Canvas from '@/lib/cli/canvas'
 import { useColor } from '@/lib/cell/color'
 import { useGcode } from '@/lib/cell/gcode'
-import { computed, ref, watchEffect } from 'vue'
+import { computed, ref, watch, watchEffect } from 'vue'
 import { renderToolpath } from '@/lib/gcode-renderer'
 
 export default class CliButton {
@@ -18,6 +19,7 @@ export default class CliButton {
     this.size = size
     this.buttonActions = buttonActions
     this.watchers = []
+    this.drawTime = 0
     this.setup()
   }
 
@@ -78,6 +80,22 @@ export default class CliButton {
       }
       return color ?? '#000'
     })
+    const holdPercent = ref(0)
+    let holdAnimation
+
+    watch(this.buttonHandler.holding, (holding) => {
+      if (holdAnimation) {
+        holdAnimation.cancel()
+        holdAnimation = null
+        holdPercent.value = 0
+      }
+      if (holding) {
+        holdAnimation = animation(400, 60, (percent) => {
+          holdPercent.value = percent
+        })
+        holdAnimation.delay(100)
+      }
+    })
 
     const gcodeLine = ref()
     const updateGcodeLine = (index) => {
@@ -110,6 +128,7 @@ export default class CliButton {
     this.show = show
 
     watchEffect(() => {
+      const time = performance.now()
       buttonRenderer(
         {
           ...this.config,
@@ -128,6 +147,7 @@ export default class CliButton {
           font,
           fontSize,
           gcodeLine,
+          holdPercent,
           renderGcode,
           textSvgAlignment,
           textSvgVerticalAlignment,
@@ -136,6 +156,11 @@ export default class CliButton {
         },
         this.canvas
       ).then((newBuffers) => {
+        if (time < this.drawTime) {
+          console.log('Skipping slow draw', time - this.drawTime)
+          return
+        }
+        this.drawTime = time
         this.buffers.forEach((buffer, i) => {
           buffer.value = newBuffers[i] || null
         })

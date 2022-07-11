@@ -80,7 +80,6 @@ const getRender = async (config, canvas) => {
       config.textLines.length * lineHeight
     )
 
-    // TODO: Don't hardcode width/height
     const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
       <text
         fill="${config.cellTextColor}"
@@ -95,6 +94,41 @@ const getRender = async (config, canvas) => {
     const textBuffer = Buffer.from(svg)
     finalComposite.push({ input: textBuffer, top: 0, left: 0 })
   }
+  if (config.holdPercent) {
+    const height = outputHeight * config.holdPercent * 1.1
+    const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
+      <rect
+      width="${outputWidth}px"
+      height="${height}px"
+      x="0"
+      y="${outputHeight - height}px"
+      stroke="none"
+      fill="${config.cellProgressColor}" />
+    </svg>`
+    const holdBuffer = Buffer.from(svg)
+    finalComposite.push({ input: holdBuffer, top: 0, left: 0 })
+  }
+  // if (config.holdPercent) {
+  //   // if (config.holdPercent === 1) {
+  //   //   console.log({ config })
+  //   // }
+  //   const radius = Math.min(outputHeight, outputWidth) * 0.4
+  //   const circ = radius * 2 * Math.PI
+  //   const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
+  //     <circle
+  //     stroke="${config.cellProgressColor}"
+  //     fill="none"
+  //     stroke-width="25px"
+  //     stroke-linecap="round"
+  //     stroke-dasharray="${circ}"
+  //     stroke-dashoffset="${circ - config.holdPercent * circ}"
+  //     cx="${outputWidth / 2}"
+  //     cy="${outputHeight / 2}"
+  //     r="${radius}" />
+  //   </svg>`
+  //   const holdBuffer = Buffer.from(svg)
+  //   finalComposite.push({ input: holdBuffer, top: 0, left: 0 })
+  // }
 
   if (!config.enabled) {
     finalComposite.push({
