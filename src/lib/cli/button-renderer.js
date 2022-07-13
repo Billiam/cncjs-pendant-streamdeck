@@ -61,6 +61,15 @@ const getRender = async (config, canvas) => {
     })
   }
 
+  if (config.type === 'gcodePreview') {
+    const { width, height } = canvas.dimensions()
+    finalComposite.push({
+      input: await canvas.buffer(),
+      top: Math.floor((outputHeight - height) / 2),
+      left: Math.floor((outputWidth - width) / 2),
+    })
+  }
+
   if (config.text) {
     // TODO: html escape
     // TODO: config font
@@ -94,6 +103,7 @@ const getRender = async (config, canvas) => {
     const textBuffer = Buffer.from(svg)
     finalComposite.push({ input: textBuffer, top: 0, left: 0 })
   }
+
   if (config.holdPercent) {
     const height = outputHeight * config.holdPercent * 1.1
     const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
@@ -135,15 +145,6 @@ const getRender = async (config, canvas) => {
       input: Buffer.from([0, 0, 0, 180]),
       raw: { width: 1, height: 1, channels: 4 },
       tile: true,
-    })
-  }
-
-  if (config.type === 'gcodePreview') {
-    const { width, height } = canvas.dimensions()
-    finalComposite.push({
-      input: await canvas.buffer(),
-      top: Math.floor((outputHeight - height) / 2),
-      left: Math.floor((outputWidth - width) / 2),
     })
   }
 
