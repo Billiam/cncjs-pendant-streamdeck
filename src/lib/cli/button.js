@@ -42,6 +42,14 @@ export default class CliButton {
     })
   }
 
+  watch(key, callback) {
+    this.watchers.push(watch(key, callback))
+  }
+
+  watchEffect(callback) {
+    this.watchers.push(watchEffect(callback))
+  }
+
   setup() {
     const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(
       this.config
@@ -83,7 +91,7 @@ export default class CliButton {
     const holdPercent = ref(0)
     let holdAnimation
 
-    watch(this.buttonHandler.holding, (holding) => {
+    this.watch(this.buttonHandler.holding, (holding) => {
       if (holdAnimation) {
         holdAnimation.cancel()
         holdAnimation = null
@@ -101,33 +109,39 @@ export default class CliButton {
     const updateGcodeLine = (index) => {
       gcodeLine.value = index
     }
+
     if (this.config.type === 'gcodePreview') {
-      if (!this.canvas) {
+      this.watchEffect((onInvalidate) => {
         this.canvas = new Canvas(width - 10, height - 10)
-      }
-      const watcher = watchEffect(() => {
+
         if (!renderGcode.value) {
           return
         }
+        let halt = false
+        onInvalidate(() => {
+          halt = true
+        })
+        const halted = () => halt
 
+        const settings = {
+          animate: this.config.animated,
+          lineWidth: this.canvas.lineWidth,
+          autosize: false,
+          colors: gcodeColors.value,
+        }
         renderToolpath(
           this.canvas.canvas,
           renderGcode.value,
-          {
-            animate: this.config.animated,
-            lineWidth: this.canvas.lineWidth,
-            autosize: false,
-            colors: gcodeColors.value,
-          },
-          updateGcodeLine
+          settings,
+          updateGcodeLine,
+          halted
         )
       })
-      this.watchers.push(watcher)
     }
 
     this.show = show
 
-    watchEffect(() => {
+    this.watchEffect(() => {
       const time = performance.now()
       buttonRenderer(
         {

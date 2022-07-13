@@ -1,4 +1,5 @@
 import { SleepScreen } from '@/lib/cli/sleep-screen'
+import { useFileList } from '@/lib/scene/file-list'
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
 import { openStreamDeck } from '@elgato-stream-deck/node'
@@ -31,6 +32,7 @@ const run = async () => {
 
   const { ui: uiConfig } = await container.get('config')
   const { wake } = SleepScreen(uiConfig?.timeout, streamdeck)
+  const { buttons: fileListButtons, loadFiles } = useFileList()
 
   const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
 
@@ -54,10 +56,22 @@ const run = async () => {
     })
   })
 
-  // TODO: Extract special file list scene to a thing that just returns buttons
-  // TODO: Extract "buttons" to ui store
+  // TODO: May not need scene override
+  const specialScenes = {
+    gcodeList: {
+      buttons: fileListButtons,
+      load: loadFiles,
+    },
+  }
+
   const buttons = computed(() => {
-    return sceneStore.scenes[ui.sceneName].buttons
+    const specialScene = specialScenes[ui.sceneName]
+    if (specialScene) {
+      specialScene.load?.()
+      return specialScene.buttons.value
+    } else {
+      return sceneStore.scenes[ui.sceneName].buttons
+    }
   })
 
   const buttonActions = ref()
@@ -84,7 +98,8 @@ const run = async () => {
     const buttonList = {}
 
     eachButton((key, buttonId) => {
-      const config = buttonConfig[buttonId]
+      const config =
+        typeof buttonId === 'string' ? buttonConfig[buttonId] : buttonId
 
       const button = new CliButton(key, config, {
         size: streamdeck.ICON_SIZE,
