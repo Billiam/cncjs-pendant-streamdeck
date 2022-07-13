@@ -7,6 +7,7 @@ import { useUiStore } from '@/stores/ui'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { arrayWrap } from '@/lib/enumerable'
 import { createPinia, setActivePinia } from 'pinia'
+import animation from '@/lib/cli/animate'
 import Sleep from '@/lib/cli/sleep'
 import CliButton from '@/lib/cli/button'
 import Sharp from 'sharp'
@@ -31,28 +32,23 @@ const run = async () => {
 
   const { ui: uiConfig } = await container.get('config')
   const sleep = Sleep(uiConfig?.timeout)
-  let fadeoutTimer
 
-  watchEffect(() => {
-    const asleep = sleep.asleep.value
+  let fadeoutAnimation
+  watch(sleep.asleep, (asleep) => {
     ui.asleep = asleep
-    clearInterval(fadeoutTimer)
+    fadeoutAnimation?.cancel()
+    fadeoutAnimation = null
     if (asleep) {
-      const startFade = new Date().getTime()
-      const duration = 800 * ui.displayBrightness * 0.01
-      fadeoutTimer = setInterval(() => {
-        const pct =
-          1 -
-          Math.min(
-            1,
-            Math.max((new Date().getTime() - startFade) / duration, 0)
+      fadeoutAnimation = animation(
+        800 * ui.displayBrightness * 0.01,
+        30,
+        (percent) => {
+          streamdeck.setBrightness(
+            Math.floor(ui.displayBrightness * (1 - percent))
           )
-
-        streamdeck.setBrightness(Math.floor(ui.displayBrightness * pct))
-        if (pct === 0) {
-          clearInterval(fadeoutTimer)
         }
-      }, 30)
+      )
+      fadeoutAnimation.start()
     } else {
       streamdeck.setBrightness(ui.displayBrightness)
     }
