@@ -1,7 +1,7 @@
 import animation from '@/lib/cli/animate'
 import Sleep from '@/lib/cli/sleep'
 import { useUiStore } from '@/stores/ui'
-import { watch } from 'vue/dist/vue'
+import { watch } from 'vue'
 
 export const SleepScreen = (timeout, streamdeck) => {
   const ui = useUiStore()
