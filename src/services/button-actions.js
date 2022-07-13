@@ -262,6 +262,7 @@ export default (actionBus, connectionBus) => {
   }
 
   const loadFile = (path) => {
+    store.gcode.setLoaded(path, null)
     command('watchdir:load', path)
   }
   const loadDetailFile = () => {
