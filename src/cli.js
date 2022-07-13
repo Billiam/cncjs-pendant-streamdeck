@@ -1,3 +1,4 @@
+import { SleepScreen } from '@/lib/cli/sleep-screen'
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
 import { openStreamDeck } from '@elgato-stream-deck/node'
@@ -7,8 +8,6 @@ import { useUiStore } from '@/stores/ui'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { arrayWrap } from '@/lib/enumerable'
 import { createPinia, setActivePinia } from 'pinia'
-import animation from '@/lib/cli/animate'
-import Sleep from '@/lib/cli/sleep'
 import CliButton from '@/lib/cli/button'
 import Sharp from 'sharp'
 
@@ -31,28 +30,7 @@ const run = async () => {
   ui.setIconSize(streamdeck.ICON_SIZE)
 
   const { ui: uiConfig } = await container.get('config')
-  const sleep = Sleep(uiConfig?.timeout)
-
-  let fadeoutAnimation
-  watch(sleep.asleep, (asleep) => {
-    ui.asleep = asleep
-    fadeoutAnimation?.cancel()
-    fadeoutAnimation = null
-    if (asleep) {
-      fadeoutAnimation = animation(
-        800 * ui.displayBrightness * 0.01,
-        30,
-        (percent) => {
-          streamdeck.setBrightness(
-            Math.floor(ui.displayBrightness * (1 - percent))
-          )
-        }
-      )
-      fadeoutAnimation.start()
-    } else {
-      streamdeck.setBrightness(ui.displayBrightness)
-    }
-  })
+  const { wake } = SleepScreen(uiConfig?.timeout, streamdeck)
 
   const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
 
@@ -176,9 +154,7 @@ const run = async () => {
   })
 
   streamdeck.on('down', (keyIndex) => {
-    const isAsleep = ui.asleep
-    sleep.clearSleep()
-    if (isAsleep) {
+    if (wake()) {
       return
     }
     const button = effectiveButtons.value[keyIndex]
@@ -189,9 +165,7 @@ const run = async () => {
   })
 
   streamdeck.on('up', (keyIndex) => {
-    const isAsleep = ui.asleep
-    sleep.clearSleep()
-    if (isAsleep) {
+    if (wake()) {
       return
     }
     const button = effectiveButtons.value[keyIndex]
