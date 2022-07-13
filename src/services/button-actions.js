@@ -301,6 +301,12 @@ export default (actionBus, connectionBus) => {
 
     actionBus.emit('absolutePosition', move)
   }
+  const startFeed = () => {
+    command('feeder:start')
+  }
+  const stopFeed = () => {
+    command('feeder:stop')
+  }
   const setUserFlag = (id, value) => {
     store.ui.setUserFlag(id, value)
   }
@@ -352,8 +358,10 @@ export default (actionBus, connectionBus) => {
     setRapids,
     setUserFlag,
     sortDetails,
+    startFeed,
     startSmoothJog,
     stop,
+    stopFeed,
     stopSmoothJog,
     swapScene,
     toggleFeedrateInterval,

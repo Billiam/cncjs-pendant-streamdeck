@@ -157,7 +157,6 @@ export default class CliButton {
         this.canvas
       ).then((newBuffers) => {
         if (time < this.drawTime) {
-          console.log('Skipping slow draw', time - this.drawTime)
           return
         }
         this.drawTime = time

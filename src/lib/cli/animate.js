@@ -8,7 +8,6 @@ export default (duration, fps, callback) => {
       0,
       Math.min(1, (Date.now() - startTime) / duration)
     )
-    console.log({ percent })
     callback(percent)
     if (percent < 1) {
       run()

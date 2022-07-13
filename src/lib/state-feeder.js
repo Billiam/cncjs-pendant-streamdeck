@@ -66,6 +66,20 @@ export default (socket, ackBus) => {
         cnc.setError(msg)
       }
     },
+    'feeder:status': (status) => {
+      if (!status.hold) {
+        cnc.clearFeedHold()
+        return
+      }
+      let data, msg, err
+      if (status.holdReason) {
+        ;({ data, msg, err } = status.holdReason)
+      }
+      cnc.setFeedHold(data, msg)
+      if (err) {
+        console.error(err)
+      }
+    },
     'workflow:state': (status) => {
       cnc.setWorkflowState(status)
     },
