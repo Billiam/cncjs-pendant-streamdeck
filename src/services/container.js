@@ -39,12 +39,16 @@ export default () => {
     args: ['@connectionConfig'],
     type: 'method',
   })
+  container.register('socketPort', (config) => config.socketPort, {
+    args: ['@connectionConfig'],
+    type: 'method',
+  })
   container.register('machineConfig', (config) => config.machine, {
     args: ['@config'],
     type: 'method',
   })
   container.register('cncApi', CncApi, {
-    args: ['@accessToken', '@socketAddress'],
+    args: ['@accessToken', '@socketAddress', '@socketPort'],
     type: 'method',
   })
   container.register('ackBus', bus, { type: 'method', singleton: true })

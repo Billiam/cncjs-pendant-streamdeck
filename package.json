@@ -16,6 +16,7 @@
     "jsonschema": "^1.4.1",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
+    "node-fetch": "^2.6.7",
     "pinia": "^2.0.13",
     "serialport": "^8.0.7",
     "sharp": "^0.30.7",
