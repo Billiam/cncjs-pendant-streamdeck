@@ -57,7 +57,7 @@ const logicValidation = (config) => {
     enterPosition: 1,
   }
   const paletteCount = config?.ui?.palette?.length || 0
-  const referencedScenes = new Set(['fileDetails', 'numpad'])
+  const referencedScenes = new Set(['fileDetails', 'numpad', 'home'])
   const referencedButtons = new Set(['gcodeFile', 'gcodeFolder', 'sortScene'])
 
   const addButtonError = (button, path) => {
