@@ -138,11 +138,14 @@
             "clearGcode",
             "clearUserFlag",
             "completeInput",
+            "connect",
+            "decreaseBrightness",
             "decreaseFeedrate",
             "decreaseSpindle",
             "fullscreen",
             "hold",
             "homing",
+            "increaseBrightness",
             "increaseFeedrate",
             "increaseSpindle",
             "loadDetailFile",
@@ -152,7 +155,9 @@
             "resetFeedrate",
             "resetSpindle",
             "run",
+            "startFeed",
             "stop",
+            "stopFeed",
             "toggleFeedrateInterval",
             "toggleShowAbsolutePosition",
             "toggleSpindleInterval",
@@ -243,6 +248,8 @@
             "clearGcode",
             "clearUserFlag",
             "completeInput",
+            "connect",
+            "decreaseBrightness",
             "decreaseFeedrate",
             "decreaseSpindle",
             "enterPosition",
@@ -252,6 +259,7 @@
             "goto",
             "hold",
             "homing",
+            "increaseBrightness",
             "increaseFeedrate",
             "increaseSpindle",
             "input",
@@ -273,8 +281,10 @@
             "setScene",
             "setUserFlag",
             "sortDetails",
+            "startFeed",
             "startSmoothJog",
             "stop",
+            "stopFeed",
             "stopSmoothJog",
             "swapScene",
             "toggleFeedrateInterval",
@@ -369,6 +379,29 @@
           "description": "Array of usable axes",
           "items": { "$ref": "#/definitions/axis" },
           "type": "array"
+        },
+        "axisSpeeds": {
+          "additionalProperties": false,
+          "properties": {
+            "a": {
+              "type": "number"
+            },
+            "b": {
+              "type": "number"
+            },
+            "c": {
+              "type": "number"
+            },
+            "x": {
+              "type": "number"
+            },
+            "y": {
+              "type": "number"
+            },
+            "z": {
+              "type": "number"
+            }
+          }
         }
       },
       "type": "object"
@@ -401,13 +434,39 @@
       "additionalProperties": false,
       "description": "Grid dimension configuration",
       "properties": {
+        "brightness": {
+          "type": "integer",
+          "minimum": 10,
+          "maximum": 100
+        },
         "bgColor": { "$ref": "#/definitions/color" },
         "columns": { "type": "integer", "default": 5 },
+        "font": {
+          "type": "string",
+          "default": "monospace"
+        },
+        "fontSize": {
+          "type": "number",
+          "default": 16
+        },
+        "lineHeight": {
+          "type": "number"
+        },
+        "gcodeColors": {
+          "G0": { "$ref": "#/definitions/color" },
+          "G1": { "$ref": "#/definitions/color" },
+          "G2G3": { "$ref": "#/definitions/color" }
+        },
         "palette": { "items": { "type": "string" }, "type": "array" },
         "progressColor": { "$ref": "#/definitions/color" },
         "rows": { "type": "integer", "default": 3 },
         "textColor": { "$ref": "#/definitions/color" },
-        "textShadow": { "type": "boolean" }
+        "textShadow": { "type": "boolean" },
+        "timeout": {
+          "type": "number",
+          "default": 0,
+          "minimum": 0
+        }
       },
       "type": "object"
     }
