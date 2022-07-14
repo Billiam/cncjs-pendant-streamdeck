@@ -1,6 +1,6 @@
 # cncjs-pendant-streamdeck
 
-A _highly_ configurable mobile web and (eventually) HID elgato stream deck pendant for CNCjs
+A _highly_ configurable mobile web and Elgato Stream Deck pendant for CNCjs and Grbl
 
 The web version acts as a prototype for the stream deck, with the side effect of being a powerful and useful
 pendant in its own right.
@@ -9,73 +9,114 @@ All configuration takes place in `public/config.json`. An example, mostly matchi
 
 You can use your own images, or those included with the pendant.
 
-
-## TODO
-
-### Features
-
-* File listing
-* File loading
-* Absolute position navigation
-* Navigation presets
-* Jog presets
-
-
-### Wishlist
+### Wishlist/To-do
 
 * Configurator
-
-## Configuration
-
-* Probe layout + icons
-* 
 
 ## Features
 
 * Unlimited pages
-* Any grid dimensions you like
+* Mobile web support
+* Arbitrary grid dimensions for web version
+* Excessively customizable
 * Execute actions on press, release, or button hold
 * Up to 6 axes
 * Lots of included icons, or add your own
-* Display loaded gcode
+* Display and animate gcode
 * Manage alarms, hold, and pause events (like gcode or macro-triggered toolchanges)
 
-## Display customization
+## Button customization
 
-* Unlimited pages
-* Any grid size
-* Button images
-* Templated button text
-* Global text color
+* Global settings
+  * Text color
+  * Press-and-hold color
+* Images
 * Vertical and horizontal text alignment
 * Background color
+* Templated button text
 * Conditionally show/hide buttons
 * Conditionally disable buttons
-* Buttons may occupy odd grid dimensions (2x1, 4x3 etc)
+* Buttons with odd grid dimensions (2x1, 4x3 etc)
 
 ## Supported actions
 
-* Jog
+Run one or more actions when a button is pressed, released or held for a moment.
+
+* Jogging
 * Smooth jogging (with multiple axes)
-* Arbitrary gcode
-* Run cncjs commands
-* Run cncjs macros
+* Homing
+* Run arbitrary gcode
+* Execute macros
+* Navigate cncjs watch directory, sort and select gcode files
+* Run, pause, feed hold
+* Override feedrate, spindle and rapid speeds
 * Zero work coordinates or set arbitrary offsets
 * Move to specific coordinates
 * Fullscreen
 * Scene changing actions (navigation, swap, reset)
+* Store arbitrary values
+* Set brightness (stream deck only)
 
 ## Configuration
 
-The top level configuration has several keys: 
-* `cncjs` for connection information
-* `ui` for the global grid size and default colors
-* `buttons` to configure buttons and their actions
-* `scenes` for the way that buttons are laid out on individual pages
+Buttons, layout, and other behavior are configured with the `config.json` file.
+
+The top level configuration has the following keys:
+
+| Key                   | Description                               |
+|-----------------------|-------------------------------------------|
+| [`cncjs`](#cncjs)     | Connection information                    |
+| [`ui`](#ui)           | Global grid size and default colors       |
+| [`buttons`](#buttons) | Button display and actions                |
+| [`scenes`](#scenes)   | Button layout on individual pages         |
+| [`machine`](#machine) | Machine axis and per-axis speed modifiers |
+
+### `cncjs`
+
+| Key              | Type      | Description                                              |
+|------------------|-----------|----------------------------------------------------------|
+| `baudRate`       | `Integer` | Serial connection baud rate                              |
+| `controllerType` | `Enum`    | CNC controller type. Allowed: [`Grbl`]                   |
+| `port`           | `String`  | Serial connection port                                   |
+| `socketAddress`  | `String`  | URL for socket connection to cncjs. Usually `localhost`  |
+| `socketPort`     | `Integer` | Socket connection port for cncjs. Usually `80` or `8000` |
+
+### `ui`
+
+| Key                              | Type                        | Description                                                                                   |
+|----------------------------------|-----------------------------|-----------------------------------------------------------------------------------------------|
+| `bgColor`                        | (`Integer`,`String`)        | Default background color for buttons. May be a color string or [palette](#ui/palette) index   |
+| `brightness`                     | `Integer`                   | Default Stream Deck brightness. [`10` - `100`]                                                |
+| `columns`                        | `Integer`                   | Number of columns to display                                                                  |
+| `rows`                           |                             | Number of rows to display                                                                     |
+| `font`                           | `String`                    | Font to use for text display. Default: `monospace`                                            |
+| `fontSize`                       | `String`                    | Font size to use for text display                                                             |
+| `lineHeight`                     | `String`                    | Line height for text display. Defaults to (1.1 * `fontSize`)                                  |
+| [`gcodeColors`](#ui-gcodeColors) | [`Object`](#ui-gcodeColors) | Line and curve colors for gcode rendering.                                                    |
+| `palette`                        | `String[]`                  | Array of colors that buttons and other color settings may refer to by index                   |
+| `progressColor`                  | (`Integer`,`String`)        | Color to use for button hold indicator. May be a color string or [palette](#ui/palette) index |
+| `textColor`                      | (`Integer`,`String`)        | Color to use for button text. May be a color string or [palette](#ui/palette) index           |
+| `timeout`                        | `Integer`                   | Duration, in seconds, before blanking display. _Stream Deck only_.                            |
+
+#### `ui/gcodeColors`
+
+Gcode preview can use different colors for rapid travel, straight and curved cuts. Colors may use `rgb(#,#,#`)`, hex `#001122` etc.
+Palette colors are not supported here.
+
+| Key    | Type     | Description                              |
+|--------|----------|------------------------------------------|
+| `G0`   | `String` | Color to use for rapid travel moves.     |
+| `G1`   | `String` | Color to use for straight line cut moves |
+| `G2G3` | `String` | Color to use for curve cut moves         |
 
 The following variables are available to button conditions (like `if` and `disabled`), and templated text.
 
-### `ui` **object**
+#### `ui/palette`
+
+
+### `ui`
+
+* Type: `object`
 
 * `columns` **integer**: Number of columns to display
 * `rows` **integer**: Number of rows to display
@@ -87,6 +128,7 @@ as by their 0-indexed position, so that all button colors can be updated at once
 * `progressColor`: **(string|integer)**: Default color for push-and-hold indicator. Palette color index or CSS color format.
 
 ### `cnc` **object**
+
  * `connected` **boolean**: Whether CNC connection has been established
  * `runState` **string**: 
  * `workflowState` **string**:
@@ -130,28 +172,6 @@ as by their 0-indexed position, so that all button colors can be updated at once
 
 ### `buttons` **object**
 
-* `<any string>` **object**: The key is a unique button ID
-  * `bgColor` **(string|integer)**: Button background color. Palette color index or CSS color format.
-  * `icon` **string**: The path to an icon, relative to the `public/icons` directory. example: `custom/my-custom-icon.png`
-  * `text` **string**: A string which can contain variables. See: [template replacement]
-  * `textSize` **number**, *default 1*: Text size modifier. Set to 2 for double sized text, or 0.5 for half-sized
-  * `textAlignment` **string** *default "left"*: How text will be aligned. One of: `top left`, `top center`,
-  `top right`, `left`, `center` `right`, `bottom left`, `bottom center`, `bottom right`
-  * `rows` **integer**, *default 1*: Number of rows for button to occupy.
-  * `columns` **integer**, *default 1*: Number of columns for button to occupy.
-  * `if` **string**: Condition which can be used to hide the button. See: [conditions]
-  * `type` **string**: Magic value which changes the buttons appearance. The only value available is `gcodePreview`. See: [button types]
-  * `animated` **boolean**, *default false*: Only used by `gcodePreview` type. If true, gcode will be rendered over several seconds
-  * `disabled` **string**: Condition which can be used to disable the button. Disabled buttons do not
-  display a background color, are partially transparent, and do not respond to button pushes. See: [conditions]
-  * `actions` **object[]**: Array of actions to take on button press, release, or hold
-    * `action` **string**: Action ID. See [#actions](#actions)
-    * `arguments` **string[]**: List of arguments to pass to the action. Types and number depend on the action.
-    * `event` **string[]** *default "down"*: What kind of button event will trigger the action, one of: `down`, `up`, `hold`.  
-    If a `hold` event is set and fires, configured `up` events will be skipped.
-
-#### Example:
-
 ```json
 {
   "buttons": {
@@ -172,13 +192,28 @@ as by their 0-indexed position, so that all button colors can be updated at once
 }
 ```
 
+* `<any string>` **object**: The key is a unique button ID
+  * `bgColor` **(string|integer)**: Button background color. Palette color index or CSS color format.
+  * `icon` **string**: The path to an icon, relative to the `public/icons` directory. example: `custom/my-custom-icon.png`
+  * `text` **string**: A string which can contain variables. See: [template replacement]
+  * `textSize` **number**, *default 1*: Text size modifier. Set to 2 for double sized text, or 0.5 for half-sized
+  * `textAlignment` **string** *default "left"*: How text will be aligned. One of: `top left`, `top center`,
+  `top right`, `left`, `center` `right`, `bottom left`, `bottom center`, `bottom right`
+  * `rows` **integer**, *default 1*: Number of rows for button to occupy.
+  * `columns` **integer**, *default 1*: Number of columns for button to occupy.
+  * `if` **string**: Condition which can be used to hide the button. See: [conditions]
+  * `disabled` **string**: Condition which can be used to disable the button. Disabled buttons do not respond to button presses,
+  do not have a background color, and are grayed out. See: [conditions]
+  * `type` **string**: Magic value which changes the buttons appearance. The only value available is `gcodePreview`. See: [button types]
+  * `animated` **boolean**, *default false*: Only used by `gcodePreview` type. If true, gcode will be rendered over several seconds
+  * `actions` **object[]**: Array of actions to take on button press, release, or hold
+    * `action` **string**: Action ID. See [#actions](#actions)
+    * `arguments` **string[]**: List of arguments to pass to the action. Types and number depend on the action.
+    * `event` **string[]** *default "down"*: What kind of button event will trigger the action, one of: `down`, `up`, `hold`.  
+    If a `hold` event has been configured and is activated, the `up` actions (if any) will be skipped.
+
+
 ### `scenes` **object**
-
-* `<any string>` **object**: The key is a unique scene ID
-  * buttons* **(string|null)[][]**:  Nested array of buttons. Each nested array represents a row of buttons, listed by their ID  
-  `null` button values will be empty when displayed
-
-#### Example
 
 ```json
 {
@@ -186,13 +221,19 @@ as by their 0-indexed position, so that all button colors can be updated at once
     "my_scene": {
       "buttons": [
         ["row_1_button", null, null, "back"],
-        ["row_2_button", "another button"]
-        []
+        ["row_2_button", "another button"],
+        [["mutually_exclusive_1", "mutually_exclusive_2"]]
       ]
     }
   }
 }
 ```
+
+* `<any string>` **object**: The key is a unique scene ID
+  * buttons* **(string|null)[][]**:  Nested array of buttons. Each nested array represents a row of buttons, listed by their ID  
+  `null` button values will be empty when displayed.  
+  Instead of a button id, a (further) nested array containing button IDs can be used, only one of which will be displayed,
+  with the last button having priority. Useful toggle or other conditional buttons which should take up the same space.
 
 ## Actions
 
@@ -248,24 +289,6 @@ Arguments: none
 
 ### Jogging
 
-  * `jog`: Jog in the given direction, based on `cnc.jogDistance`  
-  Arguments:
-    1. The direction of motion, one of `-` or `+`
-    2. The axis to move, one of `x`, `y`, `z`, `a`, `b`, `c`
-  * `startSmoothJog`: Start smooth jogging in the given direction, based on `cnc.jogSpeed`. Multiple jog directions may 
-    be active at the same time  
-    Arguments:
-      1. The direction to smooth jog, one of `-` or `+`
-      2. The axis, one of `x`, `y`, `z`, `a`, `b`, `c`
-  * `stopSmoothJog`: Stop smooth jogging in the given direction.  
-    Arguments:
-      1. The direction to _stop_ smooth jogging, one of `-` or `+`
-      2. The axis, one of `x`, `y`, `z`, `a`, `b`, `c`
-
-#### `arguments`:
-
-
-
 ```json
 {
   "actions": [
@@ -281,6 +304,27 @@ Arguments: none
   ]
 }
 ```
+
+#### `jog`: Jog in the given direction, based on `cnc.jogDistance` 
+
+* Arguments:
+  1. The direction of motion, one of `-` or `+`
+  2. The axis to move, one of `x`, `y`, `z`, `a`, `b`, `c`
+  
+#### `startSmoothJog`: Start smooth jogging in the given direction
+
+Based on `cnc.jogSpeed` and `machine.axisSpeeds`. Multiple jog directions may be active at the same time  
+
+* Arguments:
+  1. The direction to smooth jog, one of `-` or `+`
+  2. The axis, one of `x`, `y`, `z`, `a`, `b`, `c`
+
+#### `stopSmoothJog`: Stop smooth jogging in the given direction.  
+
+* Arguments:
+  1. The direction to _stop_ smooth jogging, one of `-` or `+`
+  2. The axis, one of `x`, `y`, `z`, `a`, `b`, `c`
+
 
 * `jogDistance`: Increase or decrease jog distance
 * `jogSpeed`: Increase or decrease smooth jog speed
