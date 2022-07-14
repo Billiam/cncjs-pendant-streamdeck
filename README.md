@@ -63,13 +63,13 @@ Buttons, layout, and other behavior are configured with the `config.json` file.
 
 The top level configuration has the following keys:
 
-| Key                   | Description                               |
-|-----------------------|-------------------------------------------|
-| [`cncjs`](#cncjs)     | Connection information                    |
-| [`ui`](#ui)           | Global grid size and default colors       |
-| [`buttons`](#buttons) | Button display and actions                |
-| [`scenes`](#scenes)   | Button layout on individual pages         |
-| [`machine`](#machine) | Machine axis and per-axis speed modifiers |
+| Key                   | Type     | Description                               |
+|-----------------------|----------|-------------------------------------------|
+| [`cncjs`](#cncjs)     | `Object` | Connection information                    |
+| [`ui`](#ui)           | `Object` | Global grid size and default colors       |
+| [`buttons`](#buttons) | `Object` | Button display and actions                |
+| [`scenes`](#scenes)   | `Object` | Button layout on individual pages         |
+| [`machine`](#machine) | `Object` | Machine axis and per-axis speed modifiers |
 
 ### `cncjs`
 
@@ -81,26 +81,46 @@ The top level configuration has the following keys:
 | `socketAddress`  | `String`  | URL for socket connection to cncjs. Usually `localhost`  |
 | `socketPort`     | `Integer` | Socket connection port for cncjs. Usually `80` or `8000` |
 
+### `machine`
+
+| Key                                | Type                           | Description                                                     |
+|------------------------------------|--------------------------------|-----------------------------------------------------------------|
+| `axes`                             | `String[]`                     | Array of axes in use. Allowed values: [`a`,`b`,`c`,`x`,`y`,`z`] |
+| [`axisSpeeds`](#machineaxisSpeeds) | [`Object`](#machineaxisSpeeds) | Per-axis speed overrides, used for smooth jogging               |
+
+#### `machine/axisSpeeds`
+
+Override smooth jog speeds on a per-axis basis. Allows moving specific axes slower or faster than the current smooth jog travel speed.
+
+| Key   | Type         | Description                                         |
+|-------|--------------|-----------------------------------------------------|
+| `a`   | `Number`     | Travel speed multiplier for the A axis. Default `1` |
+| `b`   | `Number`     | Travel speed multiplier for the B axis. Default `1` |
+| `c`   | `Number`     | Travel speed multiplier for the C axis. Default `1` |
+| `x`   | `Number`     | Travel speed multiplier for the X axis. Default `1` |
+| `y`   | `Number`     | Travel speed multiplier for the Y axis. Default `1` |
+| `z`   | `Number`     | Travel speed multiplier for the Z axis. Default `1` |
+
 ### `ui`
 
-| Key                              | Type                        | Description                                                                                   |
-|----------------------------------|-----------------------------|-----------------------------------------------------------------------------------------------|
-| `bgColor`                        | (`Integer`,`String`)        | Default background color for buttons. May be a color string or [palette](#ui/palette) index   |
-| `brightness`                     | `Integer`                   | Default Stream Deck brightness. [`10` - `100`]                                                |
-| `columns`                        | `Integer`                   | Number of columns to display                                                                  |
-| `rows`                           |                             | Number of rows to display                                                                     |
-| `font`                           | `String`                    | Font to use for text display. Default: `monospace`                                            |
-| `fontSize`                       | `String`                    | Font size to use for text display                                                             |
-| `lineHeight`                     | `String`                    | Line height for text display. Defaults to (1.1 * `fontSize`)                                  |
-| [`gcodeColors`](#ui-gcodeColors) | [`Object`](#ui-gcodeColors) | Line and curve colors for gcode rendering.                                                    |
-| `palette`                        | `String[]`                  | Array of colors that buttons and other color settings may refer to by index                   |
-| `progressColor`                  | (`Integer`,`String`)        | Color to use for button hold indicator. May be a color string or [palette](#ui/palette) index |
-| `textColor`                      | (`Integer`,`String`)        | Color to use for button text. May be a color string or [palette](#ui/palette) index           |
-| `timeout`                        | `Integer`                   | Duration, in seconds, before blanking display. _Stream Deck only_.                            |
+| Key                             | Type                       | Description                                                                                  |
+|---------------------------------|----------------------------|----------------------------------------------------------------------------------------------|
+| `bgColor`                       | (`Integer`,`String`)       | Default background color for buttons. May be a color string or [palette](#uipalette) index   |
+| `brightness`                    | `Integer`                  | Default Stream Deck brightness. [`10` - `100`]                                               |
+| `columns`                       | `Integer`                  | Number of columns to display                                                                 |
+| `rows`                          |                            | Number of rows to display                                                                    |
+| `font`                          | `String`                   | Font to use for text display. Default: `monospace`                                           |
+| `fontSize`                      | `String`                   | Font size to use for text display                                                            |
+| `lineHeight`                    | `String`                   | Line height for text display. Defaults to (1.1 * `fontSize`)                                 |
+| [`gcodeColors`](#uigcodeColors) | [`Object`](#uigcodeColors) | Line and curve colors for gcode rendering.                                                   |
+| `palette`                       | `String[]`                 | Array of colors that buttons and other color settings may refer to by index                  |
+| `progressColor`                 | (`Integer`,`String`)       | Color to use for button hold indicator. May be a color string or [palette](#uipalette) index |
+| `textColor`                     | (`Integer`,`String`)       | Color to use for button text. May be a color string or [palette](#uipalette) index           |
+| `timeout`                       | `Integer`                  | Duration, in seconds, before blanking display. _Stream Deck only_.                           |
 
 #### `ui/gcodeColors`
 
-Gcode preview can use different colors for rapid travel, straight and curved cuts. Colors may use `rgb(#,#,#`)`, hex `#001122` etc.
+Gcode preview can use different colors for rapid travel, straight and curved cuts. Colors may use `rgb(0, 50, 200)`, hex `#001122` etc.
 Palette colors are not supported here.
 
 | Key    | Type     | Description                              |
@@ -113,6 +133,10 @@ The following variables are available to button conditions (like `if` and `disab
 
 #### `ui/palette`
 
+Palette colors are an array of color strings (of any length).
+You can refer to these colors in most places that expect a color by referencing their array index.
+
+This helps keep your color choices consistent, and allows changing many colors at once if needed.
 
 ### `ui`
 
