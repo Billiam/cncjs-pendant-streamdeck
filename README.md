@@ -19,11 +19,11 @@ You can use your own images, or those included with the pendant.
 * Mobile web support
 * Arbitrary grid dimensions for web version
 * Excessively customizable
-* Execute actions on press, release, or button hold
+* Execute one or more actions on press, release, and/or button hold
 * Up to 6 axes
 * Lots of included icons, or add your own
 * Display and animate gcode
-* Manage alarms, hold, and pause events (like gcode or macro-triggered toolchanges)
+* Manage alarms, hold, and pause events (like macro-triggered tool changes)
 
 ## Button customization
 
@@ -92,14 +92,14 @@ The top level configuration has the following keys:
 
 Override smooth jog speeds on a per-axis basis. Allows moving specific axes slower or faster than the current smooth jog travel speed.
 
-| Key   | Type         | Description                                         |
-|-------|--------------|-----------------------------------------------------|
-| `a`   | `Number`     | Travel speed multiplier for the A axis. Default `1` |
-| `b`   | `Number`     | Travel speed multiplier for the B axis. Default `1` |
-| `c`   | `Number`     | Travel speed multiplier for the C axis. Default `1` |
-| `x`   | `Number`     | Travel speed multiplier for the X axis. Default `1` |
-| `y`   | `Number`     | Travel speed multiplier for the Y axis. Default `1` |
-| `z`   | `Number`     | Travel speed multiplier for the Z axis. Default `1` |
+| Key   | Type         | Description                                          |
+|-------|--------------|------------------------------------------------------|
+| `a`   | `Number`     | Travel speed multiplier for the A axis. Default: `1` |
+| `b`   | `Number`     | Travel speed multiplier for the B axis. Default: `1` |
+| `c`   | `Number`     | Travel speed multiplier for the C axis. Default: `1` |
+| `x`   | `Number`     | Travel speed multiplier for the X axis. Default: `1` |
+| `y`   | `Number`     | Travel speed multiplier for the Y axis. Default: `1` |
+| `z`   | `Number`     | Travel speed multiplier for the Z axis. Default: `1` |
 
 ### `ui`
 
@@ -137,6 +137,90 @@ Palette colors are an array of color strings (of any length).
 You can refer to these colors in most places that expect a color by referencing their array index.
 
 This helps keep your color choices consistent, and allows changing many colors at once if needed.
+
+### `scenes`
+
+**example**
+
+```json
+{
+  "scenes": {
+    "myScene": {
+      "buttons": [
+        ["row1_button", null, null, "row1_button"],
+        [],
+        ["row3_button"]
+      ]
+    }
+  }
+}
+```
+
+The scenes configuration controls the layout of buttons (from the [`buttons`](#buttons) object), and is used to
+create individual pages. A scene represents a single page of visible buttons. It must have a unique name, so that it
+can be referred to by button actions for navigation. 
+
+| Key                                             | Type                               | Description    |
+|-------------------------------------------------|------------------------------------|----------------|
+| [`<unique scene name>`](#scenesuniquescenename) | [`Object`](#scenesuniquescenename) | A named scene  |
+
+#### `scenes/<unique scene name>`
+
+Individual sceness contain a single key: `buttons`.
+
+| Key       | Type                | Description            |
+|-----------|---------------------|------------------------|
+| `buttons` | `(String,Null)[][]` | Nested array of buttons |
+
+The buttons key is a nested array of button IDs, with each inner array representing a row of buttons.
+
+`null` values can be used in place of button IDs to space later buttons in the row.
+
+The button array does not need to be padded to the configured number of rows and columns, and will instead shrink to fit.
+The behavior when scenes contain _more_ than the configured row or column count is considered undefined.
+
+The following would display eight buttons in a 3x3 grid, with the center square empty.
+
+**example**
+
+```json
+{ 
+  "buttons": [
+    ["b1", "b2","b3"],
+    ["b4", null,"b5"],
+    ["b6","b7","b8"]
+  ]
+}
+```
+
+Instead of a button ID in a row, _another_ nested array can be used (containing button IDs). In this case, only the 
+**last visible button** in the array will be displayed. This is useful for making toggle buttons (technically two 
+different buttons), or other conditional buttons that occupy the same space.
+
+
+**example**
+
+```json
+{
+  "buttons": [
+    [
+      "row1_button",
+      [
+        "conditional_button1",
+        "conditional_button2"
+      ]
+    ],
+    ["row2_button"],
+    ["row3_button"]
+  ]
+}
+```
+
+Several scenes have special meaning:
+
+* The `home` scene must exist, as it is used when the webpage or process first loads.
+* The `numpad` scene must exist _if_ any buttons use the `enterWcs` or `enterPosition` button actions.
+* The `gcodeList` scene _should not_ exist in your scenes list, but is always available for navigation events anyway.
 
 ### `ui`
 
@@ -373,6 +457,22 @@ Arguments:
   1. One of: 
      * `backspace`: erase the last character of the input
      * `toggleSign`: change input to/from negative/positive
+
+### File list
+
+The file list scene layout is not configurable, since it is dynamically generated. However, the buttons used in this scene can have their appearance customized.
+
+It is recommended that configuration of these buttons be limited background color and image.
+
+| Key                      | Description                                                           |
+|--------------------------|-----------------------------------------------------------------------|
+| `fileListFile`           | GCode file button                                                     |
+| `fileListFolder`         | Subfolder button                                                      |
+| `fileListPreviousFolder` | "Up a directory" button                                               |
+| `fileListDownArrow`      | Down arrow for scrolling when the file list overflows the grid layout |
+| `fileListUpArrow`        | Up arrow for scrolling when the file list overflows the grid layout   |
+| `sortScene`              | Button that links to a scene where file sort options can be selected  |
+
 
 ### Configuration
 
