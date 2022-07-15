@@ -35,7 +35,7 @@ export const useFileList = () => {
 
     const defaultButton = {
       text: filename,
-      textAlignment: 'bottom center',
+      textAlignment: 'bottom left',
       bgColor: selected || !cnc.idle ? 8 : 5,
       icon: 'default/small_document.png',
       actions: [
@@ -57,7 +57,7 @@ export const useFileList = () => {
     const defaultButton = {
       text: path,
       icon: 'default/small_folder.png',
-      textAlignment: 'bottom center',
+      textAlignment: 'bottom left',
       bgColor: 4,
       actions: [
         {
@@ -103,7 +103,7 @@ export const useFileList = () => {
   }
 
   const downArrow = () => {
-    const configButton = buttonConfig.fileListUpArrow ?? {}
+    const configButton = buttonConfig.fileListDownArrow ?? {}
     const firstRowColumnsReserved = 3
     const columnsReserved = 1
     const pages =
