@@ -859,17 +859,6 @@ It is recommended that configuration of these buttons be limited background colo
 | `fileListUpArrow`        | Up arrow for scrolling when the file list overflows the grid layout   |
 | `sortScene`              | Button that links to a scene where file sort options can be selected  |
 
-
-### Configuration
-
-## Recipes
-
-### Buttons with two different states
-
-### Change several other buttons
-
-### Expand button on press
-
 ## Licenses and credits
 
 Several icon sets have been added for convenience
