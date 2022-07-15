@@ -305,16 +305,6 @@ pressed briefly, and perform a different action if pressed for a longer period, 
 | `event`     | `Enum`     | When the action will take place. Allowed: [`up`,`down`,`hold`]. Default: `down`              |
 | `arguments` | `String[]` | Options passed to the event. See: [actions](#actions) for specific arguments for each event  |
 
-**example**
-
-```json
-{
-  "actions": [
-    
-  ]
-}
-```
-
 ## `actions`
 
 [Buttons](#buttons) can use any of the following actions.
@@ -687,6 +677,65 @@ Stop cncjs's feeder queue
 
 Start cncjs's feeder queue if stopped
 
+
+### Conditions
+
+You may want to conditionally hide buttons, or visibly disable them, based on the current application state: Whether a job
+is currently running, whether the pendant is running in a web browser or a Stream Deck, whether gcode has been loaded,
+and so on.
+
+The `enabled` and `if` properties of a [button's](#buttonsuniquebuttonname) configuration are strings which are 
+evaluated and can execute a limited set of javascript. 
+
+Math, ternary, numeric comparison and logical operators are allowed, but methods may not be executed.
+
+Most of the application state is available for these conditions, see [variables](#variables)
+
+Conditions which are evaluated to a [truthy](https://developer.mozilla.org/en-US/docs/Glossary/Truthy) value will be
+shown for `if` properties, or disabled for `disabled` properties.
+Conditions which evaluate to a [falsy](https://developer.mozilla.org/en-US/docs/Glossary/Falsy) value will be
+hidden for `if` properties, or enabled for `disabled` properties.
+
+**example**
+
+```json
+{
+  "buttons": {
+    "web_only_alarm_button": {
+      "if": "ui.web",
+      "disabled": "!cnc.alarm"
+    },
+    "increase_feed_rate": {
+      "disabled": "cnc.overrides.feed === 200"
+    }
+  }
+}
+```
+
+### Templates
+
+A [button's](#buttonsuniquebuttonname) `text` configuration value can be used to display a plain text string, but it can also act as a simple text 
+_template_, containing and displaying application state information, which will be updated and re-rendered whenever any 
+of the referenced state changes.
+
+A text template is a string containing `{{ code }}`. Code within these braces will be evaluated with the same rules as
+[conditions](#conditions).
+
+**example**
+
+```json
+{
+  "buttons": {
+    "hello_world": {
+      "text": "hello world!"
+    },
+    "Current X Position": {
+      "text": "X Position: {{cnc.mpos.x}}"
+    }
+  }
+}
+```
+
 ### variables
 ### `ui`
 
@@ -765,43 +814,6 @@ as by their 0-indexed position, so that all button colors can be updated at once
   }
 }
 ```
-
-* `<any string>` **object**: The key is a unique button ID
-  * `bgColor` **(string|integer)**: Button background color. Palette color index or CSS color format.
-  * `icon` **string**: The path to an icon, relative to the `public/icons` directory. example: `custom/my-custom-icon.png`
-  * `text` **string**: A string which can contain variables. See: [template replacement]
-  * `textSize` **number**, *default 1*: Text size modifier. Set to 2 for double sized text, or 0.5 for half-sized
-  * `textAlignment` **string** *default "left"*: How text will be aligned. One of: `top left`, `top center`,
-  `top right`, `left`, `center` `right`, `bottom left`, `bottom center`, `bottom right`
-  * `rows` **integer**, *default 1*: Number of rows for button to occupy.
-  * `columns` **integer**, *default 1*: Number of columns for button to occupy.
-  * `if` **string**: Condition which can be used to hide the button. See: [conditions]
-  * `disabled` **string**: Condition which can be used to disable the button. Disabled buttons do not respond to button presses,
-  do not have a background color, and are grayed out. See: [conditions]
-  * `type` **string**: Magic value which changes the buttons appearance. The only value available is `gcodePreview`. See: [button types]
-  * `animated` **boolean**, *default false*: Only used by `gcodePreview` type. If true, gcode will be rendered over several seconds
-  * `actions` **object[]**: Array of actions to take on button press, release, or hold
-    * `action` **string**: Action ID. See [#actions](#actions)
-    * `arguments` **string[]**: List of arguments to pass to the action. Types and number depend on the action.
-    * `event` **string[]** *default "down"*: What kind of button event will trigger the action, one of: `down`, `up`, `hold`.  
-    If a `hold` event has been configured and is activated, the `up` actions (if any) will be skipped.
-
-### Interface
-
-* `fullscreen`: Toggle fullscreen (web only)
-
-### Numpad entry
-
-* `input`: Add a character to an input string  
-Arguments:
-  1. Character to add at the end of the current input. A string like "5", or a decimal point ".".
-* `completeInput`: Finish inputs, passing the number back to the previous command  
-Arguments: none
-* `inputCommand`: Other actions that can be taken for numeric input   
-Arguments:
-  1. One of: 
-     * `backspace`: erase the last character of the input
-     * `toggleSign`: change input to/from negative/positive
 
 ### File list
 
