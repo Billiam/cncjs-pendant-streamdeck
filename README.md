@@ -57,11 +57,17 @@ Run one or more actions when a button is pressed, released or held for a moment.
 * Store arbitrary values
 * Set brightness (stream deck only)
 
+## Installation
+
+### Web
+
+### Streamdeck
+
 ## Configuration
 
 Buttons, layout, and other behavior are configured with the `config.json` file.
 
-The top level configuration has the following keys:
+The top level configuration object has the following keys:
 
 | Key                   | Type     | Description                               |
 |-----------------------|----------|-------------------------------------------|
@@ -69,19 +75,23 @@ The top level configuration has the following keys:
 | [`ui`](#ui)           | `Object` | Global grid size and default colors       |
 | [`buttons`](#buttons) | `Object` | Button display and actions                |
 | [`scenes`](#scenes)   | `Object` | Button layout on individual pages         |
-| [`machine`](#machine) | `Object` | Machine axis and per-axis speed modifiers |
+| [`machine`](#machine) | `Object` | Machine axes and per-axis speed modifiers |
 
 ### `cncjs`
+
+Used to configure connection to the cncjs server, and controller serial port
 
 | Key              | Type      | Description                                              |
 |------------------|-----------|----------------------------------------------------------|
 | `baudRate`       | `Integer` | Serial connection baud rate                              |
-| `controllerType` | `Enum`    | CNC controller type. Allowed: [`Grbl`]                   |
 | `port`           | `String`  | Serial connection port                                   |
+| `controllerType` | `Enum`    | Controller type. Allowed: [`Grbl`]                       |
 | `socketAddress`  | `String`  | URL for socket connection to cncjs. Usually `localhost`  |
 | `socketPort`     | `Integer` | Socket connection port for cncjs. Usually `80` or `8000` |
 
 ### `machine`
+
+Machine axes and per-axis speed modifiers
 
 | Key                                | Type                           | Description                                                     |
 |------------------------------------|--------------------------------|-----------------------------------------------------------------|
@@ -138,6 +148,18 @@ You can refer to these colors in most places that expect a color by referencing 
 
 This helps keep your color choices consistent, and allows changing many colors at once if needed.
 
+**example**
+
+```json
+{
+  "palette": [
+    "#ccc",
+    "rgb(0, 100, 255)",
+    "salmon"
+  ]
+}
+```
+
 ### `scenes`
 
 **example**
@@ -166,18 +188,18 @@ can be referred to by button actions for navigation.
 
 #### `scenes/<unique scene name>`
 
-Individual sceness contain a single key: `buttons`.
+Individual scenes contain a single key: `buttons`.
 
-| Key       | Type                | Description            |
-|-----------|---------------------|------------------------|
+| Key       | Type                | Description             |
+|-----------|---------------------|-------------------------|
 | `buttons` | `(String,Null)[][]` | Nested array of buttons |
 
-The buttons key is a nested array of button IDs, with each inner array representing a row of buttons.
+The `buttons` value is a nested array of button IDs, with each inner array representing a row of buttons.
 
-`null` values can be used in place of button IDs to space later buttons in the row.
+`null` values represent an empty space, and can be used in place of button IDs to space later buttons in the row.
 
-The button array does not need to be padded to the configured number of rows and columns, and will instead shrink to fit.
-The behavior when scenes contain _more_ than the configured row or column count is considered undefined.
+Scenes should not contain _more_ than the configured row or column count, and this behavior is considered undefined. 
+However, scenes can have fewer items than the row or column.
 
 The following would display eight buttons in a 3x3 grid, with the center square empty.
 
@@ -193,10 +215,9 @@ The following would display eight buttons in a 3x3 grid, with the center square 
 }
 ```
 
-Instead of a button ID in a row, _another_ nested array can be used (containing button IDs). In this case, only the 
+Instead of a button ID, _another_ nested array (containing button IDs) can be used in a row. In this case, only the 
 **last visible button** in the array will be displayed. This is useful for making toggle buttons (technically two 
 different buttons), or other conditional buttons that occupy the same space.
-
 
 **example**
 
@@ -221,6 +242,67 @@ Several scenes have special meaning:
 * The `home` scene must exist, as it is used when the webpage or process first loads.
 * The `numpad` scene must exist _if_ any buttons use the `enterWcs` or `enterPosition` button actions.
 * The `gcodeList` scene _should not_ exist in your scenes list, but is always available for navigation events anyway.
+
+
+
+### `buttons`
+
+**example**
+
+```json
+{
+  "buttons": {
+    "myButton": {
+    }
+  }
+}
+```
+
+The `buttons` configuration defines buttons, their appearance details, and what (if anything) happens when buttons are
+pressed, released or held. [`Scenes`](#scenes) will refer to these buttons by their unique ID to display them their layout.
+
+| Key                                             | Type                                 | Description    |
+|-------------------------------------------------|--------------------------------------|----------------|
+| [`<unique button id>`](buttonsuniquebuttonname) | [`Object`](#buttonsuniquebuttonname) | A named button |
+
+#### `buttons/<unique button name>`
+
+| Key                          | Type                         | Description                                                                                                                                             |
+|------------------------------|------------------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`actions`](#buttonactions)  | [`Object[]`](#buttonactions) | Actions to take when button is pressed, released or held                                                                                                |
+| `bgColor`                    | (`Integer`,`String`)         | Background color. May be a color string or [palette](#uipalette) index                                                                                  |
+| `columns`                    | `Integer`                    | Number of columns the button will occupy. Default: `1`                                                                                                  |
+| `rows`                       | `Integer`                    | Number of rows the button will occupy. Default: `1`                                                                                                     |
+| `type`                       | `Enum`                       | Changes the button's behavior and appearance. Allowed: [`gcodePreview`]                                                                                 |
+| `icon`                       | `String`                     | Image path to display, relative to `public` directory. Image will be shown over background, and behind text.                                            |
+| `if`                         | `String`                     | Condition used for hiding and showing the button. See: [conditions](#conditions)                                                                        |
+| `disabled`                   | `String`                     | Condition used for disablind and enabling the button. See: [conditions](#conditions)                                                                    |
+| `text`                       | `String`                     | Text or text template that to be displayed on the button. See: [templates](#templates)                                                                  |
+| `textAlignment`              | `Enum`                       | Text position within the button. Allowed: [`top left`, `top center`, `top right`, `left`,`center`,`right`,`bottom left`,`bottom center`,`bottom right`] |
+
+
+#### `button/actions`
+
+**example**
+
+```json
+{
+  "actions": [
+    
+  ]
+}
+```
+A button's `actions` value defines what happens when a button is activated. Buttons can take multiple actions when pressed,
+or when released, or when held down for a few moments, or a combination of those.
+
+When a `hold` action is defined, any following `up` action will be skipped. This allows buttons to perform an action when
+pressed briefly, and perform a different action if pressed for a longer period, exclusively.
+
+| Key         | Type       | Description                                                                                  |
+|-------------|------------|----------------------------------------------------------------------------------------------|
+| `action`    | `String`   | The name of an action which will be triggered based on the `event`. See: [actions](#actions) |
+| `event`     | `Enum`     | When the action will take place. Allowed: [`up`,`down`,`hold`]. Default: `down`              |
+| `arguments` | `String[]` | Options passed to the event. See: [actions](#actions) for specific arguments for each event  |
 
 ### `ui`
 
@@ -362,7 +444,7 @@ as by their 0-indexed position, so that all button colors can be updated at once
 
 ### Navigation
 
-There are several different actions used for navigating between scenes. These affect what happens
+There are several different actions used for navigating between scenes. The different between these is what happens
 when navigating "back".
 
 * `navigate`: Change to the configured scene. Back will return to the previous scene where the 
