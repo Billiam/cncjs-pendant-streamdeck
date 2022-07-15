@@ -102,14 +102,14 @@ Machine axes and per-axis speed modifiers
 
 Override smooth jog speeds on a per-axis basis. Allows moving specific axes slower or faster than the current smooth jog travel speed.
 
-| Key   | Type         | Description                                          |
-|-------|--------------|------------------------------------------------------|
-| `a`   | `Number`     | Travel speed multiplier for the A axis. Default: `1` |
-| `b`   | `Number`     | Travel speed multiplier for the B axis. Default: `1` |
-| `c`   | `Number`     | Travel speed multiplier for the C axis. Default: `1` |
-| `x`   | `Number`     | Travel speed multiplier for the X axis. Default: `1` |
-| `y`   | `Number`     | Travel speed multiplier for the Y axis. Default: `1` |
-| `z`   | `Number`     | Travel speed multiplier for the Z axis. Default: `1` |
+| Key | Type     | Description                                          |
+|-----|----------|------------------------------------------------------|
+| `a` | `Number` | Travel speed multiplier for the A axis. Default: `1` |
+| `b` | `Number` | Travel speed multiplier for the B axis. Default: `1` |
+| `c` | `Number` | Travel speed multiplier for the C axis. Default: `1` |
+| `x` | `Number` | Travel speed multiplier for the X axis. Default: `1` |
+| `y` | `Number` | Travel speed multiplier for the Y axis. Default: `1` |
+| `z` | `Number` | Travel speed multiplier for the Z axis. Default: `1` |
 
 ### `ui`
 
@@ -736,84 +736,113 @@ A text template is a string containing `{{ code }}`. Code within these braces wi
 }
 ```
 
-### variables
-### `ui`
+### Variables
 
-* Type: `object`
+Variables represent pieces of application state that can be used for [conditions](#conditions) and
+[text templates](#templates). Some of these values are internal only, and unlikely to be useful for button
+display. These have not been documented below.
 
-* `columns` **integer**: Number of columns to display
-* `rows` **integer**: Number of rows to display
-* `palette` **string[]** Optional array of colors for use with button backgrounds and similar in CSS color format. Palette colors can be
-as by their 0-indexed position, so that all button colors can be updated at once.
-* `textColor` **(string|integer)**: Default color for button text. Palette color index or CSS color format.
-* `textShadow` **boolean**: Whether to add a small shadow to text
-* `bgColor` **(string|integer)**: Default color for button background. Palette color index or CSS color format.
-* `progressColor`: **(string|integer)**: Default color for push-and-hold indicator. Palette color index or CSS color format.
+These variables are available under 3 different objects: [`ui`](#ui-1), [`cnc`](#cnc-1) and [`gcode`](#gcode).
 
-### `cnc` **object**
+#### `ui`
 
- * `connected` **boolean**: Whether CNC connection has been established
- * `runState` **string**: 
- * `workflowState` **string**:
- * `locked` **boolean**: Whether CNC is in a locked state. For example, after restting following an alarm.
- * `alarmReason` **string**: Alarm reason, if known
- * `pauseReason` **string**: Pause reason, if known. Example: `M6`
- * `pauseMessage` **string**: Pause reason text, if known.
- * `pauseText` **string**: Preformatted pause reason and text for button display
- * `jogDistance` **number**: The distance value to use for jog commands. Does not include units
- * `jogSpeed` **number**: The speed to use for smooth jogging. Does not include units
- * `settings` **object<string, string>**: Current grbl settings
- * `wpos` **object**: The current work position. Properties: `x`, `y`, `z`, `a`, `b`, `c`
- * `mpos` **object**: The current machine position. Properties: `x`, `y`, `z`, `a`, `b`, `c`
- * `modal` **object**: Grbl modal state information
-   * `distance`: Current motion mode. Either `G90` or `G91`
-   * `units`: Current distance units. Either `G20` or `G21`
-   * `wcs`: The current work offset: One of `G54`
- * `isRelativeMove` **boolean**: Whether the current modal distance is `G91` (relative)
- * `distanceUnit` **string**: The current distance unit, one of `mm` or `in`
- * `alarm` **boolean**: Whether or not grbl is in an alarm state
- * `alarmText` **string**: Preformatted alarm text/reason/locked status for button display
- * `pauseText` **string**: Preformatted pause text/reason for button display
- * `ready` **boolean**: Whether the machine is connected and either in the idle or jog (meaning smooth jogging) state
+State related to the current pendant user interface
 
-### `gcode` **object**
-  * `name` **string**: The path to the currently loaded gcode file, if any
-  * `gcode` **string**: The raw loaded gcode
-  * `displayRange` **object**: Preformatted range information from the loaded gcode
-    * `min` **object**: The minimum axis ranges
-      * `x` **number**: The minimum X axis value
-      * `y` **number**: The minimum Y axis value
-      * `z` **number**: The minimum Z axis value
-    * `max` **object**: The maximum axis ranges
-      * `x` **number**: The maximum X axis value
-      * `y` **number**: The maximum Y axis value
-      * `z` **number**: The maximum Z axis value
-  * `displayDimensions` **object**: Preformatted dimension information from the loaded gcode
-    * `x` **number**: Total gcode width along the X axis
-    * `y` **number**: Total gcode depth along the Y axis
-    * `z` **number**: Total gcode height along the Z axis
+| Value                 | Type      | Description                                                                      |
+|-----------------------|-----------|----------------------------------------------------------------------------------|
+| `ui.brightness`       | `Integer` | The current brightness value. _Stream Deck only_ [`10` - `100`]                  |
+| `ui.feedrateInterval` | `Integer` | The amount that feedrate will be increased or decreased by when modified         |
+| `ui.spindleInterval`  | `Integer` | The amount that spindle speed will be increased or decreased by when modified    |
+| `ui.userFlags`        | `Object`  | Object containing [user flag data](#userflagactions). Ex: `ui.userFlags.MyValue` |
+| `ui.input.value`      | `String`  | Numeric string representing the current value for the numpad input scene         |
+| `ui.input.previous`   | `String`  | The previous value of the input being set by the numpad input scene              |
+| `ui.input.type`       | `String`  | A label for the type of input being set by the numpad input scene                |
+| `ui.web`              | `Boolean` | Whether the pendant is being used in a web browser or on a Stream Deck device    |
+| `ui.sceneName`        | `String`  | The name of the currently active scene                                           |
 
-### `buttons` **object**
+#### cnc
 
-```json
-{
-  "buttons": {
-    "my_button": {
-      "bgColor": "#ffccaa",
-      "icon": "custom/my_icon.png",
-      "text": "Oh no!",
-      "textAlignment": "top right",
-      "actions": [
-        {
-          "action": "navigate",
-          "arguments": ["home"],
-          "event": "hold"
-        }
-      ]
-    }
-  }
-}
-```
+State related to the machine or cncjs's 
+
+| Value                   | Type      | Description                                                                                                                 |
+|-------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------|
+| `cnc.connected`         | `Boolean` | Whether cncjs is connected to the machine by serial port                                                                    |
+| `cnc.connecting`        | `Boolean` | Whether cncjs is currently in the process of connecting                                                                     |
+| `cnc.runState`          | `String`  | The current controller state. One of [`Idle`, `Alarm`, `Hold`, `Jog`, `Run`]                                                |
+| `cnc.workflowState`     | `String`  | The cncjs workflow state. One of [`idle`, `paused`, `running`]                                                              |
+| `cnc.feederState`       | `String`  | The cncjs feeder state. One of [`idle`, `paused`]                                                                           |
+| `cnc.locked`            | `Boolean` | Whether the controller is in an Alarm Lock state                                                                            |
+| `cnc.elapsedTime`       | `Integer` | The elapsed job time, in seconds                                                                                            |
+| `cnc.elapsedTimeText`   | `String`  | The elapsed job time, in `hh:mm:ss` format, or empty string if not available                                                |
+| `cnc.remainingTime`     | `Integer` | The remaining job time, in seconds                                                                                          |
+| `cnc.remainingTimeText` | `String`  | The remaining job time, in `hh:mm:ss` format, or empty string if not available                                              |
+| `cnc.alarm`             | `Boolean` | Whether or not Grbl is in an alarm state                                                                                    |
+| `cnc.alarmText`         | `String`  | Preformatted alarm text/reason/locked status for button display                                                             |
+| `cnc.alarmReason`       | `String`  | The reason for an alarm, if known                                                                                           |
+| `cnc.pauseReason`       | `String`  | Pause reason, if known. Example: `M6`                                                                                       |
+| `cnc.pauseMessage`      | `String`  | Pause reason text, if known                                                                                                 |
+| `cnc.pauseText`         | `String`  | Preformatted pause reason and text for button display                                                                       |
+| `cnc.errorMessage`      | `String`  | The error reason, if the pause state is associated with an error                                                            |
+| `cnc.feedPauseReason`   | `String`  | The cncjs feed pause reason, if known                                                                                       |
+| `cnc.feedPauseMessage`  | `String`  | The cncjs feed pause text, if known                                                                                         |
+| `cnc.jogDistance`       | `Number`  | The distance value to use for jog commands. Does not include units                                                          |
+| `cnc.jogSpeed`          | `Number`  | The speed to use for smooth jogging. Does not include units                                                                 |
+| `cnc.settings`          | `Object`  | The current raw Grbl setting values                                                                                         |
+| `cnc.wpos`              | `Object`  | The current work position                                                                                                   |
+| `cnc.wpos.x`            | `String`  | The current X work position                                                                                                 |
+| `cnc.wpos.y`            | `String`  | The current Y work position                                                                                                 |
+| `cnc.wpos.z`            | `String`  | The current Z work position                                                                                                 |
+| `cnc.wpos.a`            | `String`  | The current A work position                                                                                                 |
+| `cnc.wpos.b`            | `String`  | The current B work position                                                                                                 |
+| `cnc.wpos.c`            | `String`  | The current C work position                                                                                                 |
+| `cnc.displayWpos`       | `String`  | Preformatted multiline string of all [enabled axes](#machine) and their work positions with string padding for alignment    |
+| `cnc.mpos`              | `Object`  | The current machine position                                                                                                |
+| `cnc.mpos.x`            | `String`  | The current X machine position                                                                                              |
+| `cnc.mpos.y`            | `String`  | The current Y machine position                                                                                              |
+| `cnc.mpos.z`            | `String`  | The current Z machine position                                                                                              |
+| `cnc.mpos.a`            | `String`  | The current A machine position                                                                                              |
+| `cnc.mpos.b`            | `String`  | The current B machine position                                                                                              |
+| `cnc.mpos.c`            | `String`  | The current C machine position                                                                                              |
+| `cnc.displayMpos`       | `String`  | Preformatted multiline string of all [enabled axes](#machine) and their machine positions with string padding for alignment |
+| `cnc.modal`             | `Object`  | Grbl modal state information                                                                                                |
+| `cnc.modal.distance`    | `String`  | Current motion mode. Either `G90` or `G91`                                                                                  |
+| `cnc.modal.units`       | `String`  | Current distance units. Either `G20` or `G21`                                                                               |
+| `cnc.modal.wcs`         | `String`  | The current work offset: One of [`G54`, `G55`, `G56`, `G57`, `G58`, `G59`]                                                  |
+| `cnc.isRelativeMove`    | `Boolean` | Whether the current modal distance is `G91` (relative)                                                                      |
+| `cnc.distanceUnit`      | `String`  | The current distance unit, one of `mm` or `in`                                                                              |
+| `cnc.ready`             | `Boolean` | Whether the machine is connected and either in the `idle` or `jog` (meaning smooth jogging) states                          |
+| `cnc.overrides`         | `Object`  | Current Grbl speed overrides                                                                                                |
+| `cnc.overrides.feed`    | `Integer` | The current feed rate override [`10` - `200`]                                                                               |
+| `cnc.overrides.spindle` | `Integer` | The current spindle speed override [`10` - `200`]                                                                           |
+| `cnc.overrides.rapid`   | `Integer` | The current rapid speed override. One of: [`25`, `50`, `100`]                                                               |
+| `cnc.hold`              | `Boolean` | Whether the controller state is currently `Hold`                                                                            |
+| `cnc.paused`            | `Boolean` | Whether both the cncjs workflow and feed state are both in a paused state                                                   |
+| `cnc.feedPaused`        | `Boolean` | Whether the cncjs feed state is `paused`                                                                                    |
+| `cnc.idle`              | `Boolean` | Whether the cncjs workflow and feed state are both in a idle state                                                          |
+| `cnc.running`           | `Boolean` | Whether the cncjs workflow state is `Running` and the feed state is `idle`                                                  |
+| `cnc.axisLimits`        | `Object`  | The current Grbl axis limits. Keys depend on [machine axes configuration](#machine)                                         |
+
+#### `gcode`
+
+State related to the currently loaded gcode.
+
+| Value                      | Type     | Description                                              |
+|----------------------------|----------|----------------------------------------------------------|
+| `gcode.name`               | `String` | The path to the currently loaded gcode file, if any      |
+| `gcode.gcode`              | `String` | The raw gcode content, if loaded                         |
+| `gcode.displayRange`       | `Object` | Preformatted range information from the loaded gcode     |
+| `gcode.displayRange.min`   | `Object` | The minimum axis range for the loaded gcode              |
+| `gcode.displayRange.min.x` | `String` | The minimum X axis value for the loaded gcode            |
+| `gcode.displayRange.min.y` | `String` | The minimum Y axis value for the loaded gcode            |
+| `gcode.displayRange.min.z` | `String` | The minimum Z axis value for the loaded gcode            |
+| `gcode.displayRange.max`   | `Object` | The maximum axis range for the loaded gcode              |
+| `gcode.displayRange.max.x` | `String` | The maximum X axis value for the loaded gcode            |
+| `gcode.displayRange.max.y` | `String` | The maximum Y axis value for the loaded gcode            |
+| `gcode.displayRange.max.z` | `String` | The maximum Z axis value for the loaded gcode            |
+| `gcode.displayRange`       | `Object` | Preformatted dimension information from the loaded gcode |
+| `gcode.displayRange.x`     | `String` | Total gcode width along the X axis                       |
+| `gcode.displayRange.y`     | `String` | Total gcode depth along the Y axis                       |
+| `gcode.displyaRange.z`     | `String` | Total gcode height along the Z axis                      |
 
 ### File list
 
