@@ -14,6 +14,17 @@
         "required": ["action"]
       }
     },
+    "brightness": {
+      "properties": {
+        "action": { "const": "brightness" },
+        "arguments": {
+          "items": [{ "$ref": "#/definitions/sign" }],
+          "maxItems": 1,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
     "enterPosition": {
       "properties": {
         "action": { "const": "enterPosition" },
@@ -94,39 +105,33 @@
     },
     "jogInterval": {
       "properties": {
-        "action": {
-          "arguments": {
-            "items": [{ "$ref": "#/definitions/sign" }],
-            "maxItems": 1,
-            "minItems": 1
-          },
-          "enum": ["jogSpeed", "jogDistance"]
+        "action": { "enum": ["jogSpeed", "jogDistance"] },
+        "arguments": {
+          "items": [{ "$ref": "#/definitions/sign" }],
+          "maxItems": 1,
+          "minItems": 1
         }
       },
       "required": ["action", "arguments"]
     },
     "macro": {
       "properties": {
-        "action": {
-          "arguments": {
-            "items": [{ "type": ["string", "null"] }],
-            "maxItems": 2,
-            "minItems": 1
-          },
-          "const": "macro"
+        "action": { "const": "macro" },
+        "arguments": {
+          "items": [{ "type": ["string", "null"] }],
+          "maxItems": 2,
+          "minItems": 1
         }
       },
       "required": ["action", "arguments"]
     },
     "navigation": {
       "properties": {
-        "action": {
-          "arguments": {
-            "items": [{ "type": "string" }],
-            "maxItems": 1,
-            "minItems": 1
-          },
-          "enum": ["navigate", "setScene", "swapScene"]
+        "action": { "enum": ["navigate", "setScene", "swapScene"] },
+        "arguments": {
+          "items": [{ "type": "string" }],
+          "maxItems": 1,
+          "minItems": 1
         }
       },
       "required": ["action", "arguments"]
@@ -135,17 +140,16 @@
       "properties": {
         "action": {
           "enum": [
+            "brightness",
             "clearGcode",
             "clearUserFlag",
             "completeInput",
             "connect",
-            "decreaseBrightness",
             "decreaseFeedrate",
             "decreaseSpindle",
             "fullscreen",
             "hold",
             "homing",
-            "increaseBrightness",
             "increaseFeedrate",
             "increaseSpindle",
             "loadDetailFile",
@@ -206,6 +210,19 @@
       },
       "required": ["action", "arguments"]
     },
+    "toggleUserFlag": {
+      "properties": {
+        "action": { "const": "toggleUserFlag" },
+        "arguments": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 1,
+          "minItems": 1
+        }
+      },
+      "required": ["action", "arguments"]
+    },
     "userFlag": {
       "properties": {
         "action": { "const": "setUserFlag" },
@@ -225,6 +242,7 @@
     "action": {
       "oneOf": [
         { "$ref": "#/actionSchemas/back" },
+        { "$ref": "#/actionSchemas/brightness" },
         { "$ref": "#/actionSchemas/enterPosition" },
         { "$ref": "#/actionSchemas/enterWcs" },
         { "$ref": "#/actionSchemas/gcode" },
@@ -239,17 +257,18 @@
         { "$ref": "#/actionSchemas/position" },
         { "$ref": "#/actionSchemas/sort" },
         { "$ref": "#/actionSchemas/rapids" },
+        { "$ref": "#/actionSchemas/toggleUserFlag" },
         { "$ref": "#/actionSchemas/userFlag" }
       ],
       "properties": {
         "action": {
           "enum": [
             "backScene",
+            "brightness",
             "clearGcode",
             "clearUserFlag",
             "completeInput",
             "connect",
-            "decreaseBrightness",
             "decreaseFeedrate",
             "decreaseSpindle",
             "enterPosition",
@@ -259,7 +278,6 @@
             "goto",
             "hold",
             "homing",
-            "increaseBrightness",
             "increaseFeedrate",
             "increaseSpindle",
             "input",
@@ -290,6 +308,7 @@
             "toggleFeedrateInterval",
             "toggleShowAbsolutePosition",
             "toggleSpindleInterval",
+            "toggleUserFlag",
             "unhold",
             "unlock"
           ],
@@ -333,10 +352,6 @@
             },
             "if": { "type": "string" },
             "rows": { "default": 1, "type": "integer" },
-            "target": {
-              "description": "Scene name to change to",
-              "type": "string"
-            },
             "text": { "type": "string" },
             "textAlignment": {
               "enum": [
