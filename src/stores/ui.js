@@ -9,9 +9,6 @@ export const useUiStore = defineStore({
     asleep: false,
     bgColor: 2,
     brightness: 60,
-    buttons: {
-      showAbsolutePosition: false,
-    },
     columns: 5,
     font: 'monospace',
     fontSize: 12,
@@ -31,7 +28,6 @@ export const useUiStore = defineStore({
       callback: () => {},
     },
     palette: ['#000', '#fff'],
-    pos: 'wpos',
     progressColor: 4,
     rows: 3,
     sceneStack: [],
