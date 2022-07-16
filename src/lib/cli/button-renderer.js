@@ -1,4 +1,5 @@
 import sharp from 'sharp'
+import path from 'path'
 
 const inputSize = 144
 
@@ -48,7 +49,7 @@ const getRender = async (config, canvas) => {
   const finalComposite = []
 
   if (config.icon) {
-    const overlay = await sharp(`src/public/icons/${config.icon}`)
+    const overlay = await sharp(path.resolve(__dirname, `icons/${config.icon}`))
       .resize({
         width: inputWidth,
         height: inputHeight,

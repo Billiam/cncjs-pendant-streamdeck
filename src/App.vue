@@ -61,7 +61,7 @@ onBeforeUnmount(() => {
   <div class="status" v-else>
     <h1 class="message">
       <span v-if="configError">
-        Config file (public/config.json) could not be loaded
+        Config file (config.json) could not be loaded
       </span>
       <span v-else>Loading...</span>
     </h1>

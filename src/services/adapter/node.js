@@ -22,7 +22,7 @@ const getSecret = async (secret) => {
 }
 
 export const fetchConfig = async () => {
-  const data = await fs.readFile('src/public/config.json', 'utf8')
+  const data = await fs.readFile(path.resolve(__dirname, 'config.json'), 'utf8')
   return JSON.parse(data)
 }
 
