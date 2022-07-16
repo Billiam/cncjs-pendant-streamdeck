@@ -35,4 +35,4 @@ jobs:
       - name: Release
         uses: softprops/action-gh-release@v1
         with:
-          files: dist/web.zip
+          files: dist/cncjs-pendant-streamdeck.zip
