@@ -29,7 +29,6 @@
     "mitt": "^3.0.0",
     "node-fetch": "^2.6.7",
     "pinia": "^2.0.13",
-    "serialport": "^8.0.7",
     "sharp": "^0.30.7",
     "simple-evaluate": "^1.4.4",
     "socket.io-client": "^2.3.0",
@@ -39,7 +38,7 @@
   "devDependencies": {
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.1",
-    "cation": "^2.3.0",
+    "cation": "https://github.com/billiam/Cation.git",
     "prettier": "^2.6.2",
     "sass": "^1.52.1",
     "vite": "^2.9.5"

@@ -1,5 +1,5 @@
 import ServiceProvider from 'cation/dist/providers/serviceprovider'
-import * as util from 'cation/src/helpers/service'
+import { resolveDependencies } from 'cation/dist/helpers/service'
 
 // acts the same as ServiceProvider but doesn't use "new" constructor
 class MethodProvider extends ServiceProvider {
@@ -17,7 +17,7 @@ class MethodProvider extends ServiceProvider {
 
   get() {
     // resolve arguments
-    let serviceDepsPromise = util.resolveDependencies(
+    let serviceDepsPromise = resolveDependencies(
       this.container,
       this.options.args
     )
