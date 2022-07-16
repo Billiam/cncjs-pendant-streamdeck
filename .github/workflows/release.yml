@@ -30,7 +30,7 @@ jobs:
         run: npm run build
 
       - name: Zip release
-        run: cd dist && zip -r web.zip web
+        run: cd dist && mv web cncjs-pendant-streamdeck && zip -r cncjs-pendant-streamdeck.zip cncjs-pendant-streamdeck
 
       - name: Release
         uses: softprops/action-gh-release@v1
