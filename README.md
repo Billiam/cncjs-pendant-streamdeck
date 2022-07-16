@@ -32,25 +32,29 @@ You can use your own images, or those included with the pendant.
 
 ### Web
 
-1. Download the latest release.
+1. Download the latest release and extract it, to ex: `/home/my-name/cncjs-pendant-streamdeck`
 2. Rename `config.example.json` to `config.json`
-3. Configure `config.json` file with your connection information
-4. Edit your `.cncrc` file, adding a mount point for this pendant
-```
-"mountPoints": [
-  {
-    "route": "grid",
-    "target": "/home/pi/cncjs-pendant-streamdeck"
-  }
-]
-```
+3. Update the `config.json` file with your connection information in the [`"cncjs"`](#cncjs) section.
+4. Edit your `~/.cncrc` file, adding a mount point for this pendant
+    ```
+    "mountPoints": [
+      {
+        "route": "grid",
+        "target": "/home/pi/cncjs-pendant-streamdeck"
+      }
+    ]
+    ```
 5. Restart CNCjs
 
 ### Streamdeck
 
-### Linux
+Follow [Web](#web) steps above to generate create a configuration directory, `config.json` file, and button images.
+You can skip the `cncrc` step if you do not need the web interface.
 
-_Borrowed from https://github.com/julusian/node-elgato-stream-deck_
+#### Linux
+
+_Instructions borrowed from https://github.com/julusian/node-elgato-stream-deck_
+
 On linux, the udev subsystem blocks access to the StreamDeck without some special configuration.
 Save the following to `/etc/udev/rules.d/50-elgato.rules` and reload the rules with 
 `sudo udevadm control --reload-rules`
@@ -71,22 +75,28 @@ KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", MODE:="666
 KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", MODE:="666", GROUP="plugdev"
 ```
 
-Install Stream Deck dependencies:
+Install Stream Deck and canvas dependencies:
 
 ```
-apt-get install libusb-1.0-0-dev libudev-dev
+apt-get install libusb-1.0-0-dev libudev-dev libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
 ```
 
-Install canvas dependencies (optional, only used for gcode rendering):
+Install optional node dependencies:
 
 ```
-apt-get install libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+npm install -g node-canvas @julusian/jpeg-turbo
 ```
 
-Install optional dependencies:
+Install the application:
 
 ```
 npm install -g cncjs-pendant-streamdeck
+```
+
+Run the pendant
+
+```
+cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 ```
 
 ## Configuration
@@ -139,13 +149,14 @@ The top level configuration object has the following keys:
 
 Used to configure connection to the cncjs server, and controller serial port
 
-| Key              | Type      | Description                                              |
-|------------------|-----------|----------------------------------------------------------|
-| `baudRate`       | `Integer` | Serial connection baud rate                              |
-| `port`           | `String`  | Serial connection port                                   |
-| `controllerType` | `Enum`    | Controller type. Allowed: [`Grbl`]                       |
-| `socketAddress`  | `String`  | URL for socket connection to cncjs. Usually `localhost`  |
-| `socketPort`     | `Integer` | Socket connection port for cncjs. Usually `80` or `8000` |
+| Key                     | Type                 | Description                                                                                        |
+|-------------------------|----------------------|----------------------------------------------------------------------------------------------------|
+| `accessTokenExpiration` | (`String`,`Integer`) | Expiration time web token, in seconds or as a duration string (_Stream Deck only_). Default: `30d` |
+| `baudRate`              | `Integer`            | Serial connection baud rate                                                                        |
+| `port`                  | `String`             | Serial connection port                                                                             |
+| `controllerType`        | `Enum`               | Controller type. Allowed: [`Grbl`]                                                                 |
+| `socketAddress`         | `String`             | URL for socket connection to cncjs. Usually `localhost`                                            |
+| `socketPort`            | `Integer`            | Socket connection port for cncjs. Usually `80` or `8000`                                           |
 
 ### `machine`
 
