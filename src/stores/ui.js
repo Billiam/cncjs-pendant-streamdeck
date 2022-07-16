@@ -77,9 +77,6 @@ export const useUiStore = defineStore({
         this.input.value = newValue
       }
     },
-    toggleShowAbsolutePosition() {
-      this.buttons.showAbsolutePosition = !this.buttons.showAbsolutePosition
-    },
     toggleInputSign() {
       if (this.input.value.startsWith('-')) {
         this.input.value = this.input.value.slice(1)
