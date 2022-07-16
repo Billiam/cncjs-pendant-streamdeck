@@ -1,5 +1,6 @@
 import sharp from 'sharp'
 import path from 'path'
+import escape from 'lodash/escape'
 
 const inputSize = 144
 
@@ -72,16 +73,13 @@ const getRender = async (config, canvas) => {
   }
 
   if (config.text) {
-    // TODO: html escape
-    // TODO: config font
-    // TODO: config line height
     const fontSize = 16 * (config.textSize || 1)
     const lineHeight = config.lineHeight ?? fontSize * 1.1
 
     const spanX = textOffset(config.textSvgAlignment, outputWidth)
     const textSpan = config.textLines.map((line) => {
       const text = line === '' ? ' ' : line
-      return `<tspan dy="${lineHeight}" x="${spanX}px">${text}</tspan>`
+      return `<tspan dy="${lineHeight}" x="${spanX}px">${escape(text)}</tspan>`
     })
 
     const y = textVOffset(
