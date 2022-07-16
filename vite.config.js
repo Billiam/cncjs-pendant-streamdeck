@@ -20,6 +20,15 @@ export default defineConfig(({ command, mode }) => {
         ),
       },
     },
+    build: {
+      rollupOptions: {
+        output: {
+          assetFileNames: '[name][extname]',
+          entryFileNames: '[name].js',
+          chunkFileNames: '[name].js',
+        },
+      },
+    },
     optimizeDeps: {
       esbuildOptions: {
         keepNames: true,
