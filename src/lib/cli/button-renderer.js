@@ -25,7 +25,7 @@ const textVOffset = (alignment, height, textHeight) => {
   }
 }
 
-const getRender = async (config, canvas) => {
+const getRender = async (config, canvas, directory) => {
   if (!config.show) {
     return []
   }
@@ -50,7 +50,7 @@ const getRender = async (config, canvas) => {
   const finalComposite = []
 
   if (config.icon) {
-    const overlay = await sharp(path.resolve(__dirname, `icons/${config.icon}`))
+    const overlay = await sharp(path.resolve(directory, config.icon))
       .resize({
         width: inputWidth,
         height: inputHeight,
@@ -200,7 +200,7 @@ const effectiveConfig = (config, computed) => {
   return newConfig
 }
 
-export default (config, computed, canvas) => {
+export default (config, computed, canvas, directory) => {
   const combinedConfig = effectiveConfig(config, computed)
-  return getRender(combinedConfig, canvas)
+  return getRender(combinedConfig, canvas, directory)
 }

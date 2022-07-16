@@ -11,6 +11,7 @@ import { arrayWrap } from '@/lib/enumerable'
 import { createPinia, setActivePinia } from 'pinia'
 import CliButton from '@/lib/cli/button'
 import Sharp from 'sharp'
+import path from 'path'
 
 const container = Container()
 setActivePinia(createPinia())
@@ -31,6 +32,8 @@ const run = async () => {
   ui.setIconSize(streamdeck.ICON_SIZE)
 
   const { ui: uiConfig } = await container.get('config')
+  const { directory } = await container.get('options')
+  const iconDirectory = path.join(directory, 'icons')
   const { wake } = SleepScreen(uiConfig?.timeout, streamdeck)
   const { buttons: fileListButtons, loadFiles } = useFileList()
 
@@ -56,7 +59,6 @@ const run = async () => {
     })
   })
 
-  // TODO: May not need scene override
   const specialScenes = {
     gcodeList: {
       buttons: fileListButtons,
@@ -104,6 +106,7 @@ const run = async () => {
       const button = new CliButton(key, config, {
         size: streamdeck.ICON_SIZE,
         buttonActions,
+        iconDirectory,
       })
 
       //iterate over all rows/columns of button

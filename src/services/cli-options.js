@@ -6,6 +6,11 @@ program
   .option('-s, --secret <secret>', 'the secret key stored in the ~/.cncrc file')
   .option('-p, --port <port>', 'path or name of serial port')
   .option('-b, --baudrate <baudrate>', 'baud rate (default: 115200)', 115200)
+  .option(
+    '-d, --directory <directory>',
+    'path to configuration directory',
+    process.cwd()
+  )
   .option('-c, --config <path>', 'path to config file')
   .option(
     '--socket-address <address>',

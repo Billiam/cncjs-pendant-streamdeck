@@ -10,7 +10,7 @@ import { computed, ref, watch, watchEffect } from 'vue'
 import { renderToolpath } from '@/lib/gcode-renderer'
 
 export default class CliButton {
-  constructor(index, config, { size, buttonActions }) {
+  constructor(index, config, { size, buttonActions, iconDirectory }) {
     this.index = index
     this.config = config
     this.buffers = Array.from(
@@ -18,6 +18,7 @@ export default class CliButton {
     ).map(() => ref())
     this.size = size
     this.buttonActions = buttonActions
+    this.iconDirectory = iconDirectory
     this.watchers = []
     this.drawTime = 0
     this.setup()
@@ -168,7 +169,8 @@ export default class CliButton {
           textLines,
           show,
         },
-        this.canvas
+        this.canvas,
+        this.iconDirectory
       ).then((newBuffers) => {
         if (time < this.drawTime) {
           return

@@ -19,7 +19,6 @@ export const fetchConfig = async () => {
 export const getOptions = () => ({})
 
 export const GcodeWorker = () => {
-  // console.log({ dirname: __dirname })
   return new Worker(new URL('../../gcode-worker.js', import.meta.url), {
     type: 'module',
   })

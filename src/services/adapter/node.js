@@ -22,11 +22,20 @@ const getSecret = async (secret) => {
 }
 
 export const fetchConfig = async () => {
-  const data = await fs.readFile(path.resolve(__dirname, 'config.json'), 'utf8')
+  const options = getOptions()
+  const configPath = path.resolve(options.directory, 'config.json')
+  const data = await fs.readFile(configPath, 'utf8')
   return JSON.parse(data)
 }
 
-export const getOptions = () => cliOptions()
+let options
+export const getOptions = () => {
+  if (options) {
+    return options
+  }
+  options = cliOptions()
+  return options
+}
 
 export const getAccessToken = async (secret, expiration) => {
   secret = await getSecret(secret)
