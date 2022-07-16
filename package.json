@@ -40,10 +40,12 @@
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.1",
     "cation": "^2.3.0",
-    "node-canvas": "^2.9.0",
     "prettier": "^2.6.2",
-    "pureimage": "^0.3.14",
     "sass": "^1.52.1",
     "vite": "^2.9.5"
+  },
+  "optionalDependencies": {
+    "pureimage": "^0.3.14",
+    "node-canvas": "^2.9.0"
   }
 }
