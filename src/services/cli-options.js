@@ -14,7 +14,6 @@ program
     'path to configuration directory',
     process.cwd()
   )
-  .option('-c, --config <path>', 'path to config file')
   .option(
     '--socket-address <address>',
     'socket address or hostname (default: localhost)',
