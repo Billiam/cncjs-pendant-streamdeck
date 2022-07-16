@@ -27,10 +27,14 @@ export default () => {
     args: ['@connectionConfig'],
     type: 'method',
   })
-  container.register('expiration', (config) => config.accessTokenExpiration, {
-    args: ['@connectionConfig'],
-    type: 'method',
-  })
+  container.register(
+    'expiration',
+    (config) => config.accessTokenExpiration ?? '30d',
+    {
+      args: ['@connectionConfig'],
+      type: 'method',
+    }
+  )
   container.register('port', (config) => config.port, {
     args: ['@connectionConfig'],
     type: 'method',
