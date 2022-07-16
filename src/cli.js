@@ -138,11 +138,11 @@ const run = async () => {
       {}
     )
   })
-  watch(effectiveButtons, (current, previous) => {
+  watch(sceneButtons, (current, previous) => {
     Object.entries(previous).forEach(([index, button]) => {
       if (button && button !== current[index]) {
         // unload button
-        button?.button?.cleanup?.()
+        button.button?.cleanup?.()
       }
     })
   })
@@ -157,8 +157,6 @@ const run = async () => {
         !button?.button?.show?.value ||
         (newBuffer && !newBuffer.equals(buffer.value))
       ) {
-        if (newBuffer && buffer.value) {
-        }
         buffer.value = newBuffer
       }
     })
