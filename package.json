@@ -2,11 +2,13 @@
   "name": "cncjs-pendant-streamdeck",
   "version": "0.1.0",
   "description": "A cncjs pendant for the Elgato Stream Deck",
-  "main": "dist/cli/cli.js",
   "files": [
     "dist/cli/*.js",
     "dist/cli/config.example.json"
   ],
+  "bin": {
+    "cncjs-pendant-streamdeck": "dist/cli/cli.js"
+  },
   "repository": "github:billiam/cncjs-pendant-streamdeck",
   "scripts": {
     "dev": "vite --port 3434",
@@ -20,7 +22,9 @@
     "@elgato-stream-deck/node": "^5.4.0",
     "@julusian/jpeg-turbo": "^1.1.2",
     "chalk": "^4.1.2",
+    "commander": "^9.3.0",
     "jsonschema": "^1.4.1",
+    "jsonwebtoken": "^7.2.1",
     "lodash": "^4.17.21",
     "mitt": "^3.0.0",
     "node-fetch": "^2.6.7",
@@ -36,8 +40,6 @@
     "@vitejs/plugin-legacy": "^1.8.2",
     "@vitejs/plugin-vue": "^2.3.1",
     "cation": "^2.3.0",
-    "commander": "^9.3.0",
-    "jsonwebtoken": "^7.2.1",
     "node-canvas": "^2.9.0",
     "prettier": "^2.6.2",
     "pureimage": "^0.3.14",
