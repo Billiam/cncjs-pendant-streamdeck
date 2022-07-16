@@ -2,7 +2,7 @@ import { useUiStore } from '@/stores/ui'
 import tinycolor from 'tinycolor2'
 
 export default () => {
-  const { palette } = useUiStore()
+  const { palette, isWeb } = useUiStore()
 
   const normalizeColor = (color) => {
     if (typeof color === 'number') {
@@ -12,11 +12,13 @@ export default () => {
   }
 
   const highlightColor = (color) => {
+    const amount = isWeb ? 10 : 20
+
     const normalized = tinycolor(normalizeColor(color))
     if (normalized.isDark()) {
-      return normalized.brighten(10).toHexString()
+      return normalized.brighten(amount).toHexString()
     } else {
-      return normalized.darken(10).toHexString()
+      return normalized.darken(amount).toHexString()
     }
   }
 
