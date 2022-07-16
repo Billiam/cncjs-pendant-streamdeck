@@ -200,9 +200,6 @@ export default (actionBus, connectionBus) => {
       document.documentElement.requestFullscreen()
     }
   }
-  const toggleShowAbsolutePosition = () => {
-    store.ui.toggleShowAbsolutePosition()
-  }
 
   const fileDetails = (path, file) => {
     store.ui.fileDetailsPath = path
@@ -254,11 +251,12 @@ export default (actionBus, connectionBus) => {
       command('rapidOverride', Number(speed))
     }
   }
-  const increaseBrightness = () => {
-    store.ui.increaseBrightness()
-  }
-  const decreaseBrightness = () => {
-    store.ui.decreaseBrightness()
+  const brightness = (sign) => {
+    if (sign === '-') {
+      store.ui.decreaseBrightness()
+    } else {
+      store.ui.increaseBrightness()
+    }
   }
 
   const loadFile = (path) => {
@@ -293,7 +291,7 @@ export default (actionBus, connectionBus) => {
             const absPosition = parseFloat(position) * -0.01 * limits[axis]
             return `${axis}${absPosition.toFixed(5)}`
           }
-        } else if (position) {
+        } else if (position != null) {
           return `${axis}${position}`
         }
       })
@@ -314,16 +312,19 @@ export default (actionBus, connectionBus) => {
   const clearUserFlag = (id, value) => {
     store.ui.clearUserFlag(id, value)
   }
+  const toggleUserFlag = (id) => {
+    store.ui.setUserFlag(id, !store.ui.userFlags[id])
+  }
 
   const actionTypes = {}
 
   const actions = {
     backScene,
+    brightness,
     clearGcode,
     clearUserFlag,
     completeInput,
     connect,
-    decreaseBrightness,
     decreaseFeedrate,
     decreaseSpindle,
     enterPosition,
@@ -337,7 +338,6 @@ export default (actionBus, connectionBus) => {
     goto,
     hold,
     homing,
-    increaseBrightness,
     increaseFeedrate,
     increaseSpindle,
     input,
@@ -367,7 +367,7 @@ export default (actionBus, connectionBus) => {
     swapScene,
     toggleFeedrateInterval,
     toggleSpindleInterval,
-    toggleShowAbsolutePosition,
+    toggleUserFlag,
     unhold,
     unlock,
   }
