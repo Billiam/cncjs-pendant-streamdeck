@@ -9,9 +9,12 @@ All configuration takes place in `public/config.json`. An example, mostly matchi
 
 You can use your own images, or those included with the pendant.
 
-### Wishlist/To-do
+### To-do
 
 * Configurator
+* Web validation
+* Docs site
+* Screenshots
 
 ## Features
 
@@ -20,10 +23,73 @@ You can use your own images, or those included with the pendant.
 * Arbitrary grid dimensions for web version
 * Excessively customizable
 * Execute one or more actions on press, release, and/or button hold
-* Up to 6 axes
+* Support up to 6 axes
 * Lots of included icons, or add your own
 * Display and animate gcode
 * Manage alarms, hold, and pause events (like macro-triggered tool changes)
+
+## Installation
+
+### Web
+
+1. Download the latest release.
+2. Rename `config.example.json` to `config.json`
+3. Configure `config.json` file with your connection information
+4. Edit your `.cncrc` file, adding a mount point for this pendant
+```
+"mountPoints": [
+  {
+    "route": "grid",
+    "target": "/home/pi/cncjs-pendant-streamdeck"
+  }
+]
+```
+5. Restart CNCjs
+
+### Streamdeck
+
+### Linux
+
+_Borrowed from https://github.com/julusian/node-elgato-stream-deck_
+On linux, the udev subsystem blocks access to the StreamDeck without some special configuration.
+Save the following to `/etc/udev/rules.d/50-elgato.rules` and reload the rules with 
+`sudo udevadm control --reload-rules`
+
+```
+SUBSYSTEM=="input", GROUP="input", MODE="0666"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", MODE:="666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", MODE:="666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006c", MODE:="666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006d", MODE:="666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", MODE:="666", GROUP="plugdev"
+SUBSYSTEM=="usb", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0060", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0063", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006c", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="006d", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", MODE:="666", GROUP="plugdev"
+KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", MODE:="666", GROUP="plugdev"
+```
+
+Install Stream Deck dependencies:
+
+```
+apt-get install libusb-1.0-0-dev libudev-dev
+```
+
+Install canvas dependencies (optional, only used for gcode rendering):
+
+```
+apt-get install libcairo2-dev libpango1.0-dev libjpeg-dev libgif-dev librsvg2-dev
+```
+
+Install optional dependencies:
+
+```
+npm install -g cncjs-pendant-streamdeck
+```
+
+## Configuration
 
 ## Button customization
 
@@ -56,14 +122,6 @@ Run one or more actions when a button is pressed, released or held for a moment.
 * Scene changing actions (navigation, swap, reset)
 * Store arbitrary values
 * Set brightness (stream deck only)
-
-## Installation
-
-### Web
-
-### Streamdeck
-
-## Configuration
 
 Buttons, layout, and other behavior are configured with the `config.json` file.
 
