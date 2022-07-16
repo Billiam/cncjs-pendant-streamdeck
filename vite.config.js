@@ -21,6 +21,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     build: {
+      outDir: '../dist/web',
       rollupOptions: {
         output: {
           assetFileNames: '[name][extname]',

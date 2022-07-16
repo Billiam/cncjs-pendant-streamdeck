@@ -1,6 +1,13 @@
 {
-  "name": "cncjs-pendant-grid",
-  "version": "0.0.1",
+  "name": "cncjs-pendant-streamdeck",
+  "version": "0.1.0",
+  "description": "A cncjs pendant for the Elgato Stream Deck",
+  "main": "dist/cli/cli.js",
+  "files": [
+    "dist/cli/*.js",
+    "dist/cli/config.example.json"
+  ],
+  "repository": "github:billiam/cncjs-pendant-streamdeck",
   "scripts": {
     "dev": "vite --port 3434",
     "build": "vite build",

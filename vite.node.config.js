@@ -13,6 +13,8 @@ export default defineConfig(({ command, mode }) => {
       __APP_VERSION__: JSON.stringify(pkg.version),
     },
     build: {
+      outDir: '../dist/cli',
+      emptyOutDir: true,
       rollupOptions: {
         treeshake: 'smallest',
         input: {

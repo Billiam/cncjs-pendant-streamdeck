@@ -4,4 +4,5 @@ node_modules
 /src/pubilc/icons/custom/*
 !/src/public/icons/custom/.gitkeep
 Thumbs.db*
-/src/dist/
+/dist/
+/debug

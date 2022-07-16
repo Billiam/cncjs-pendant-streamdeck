@@ -1,7 +1,10 @@
 import program from 'commander'
+import fs from 'fs'
+import path from 'path'
 
 program
   .version(__APP_VERSION__)
+  .option('-e, --example', 'save an example config file and exit')
   .usage('-s <secret> -p <port> [options]')
   .option('-s, --secret <secret>', 'the secret key stored in the ~/.cncrc file')
   .option('-p, --port <port>', 'path or name of serial port')
@@ -31,6 +34,14 @@ program
 
 export default () => {
   program.parse()
-
-  return program.opts()
+  const options = program.opts()
+  if (options.example) {
+    fs.copyFileSync(
+      path.join(__dirname, 'config.example.json'),
+      'config.example.json'
+    )
+    console.log(`${process.cwd()}/config.example.json saved`)
+    process.exit()
+  }
+  return options
 }
