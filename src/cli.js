@@ -33,7 +33,12 @@ const getStreamdeck = async () => {
 }
 
 const run = async () => {
-  const [, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
+  let streamdeck
+  try {
+    ;[, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
+  } catch (e) {
+    process.kill(process.pid, 'SIGINT')
+  }
 
   const { buttons: buttonConfig } = useButtonStore()
   const sceneStore = useScenesStore()
