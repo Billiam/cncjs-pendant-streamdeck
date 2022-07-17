@@ -18,12 +18,22 @@ setActivePinia(createPinia())
 
 const bootstrap = Bootstrap(container)
 
-const run = async () => {
-  await bootstrap.start()
+const getStreamdeck = async () => {
+  let streamdeck
+  try {
+    streamdeck = await openStreamDeck(null, {
+      jpegOptions: { quality: 100, subsampling: 0 },
+    })
+  } catch (e) {
+    console.error(e)
+    console.error('Could not open Stream Deck')
+    process.exit()
+  }
+  return streamdeck
+}
 
-  const streamdeck = await openStreamDeck(null, {
-    jpegOptions: { quality: 100, subsampling: 0 },
-  })
+const run = async () => {
+  const [, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
 
   const { buttons: buttonConfig } = useButtonStore()
   const sceneStore = useScenesStore()
