@@ -74,4 +74,4 @@ export const offWorkerEvent = (worker, event, callback) => {
   worker.removeListener(event, callback)
 }
 
-export const performance = () => nodePerformance
+export const performance = nodePerformance
