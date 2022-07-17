@@ -114,6 +114,11 @@ proto.connect = function () {
 
     this.socket = socket
 
+    socket.on('connect_error', (e) => {
+      console.error(e.type, e.description.message)
+      reject(new Error(e.description.message))
+    })
+
     socket.on('connect', () => {
       resolve({ socket })
       // Open port
