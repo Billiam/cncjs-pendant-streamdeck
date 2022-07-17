@@ -190,7 +190,7 @@ Override smooth jog speeds on a per-axis basis. Allows moving specific axes slow
 | `rows`                          |                            | Number of rows to display                                                                    |
 | `font`                          | `String`                   | Font to use for text display. Default: `monospace`                                           |
 | `fontSize`                      | `String`                   | Font size to use for text display                                                            |
-| `lineHeight`                    | `String`                   | Line height for text display. Defaults to (1.1 * `fontSize`)                                 |
+| `lineHeight`                    | `String`                   | Line height for text display as a percentage of font size. Default: `1.1`                    |
 | [`gcodeColors`](#uigcodeColors) | [`Object`](#uigcodeColors) | Line and curve colors for gcode rendering.                                                   |
 | `palette`                       | `String[]`                 | Array of colors that buttons and other color settings may refer to by index                  |
 | `progressColor`                 | (`Integer`,`String`)       | Color to use for button hold indicator. May be a color string or [palette](#uipalette) index |

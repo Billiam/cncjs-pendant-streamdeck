@@ -1614,14 +1614,13 @@
     "bgColor": 0,
     "brightness": 60,
     "columns": 5,
-    "font": "ProggyTinyTT",
+    "font": "monospace",
     "fontSize": 16,
     "gcodeColors": {
       "G0": "#52ff2e",
       "G1": "#9a96ff",
       "G2G3": "#9a96ff"
     },
-    "lineHeight": 12,
     "palette": [
       "#181818",
       "#bdc3c7",

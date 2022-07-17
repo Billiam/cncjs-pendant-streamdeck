@@ -41,6 +41,8 @@ const {
   cellTextColor,
   contrastingTextColor,
   fontSize,
+  font,
+  lineHeight,
   textAlignment,
   textVerticalAlignment,
   textString,
@@ -138,7 +140,12 @@ const gridPosition = computed(() => {
   padding: 0 5px;
   position: relative;
   font-size: v-bind(fontSize);
-  line-height: 1.2;
+  font-family: v-bind(font);
+  line-height: v-bind(lineHeight);
+  white-space: pre-line;
+  color: v-bind(cellTextColor);
+  user-select: none;
+
   display: block;
   &.vertical-center {
     top: 50%;
@@ -159,12 +166,6 @@ const gridPosition = computed(() => {
   }
 }
 
-.button-text {
-  font-family: monospace;
-  white-space: pre-line;
-  color: v-bind(cellTextColor);
-  user-select: none;
-}
 .button {
   position: relative;
   border: 0;
