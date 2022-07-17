@@ -8,6 +8,7 @@ import { useColor } from '@/lib/cell/color'
 import { useGcode } from '@/lib/cell/gcode'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { renderToolpath } from '@/lib/gcode-renderer'
+import { performance } from 'adapter'
 
 export default class CliButton {
   constructor(index, config, { size, buttonActions, iconDirectory }) {

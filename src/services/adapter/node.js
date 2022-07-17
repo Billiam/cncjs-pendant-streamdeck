@@ -5,6 +5,8 @@ const path = require('path')
 const { Worker } = require('worker_threads')
 const fs = fsModule.promises
 const chalk = require('chalk')
+const { performance: nodePerformance } = require('perf_hooks')
+
 const getUserHome = function () {
   return process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
 }
@@ -71,3 +73,5 @@ export const onWorkerEvent = (worker, event, callback) => {
 export const offWorkerEvent = (worker, event, callback) => {
   worker.removeListener(event, callback)
 }
+
+export const performance = () => nodePerformance

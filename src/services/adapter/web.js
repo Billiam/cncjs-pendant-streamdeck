@@ -38,3 +38,5 @@ export const onWorkerEvent = (worker, event, callback) => {
 export const offWorkerEvent = (worker, event, callback) => {
   worker.removeEventListener(event, callback)
 }
+
+export const performance = () => window.performance
