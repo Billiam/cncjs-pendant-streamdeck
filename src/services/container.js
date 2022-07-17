@@ -63,8 +63,8 @@ export default () => {
     'connectionConfig',
     (config, options) => {
       return {
-        ...(options || {}),
         ...(config.cncjs || {}),
+        ...(options || {}),
       }
     },
     { args: ['@config', '@options'], type: 'method', singleton: true }
