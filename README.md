@@ -84,7 +84,7 @@ apt-get install libusb-1.0-0-dev libudev-dev libcairo2-dev libpango1.0-dev libjp
 Install optional node dependencies:
 
 ```
-npm install -g node-canvas @julusian/jpeg-turbo
+npm install -g canvas @julusian/jpeg-turbo
 ```
 
 Install the application:

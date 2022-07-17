@@ -5,7 +5,7 @@ let isNodeCanvas = false
 let isPureImage = false
 
 try {
-  canvas = require('node-canvas')
+  canvas = require('canvas')
   isNodeCanvas = true
 } catch (e) {}
 
