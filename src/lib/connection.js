@@ -101,11 +101,11 @@ proto.openSerialPort = function () {
 }
 
 proto.connect = function () {
-  const { socketAddress } = this.options
+  const { socketAddress, socketPort } = this.options
   this.validate()
 
   return new Promise((resolve, reject) => {
-    const url = `ws://${socketAddress}/`
+    const url = `ws://${socketAddress}:${socketPort}/`
 
     const socket = io.connect(url, {
       query: `token=${this.token}`,
