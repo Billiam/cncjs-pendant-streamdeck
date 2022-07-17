@@ -27,7 +27,7 @@ jobs:
         run: npm ci
 
       - name: Build Web
-        run: npm run build
+        run: npm run web-package
 
       - name: Zip release
         run: cd dist && mv web cncjs-pendant-streamdeck && zip -r cncjs-pendant-streamdeck.zip cncjs-pendant-streamdeck

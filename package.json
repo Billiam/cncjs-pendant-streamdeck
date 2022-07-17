@@ -15,8 +15,10 @@
     "build": "vite build",
     "cli-dev": "npm run cli -- --mode development",
     "cli": "vite build --config=vite.node.config.js --ssr",
+    "package": "npm run cli && bin/cli-package.sh",
+    "web-package": "npm run build && bin/web-package.sh",
     "preview": "vite preview --port 5050",
-    "format": "prettier .  --write"
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@elgato-stream-deck/node": "^5.4.0",
