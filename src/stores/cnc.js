@@ -30,6 +30,7 @@ export const cncStates = {
   ALARM: 'Alarm',
   JOG: 'Jog',
   RUNNING: 'Run',
+  HOMING: 'Home',
 }
 export const workflowStates = {
   IDLE: 'idle',

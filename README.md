@@ -75,6 +75,8 @@ KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0080", MODE:="666
 KERNEL=="hidraw*", ATTRS{idVendor}=="0fd9", ATTRS{idProduct}=="0086", MODE:="666", GROUP="plugdev"
 ```
 
+Unplug, and replug the device after reloading rules if necessary.
+
 Install Stream Deck and canvas dependencies:
 
 ```
@@ -837,7 +839,7 @@ State related to the machine or cncjs's
 |-------------------------|-----------|-----------------------------------------------------------------------------------------------------------------------------|
 | `cnc.connected`         | `Boolean` | Whether cncjs is connected to the machine by serial port                                                                    |
 | `cnc.connecting`        | `Boolean` | Whether cncjs is currently in the process of connecting                                                                     |
-| `cnc.runState`          | `String`  | The current controller state. One of [`Idle`, `Alarm`, `Hold`, `Jog`, `Run`]                                                |
+| `cnc.runState`          | `String`  | The current controller state. One of [`Idle`, `Alarm`, `Hold`, `Home`, `Jog`, `Run`]                                        |
 | `cnc.workflowState`     | `String`  | The cncjs workflow state. One of [`idle`, `paused`, `running`]                                                              |
 | `cnc.feederState`       | `String`  | The cncjs feeder state. One of [`idle`, `paused`]                                                                           |
 | `cnc.locked`            | `Boolean` | Whether the controller is in an Alarm Lock state                                                                            |
