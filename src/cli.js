@@ -58,15 +58,17 @@ const run = async () => {
     watchEffect(() => {
       const result = buffer.value
       if (result) {
-        Sharp(result, {
-          raw: {
-            width: streamdeck.ICON_SIZE,
-            height: streamdeck.ICON_SIZE,
-            channels: 4,
-          },
-        })
-          .jpeg({ quality: 100, chromaSubsampling: '4:4:4' })
-          .toFile(`./debug/${index}.jpg`)
+        if (import.meta.env.DEV) {
+          Sharp(result, {
+            raw: {
+              width: streamdeck.ICON_SIZE,
+              height: streamdeck.ICON_SIZE,
+              channels: 4,
+            },
+          })
+            .jpeg({ quality: 100, chromaSubsampling: '4:4:4' })
+            .toFile(`./debug/${index}.jpg`)
+        }
         streamdeck.fillKeyBuffer(index, result, { format: 'rgba' })
       } else {
         streamdeck.clearKey(index)
