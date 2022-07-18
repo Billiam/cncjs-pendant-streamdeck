@@ -160,11 +160,10 @@ const run = async () => {
     )
   })
   watch(sceneButtons, (current, previous) => {
-    Object.entries(previous).forEach(([index, button]) => {
-      if (button && button !== current[index]) {
-        // unload button
-        button.button?.cleanup?.()
-      }
+    Object.values(previous).forEach((position) => {
+      position.forEach((button) => {
+        button.button?.cleanup()
+      })
     })
   })
 
