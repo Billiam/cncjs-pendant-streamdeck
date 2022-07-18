@@ -4,14 +4,16 @@ import CliButtonHandler from '@/lib/cli/button-handler'
 import buttonRenderer from '@/lib/cli/button-renderer'
 import animation from '@/lib/cli/animate'
 import Canvas from '@/lib/cli/canvas'
+import uncompute from '@/lib/uncompute'
 import { useColor } from '@/lib/cell/color'
 import { useGcode } from '@/lib/cell/gcode'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { renderToolpath } from '@/lib/gcode-renderer'
 import { performance } from 'adapter'
+import { throttle } from 'lodash'
 
 export default class CliButton {
-  constructor(index, config, { size, buttonActions, iconDirectory }) {
+  constructor(index, config, { size, buttonActions, iconDirectory, throttle }) {
     this.index = index
     this.config = config
     this.buffers = Array.from(
@@ -22,6 +24,7 @@ export default class CliButton {
     this.iconDirectory = iconDirectory
     this.watchers = []
     this.drawTime = 0
+    this.throttle = throttle
     this.setup()
   }
 
@@ -143,17 +146,33 @@ export default class CliButton {
 
     this.show = show
 
+    const render = (time, config) => {
+      buttonRenderer(config, this.canvas, this.iconDirectory).then(
+        (newBuffers) => {
+          if (time < this.drawTime) {
+            return
+          }
+          this.drawTime = time
+          this.buffers.forEach((buffer, i) => {
+            buffer.value = newBuffers[i] || null
+          })
+        }
+      )
+    }
+    const throttledRender = this.throttle
+      ? throttle(render, this.throttle)
+      : render
+
     this.watchEffect(() => {
       const time = performance.now()
-      buttonRenderer(
-        {
-          ...this.config,
-          buttonSize: this.size,
-          height,
-          index: this.index,
-          width,
-        },
-        {
+      // eager load computed values for watch effect
+      const config = {
+        ...this.config,
+        buttonSize: this.size,
+        height,
+        index: this.index,
+        width,
+        ...uncompute({
           color,
           cellProgressColor,
           cellTextColor,
@@ -169,18 +188,9 @@ export default class CliButton {
           textSvgVerticalAlignment,
           textLines,
           show,
-        },
-        this.canvas,
-        this.iconDirectory
-      ).then((newBuffers) => {
-        if (time < this.drawTime) {
-          return
-        }
-        this.drawTime = time
-        this.buffers.forEach((buffer, i) => {
-          buffer.value = newBuffers[i] || null
-        })
-      })
+        }),
+      }
+      throttledRender(time, config)
     })
   }
 }

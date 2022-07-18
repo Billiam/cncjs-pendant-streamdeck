@@ -51,6 +51,7 @@ export default (container) => {
 
     uiStore.setPalette(config.ui.palette)
     uiStore.setGrid(config.ui.rows, config.ui.columns)
+    uiStore.setThrottle(config.ui.throttle)
     uiStore.textColor = config.ui.textColor ?? uiStore.textColor
     uiStore.textShadow = config.ui.textShadow
     uiStore.font = config.ui.font ?? uiStore.font

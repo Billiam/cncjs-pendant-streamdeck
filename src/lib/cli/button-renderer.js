@@ -190,17 +190,4 @@ const getRender = async (config, canvas, directory) => {
   return [outputBuffer]
 }
 
-// eager load conditional computed values for caching/reactivity
-const effectiveConfig = (config, computed) => {
-  const newConfig = { ...config }
-
-  Object.entries(computed).forEach(([name, computed]) => {
-    newConfig[name] = computed.value
-  })
-  return newConfig
-}
-
-export default (config, computed, canvas, directory) => {
-  const combinedConfig = effectiveConfig(config, computed)
-  return getRender(combinedConfig, canvas, directory)
-}
+export default getRender

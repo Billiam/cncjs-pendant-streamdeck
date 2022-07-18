@@ -124,6 +124,7 @@ const run = async () => {
         size: streamdeck.ICON_SIZE,
         buttonActions,
         iconDirectory,
+        throttle: ui.throttle,
       })
 
       //iterate over all rows/columns of button

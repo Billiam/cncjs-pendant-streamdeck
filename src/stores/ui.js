@@ -33,6 +33,7 @@ export const useUiStore = defineStore({
     sceneStack: [],
     textColor: 1,
     textShadow: false,
+    throttle: 0,
     timeout: 0,
     web: true,
   }),
@@ -154,6 +155,14 @@ export const useUiStore = defineStore({
     },
     setPalette(colors) {
       this.palette = colors
+    },
+    setThrottle(throttle) {
+      if (throttle != null) {
+        const millis = parseInt(throttle)
+        if (millis) {
+          this.throttle = millis
+        }
+      }
     },
     setScene(scene) {
       this.sceneStack.splice(0)
