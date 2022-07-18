@@ -21,6 +21,7 @@ export default (socket, ackBus) => {
     'serialport:read': (data) => {
       switch (true) {
         case data === 'ok':
+        case data.startsWith('error:15'):
           ackBus.emit('ok')
           break
         case data.startsWith('ALARM:'):
