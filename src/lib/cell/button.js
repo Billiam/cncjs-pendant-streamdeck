@@ -21,7 +21,7 @@ export const useButton = (events, cleanupActions) => {
     skipUpEvent = false
   }
   const onHold = () => {
-    active.value = false
+    unsetActive()
     holding.value = false
     skipUpEvent = true
     callActions(configHoldActions.value)
@@ -66,7 +66,7 @@ export const useButton = (events, cleanupActions) => {
 
   const cancelClick = () => {
     const wasActive = active.value
-    active.value = false
+    unsetActive()
 
     if (wasActive && cleanupActions.value) {
       callActions(cleanupActions.value)
@@ -82,8 +82,7 @@ export const useButton = (events, cleanupActions) => {
     if (cleanupActions.value) {
       callActions(cleanupActions.value)
     }
-    active.value = false
-    holding.value = false
+    unsetActive()
   }
 
   return {
