@@ -931,6 +931,25 @@ It is recommended that configuration of these buttons be limited background colo
 | `fileListUpArrow`        | Up arrow for scrolling when the file list overflows the grid layout   |
 | `sortScene`              | Button that links to a scene where file sort options can be selected  |
 
+
+## Improving Stream Deck performance
+
+Unlike the web UI, which uses normal DOM operations for button display, Stream Deck rendering is handled by serverside 
+image and SVG compositing. 
+
+If the interface feels sluggish (especially on slower systems), there are some configuration changes which can help:
+
+* Limit the number of visible buttons. Ensure that buttons which are covered by other buttons are set to `show: false`
+* Limit the number of visible buttons which require frequent updates, including their disabled states
+* Limit button rendering complexity: A single, flat image is faster to render than compositing a
+background, overlay image and SVG text (but less convenient).
+* Throttle button updates. `ui.throttle: 100` will ensure that at most 10 updates per second for a single button are allowed.
+* For very large gcode files, the benefit of displaying accurate gcode dimensions or rendering the gcode may not be worth
+the cost of parsing the gcode. You can limit the number of gcode lines which will be processed with the `ui.gcodeLimit`
+setting.
+
+Additionally, the Stream Deck can be connected to a different computer 
+
 ## Licenses and credits
 
 Several icon sets have been added for convenience
