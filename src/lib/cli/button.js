@@ -130,6 +130,7 @@ export default class CliButton {
 
         const settings = {
           animate: this.config.animated,
+          throttle: this.throttle,
           lineWidth: this.canvas.lineWidth,
           autosize: false,
           colors: gcodeColors.value,

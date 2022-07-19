@@ -24,7 +24,14 @@ export const renderToolpath = (
   }
 
   if (options.animate) {
-    return animatedDraw(parsedGcode.lines, drawLine, 4000, callback, halted)
+    return animatedDraw({
+      lines: parsedGcode.lines,
+      drawLine,
+      duration: 4000,
+      throttle: settings.throttle,
+      callback,
+      halted,
+    })
   } else {
     return draw(parsedGcode.lines, drawLine, callback, halted)
   }
@@ -36,8 +43,18 @@ function* chunkLines(lines, size = 1) {
   }
 }
 
-const animatedDraw = async (lines, drawLine, duration, callback, halted) => {
-  const fps = 30
+const animatedDraw = async ({
+  lines,
+  drawLine,
+  duration,
+  callback,
+  halted,
+  throttle,
+}) => {
+  let fps = 30
+  if (throttle) {
+    fps = 1000 / throttle
+  }
   const linesPerFrame = Math.floor(lines.length / ((duration / 1000) * fps))
   const wait = animatedWait(1000 / fps)
   const gen = chunkLines(lines, linesPerFrame)
