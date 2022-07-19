@@ -23,6 +23,9 @@ var parse = function (code) {
     var s = command.split('(')[0].split(';')[0].split('%')[0] //No need to use regex
     return s.split(/\s/).join('').trim()
   }
+  function bulkRemoveCommentsAndSpaces(gcode) {
+    return gcode.replace(/[ \r]|[(;%].*/g, '')
+  }
   /**
    * Parses the result of GParser.parse.
    * @param  {array}  Result of GParser.parse
@@ -465,13 +468,11 @@ var parse = function (code) {
       errorList: [{ line: 0, message: '(error) No command.' }],
     }
   }
-  var gcode = code.split('\n')
-  i = 0
-  while (i < gcode.length && parsing === true) {
-    //Sorry for not being really readable :'(
-    tabRes = parseParsedGCode(
-      GParser.parse(removeCommentsAndSpaces(gcode[i]).toUpperCase())
-    )
+  var gcode = bulkRemoveCommentsAndSpaces(code).toUpperCase().split('\n')
+  var i = 0
+  var len = gcode.length
+  while (i < len && parsing === true) {
+    tabRes = parseParsedGCode(GParser.parse(gcode[i]))
     j = 0
     while (j < tabRes.length && parsing === true) {
       parsing = manageCommand(
@@ -492,7 +493,6 @@ var parse = function (code) {
     )
   }
   return {
-    gcode: gcode,
     lines: lines,
     size: totalSize,
     displayInInch: setInInch,
