@@ -46,7 +46,7 @@
     "vite": "^2.9.5"
   },
   "optionalDependencies": {
-    "pureimage": "^0.3.14",
-    "canvas": "^2.9.0"
+    "canvas": "^2.9.0",
+    "pureimage": "^0.3.14"
   }
 }

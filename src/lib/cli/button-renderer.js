@@ -1,7 +1,7 @@
 import sharp from 'sharp'
 import path from 'path'
 import escape from 'lodash/escape'
-
+const icons = {}
 const inputSize = 144
 
 const textOffset = (alignment, width) => {
@@ -50,16 +50,19 @@ const getRender = async (config, canvas, directory) => {
   const finalComposite = []
 
   if (config.icon) {
-    const overlay = await sharp(path.resolve(directory, config.icon))
-      .resize({
-        width: inputWidth,
-        height: inputHeight,
-        fit: 'contain',
-        kernel: 'cubic',
-      })
-      .toBuffer()
+    if (!icons[config.icon]) {
+      const overlay = await sharp(path.resolve(directory, config.icon))
+        .resize({
+          width: inputWidth,
+          height: inputHeight,
+          fit: 'contain',
+          kernel: 'cubic',
+        })
+        .toBuffer()
+      icons[config.icon] = overlay
+    }
     composite.push({
-      input: overlay,
+      input: icons[config.icon],
     })
   }
 
