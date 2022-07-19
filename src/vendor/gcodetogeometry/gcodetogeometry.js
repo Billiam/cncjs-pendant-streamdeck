@@ -1,7 +1,8 @@
 import util from './util.js'
 import { StraightLine as StraightLine$0 } from './lines.js'
 import { CurvedLine as CurvedLine$0 } from './lines.js'
-import GParser from './parser.js'
+import { parseLine } from '../gcode-parser'
+
 var StraightLine = { StraightLine: StraightLine$0 }.StraightLine
 var CurvedLine = { CurvedLine: CurvedLine$0 }.CurvedLine
 /**
@@ -34,11 +35,12 @@ var parse = function (code) {
   function parseParsedGCode(parsed) {
     var obj = {}
     var i = 0
+    var l
     var letter = '',
       number = ''
     var tab = []
     var emptyObj = true
-    for (i = 0; i < parsed.words.length; i++) {
+    for (i = 0, l = parsed.words.length; i < l; i++) {
       letter = parsed.words[i][0]
       number = parsed.words[i][1]
       if (letter === 'G' || letter === 'M') {
@@ -102,58 +104,7 @@ var parse = function (code) {
       }
     }
   }
-  /**
-   * Creates an error object.
-   *
-   * @param {number} line The line number.
-   * @param {string} message The message.
-   * @param {boolean} isSkipped If the command is skipped.
-   * @return {Error} The error object.
-   */
-  function createError(line, message, isSkipped) {
-    return { line: line, message: message, isSkipped: isSkipped }
-  }
-  /**
-   * Checks if there is an error due to the feed rate configuration.
-   * @param  {object}  command    The command (the feed rate can be changed)
-   * @param  {object}  errorList  The error list
-   * @param  {number}  line       The line number
-   * @param  {object}  settings   The modularity settings
-   * @return {bool}  True if the command is skipped (error), else false if the
-   *                 feedrate is correct or emits only a warning
-   */
-  function checkErrorFeedrate(command, errorList, line, settings) {
-    var c = command
-    var consideredFeedrate = c.f === undefined ? settings.feedrate : c.f
-    if (
-      c.type !== undefined &&
-      c.type !== 'G1' &&
-      c.type !== 'G2' &&
-      c.type !== 'G3'
-    ) {
-      return false
-    }
-    if (consideredFeedrate > 0) {
-      return false
-    }
-    if (consideredFeedrate < 0) {
-      errorList.push(
-        createError(
-          line,
-          '(warning) Cannot use a negative feed rate ' +
-            '(the absolute value is used).',
-          false
-        )
-      )
-      c.f = Math.abs(consideredFeedrate)
-      return false
-    }
-    errorList.push(
-      createError(line, '(error) Cannot use a null feed rate (skipped).', true)
-    )
-    settings.feedrate = 0
-    return true
-  }
+
   /**
    * Sets the command type if not set and if a previous move command was set.
    * @param  {object}  parsedCommand        The command (is modified)
@@ -205,43 +156,7 @@ var parse = function (code) {
     }
     return pos
   }
-  /**
-   * Checks a G0 command.
-   * @param  {object}  command    The command
-   * @param  {array}   errorList  The error list
-   * @param  {number}  line       The line number
-   * @return  {bool}   Returns true if the command is done, false if skipped
-   */
-  function checkG0(command, errorList, line) {
-    var acceptedParameters = ['X', 'Y', 'Z']
-    var parameters = Object.keys(command)
-    parameters.splice(parameters.indexOf('type'), 1)
-    if (checkWrongParameter(acceptedParameters, parameters) === true) {
-      errorList.push(
-        createError(line, '(warning) Some parameters are wrong.', false)
-      )
-    }
-    return true
-  }
-  /**
-   * Checks a G1 command.
-   * @param  {object}  command           The command
-   * @param  {array}   errorList         The error list
-   * @param  {number}  line              The line number
-   * @param  {number}  previousFeedrate  The previous feedrate
-   * @return  {bool}   Returns true if the command is done, false if skipped
-   */
-  function checkG1(command, errorList, line, previousFeedrate) {
-    var acceptedParameters = ['X', 'Y', 'Z', 'F']
-    var parameters = Object.keys(command)
-    parameters.splice(parameters.indexOf('type'), 1)
-    if (checkWrongParameter(acceptedParameters, parameters) === true) {
-      errorList.push(
-        createError(line, '(warning) Some parameters are wrong.', false)
-      )
-    }
-    return !checkErrorFeedrate(command, errorList, line, previousFeedrate)
-  }
+
   /**
    * Checks a G2 or G3 command.
    * @param  {object}  command           The command
@@ -251,23 +166,12 @@ var parse = function (code) {
    * @return  {bool}   Returns true if the command is done, false if skipped
    */
   function checkG2G3(command, errorList, line, previousFeedrate) {
-    var acceptedParameters = ['X', 'Y', 'Z', 'F', 'I', 'J', 'K', 'R']
-    var parameters = Object.keys(command)
-    parameters.splice(parameters.indexOf('type'), 1)
-    if (checkWrongParameter(acceptedParameters, parameters) === true) {
-      errorList.push(
-        createError(line, '(warning) Some parameters are wrong.', false)
-      )
-    }
     if (
       command.r === undefined &&
       command.i === undefined &&
       command.j === undefined &&
       command.k === undefined
     ) {
-      errorList.push(
-        createError(line, '(error) No parameter R, I, J or K.', true)
-      )
       return false
     }
     if (
@@ -276,16 +180,9 @@ var parse = function (code) {
         command.j !== undefined ||
         command.k !== undefined)
     ) {
-      errorList.push(
-        createError(
-          line,
-          '(error) Cannot use R and I, J or K at the same time.',
-          true
-        )
-      )
       return false
     }
-    return !checkErrorFeedrate(command, errorList, line, previousFeedrate)
+    return true
   }
   /**
    * Manages a 60 or G1 command.
@@ -314,9 +211,6 @@ var parse = function (code) {
     checkTotalSize(totalSize, line.getSize())
     lines.push(line.returnLine())
     settings.position = util.copyObject(line.end)
-    if (command.f !== undefined) {
-      settings.feedrate = command.f
-    }
   }
   /**
    * Manages a G2 or G3 command.
@@ -351,24 +245,12 @@ var parse = function (code) {
     if (line.center !== false) {
       var temp = line.returnLine()
       if (temp === false) {
-        errorList.push(
-          createError(lineNumber, '(error) Impossible to create arc.', true)
-        )
         return
       }
-      settings.feedrate = line.feedrate
       settings.previousMoveCommand = command.type
       checkTotalSize(totalSize, line.getSize())
       lines.push(temp)
       settings.position = util.copyObject(line.end)
-    } else {
-      errorList.push(
-        createError(
-          lineNumber,
-          '(error) Physically impossible to do with those values.',
-          true
-        )
-      )
     }
   }
   /**
@@ -395,19 +277,9 @@ var parse = function (code) {
     }
     setGoodType(command, settings.previousMoveCommand)
     if (command.type === undefined) {
-      if (command.f !== undefined) {
-        checkErrorFeedrate(command, errorList, lineNumber, settings.feedrate)
-        settings.feedrate = command.f
-      }
-    } else if (
-      command.type === 'G0' &&
-      checkG0(command, errorList, lineNumber) === true
-    ) {
+    } else if (command.type === 'G0') {
       manageG0G1(command, settings, lineNumber, lines, totalSize)
-    } else if (
-      command.type === 'G1' &&
-      checkG1(command, errorList, lineNumber, settings) === true
-    ) {
+    } else if (command.type === 'G1') {
       manageG0G1(command, settings, lineNumber, lines, totalSize)
     } else if (
       (command.type === 'G2' || command.type === 'G3') &&
@@ -452,7 +324,6 @@ var parse = function (code) {
   var lines = []
   var errorList = []
   var settings = {
-    feedrate: 0,
     previousMoveCommand: '',
     crossAxe: 'z',
     inMm: false,
@@ -469,12 +340,14 @@ var parse = function (code) {
     }
   }
   var gcode = bulkRemoveCommentsAndSpaces(code).toUpperCase().split('\n')
-  var i = 0
+
   var len = gcode.length
   while (i < len && parsing === true) {
-    tabRes = parseParsedGCode(GParser.parse(gcode[i]))
+    const parsed = parseLine(gcode[i])
+    tabRes = parseParsedGCode(parsed)
     j = 0
-    while (j < tabRes.length && parsing === true) {
+    const tabLen = tabRes.length
+    while (j < tabLen && parsing === true) {
       parsing = manageCommand(
         tabRes[j],
         settings,
@@ -487,11 +360,7 @@ var parse = function (code) {
     }
     i++
   }
-  if (i < gcode.length) {
-    errorList.push(
-      createError(i + 1, '(warning) The next code is not executed.', false)
-    )
-  }
+
   return {
     lines: lines,
     size: totalSize,
