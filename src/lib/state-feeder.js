@@ -1,3 +1,4 @@
+import { useUiStore } from '@/stores/ui'
 import { GcodeWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
 import { useCncStore } from '@/stores/cnc'
 import { useGcodeStore } from '@/stores/gcode'
@@ -5,6 +6,7 @@ const gcodeWorker = GcodeWorker()
 
 export default (socket, ackBus) => {
   const cnc = useCncStore()
+  const ui = useUiStore()
   const gcode = useGcodeStore()
 
   const listeners = {
@@ -45,7 +47,7 @@ export default (socket, ackBus) => {
       cnc.setVersion(version)
     },
     'gcode:load': (file, code) => {
-      gcodeWorker.postMessage({ name: file, gcode: code })
+      gcodeWorker.postMessage({ name: file, gcode: code, limit: ui.gcodeLimit })
       gcode.setLoaded(file, code)
     },
     'gcode:unload': () => {

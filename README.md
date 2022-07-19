@@ -819,18 +819,19 @@ These variables are available under 3 different objects: [`ui`](#ui-1), [`cnc`](
 
 State related to the current pendant user interface
 
-| Value                 | Type      | Description                                                                                       |
-|-----------------------|-----------|---------------------------------------------------------------------------------------------------|
-| `ui.brightness`       | `Integer` | The current brightness value. _Stream Deck only_ [`10` - `100`]                                   |
-| `ui.feedrateInterval` | `Integer` | The amount that feedrate will be increased or decreased by when modified                          |
-| `ui.spindleInterval`  | `Integer` | The amount that spindle speed will be increased or decreased by when modified                     |
-| `ui.userFlags`        | `Object`  | Object containing [user flag data](#userflagactions). Ex: `ui.userFlags.MyValue`                  |
-| `ui.input.value`      | `String`  | Numeric string representing the current value for the numpad input scene                          |
-| `ui.input.previous`   | `String`  | The previous value of the input being set by the numpad input scene                               |
-| `ui.input.type`       | `String`  | A label for the type of input being set by the numpad input scene                                 |
-| `ui.web`              | `Boolean` | Whether the pendant is being used in a web browser or on a Stream Deck device                     |
-| `ui.sceneName`        | `String`  | The name of the currently active scene                                                            |
-| `ui.throttle`         | `Integer` | Redraw each button at most once every `throttle` milliseconds. (_Stream Deck only_). Default: `0` |
+| Value                 | Type      | Description                                                                                                                        |
+|-----------------------|-----------|------------------------------------------------------------------------------------------------------------------------------------|
+| `ui.brightness`       | `Integer` | The current brightness value. _Stream Deck only_ [`10` - `100`]                                                                    |
+| `ui.feedrateInterval` | `Integer` | The amount that feedrate will be increased or decreased by when modified                                                           |
+| `ui.gcodeLimit`       | `Integer' | Set a hard limit on the number of lines of gcode that will be processed. Affects rendering and boundary data. (_Stream deck only_) |
+| `ui.spindleInterval`  | `Integer` | The amount that spindle speed will be increased or decreased by when modified                                                      |
+| `ui.userFlags`        | `Object`  | Object containing [user flag data](#userflagactions). Ex: `ui.userFlags.MyValue`                                                   |
+| `ui.input.value`      | `String`  | Numeric string representing the current value for the numpad input scene                                                           |
+| `ui.input.previous`   | `String`  | The previous value of the input being set by the numpad input scene                                                                |
+| `ui.input.type`       | `String`  | A label for the type of input being set by the numpad input scene                                                                  |
+| `ui.web`              | `Boolean` | Whether the pendant is being used in a web browser or on a Stream Deck device                                                      |
+| `ui.sceneName`        | `String`  | The name of the currently active scene                                                                                             |
+| `ui.throttle`         | `Integer` | Redraw each button at most once every `throttle` milliseconds. (_Stream Deck only_). Default: `0`                                  |
 #### cnc
 
 State related to the machine or cncjs's 

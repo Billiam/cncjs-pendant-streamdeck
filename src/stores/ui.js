@@ -19,6 +19,7 @@ export const useUiStore = defineStore({
     fileDetails: {},
     fileDetailsSort: 'alpha_asc',
     gcodeColors: {},
+    gcodeLimit: 0,
     iconSize: 72,
     userFlags: {},
     input: {
@@ -140,6 +141,9 @@ export const useUiStore = defineStore({
     },
     increaseBrightness() {
       this.setBrightness(this.brightness + 10)
+    },
+    setGcodeLimit(limit) {
+      this.gcodeLimit = limit
     },
     setTimeout(timeout) {
       this.timeout = timeout
