@@ -78,7 +78,7 @@ proto.debug = function () {
     console.debug('grbl:settings', data)
   })
   socket.on('gcode:load', function (name, gcode, context) {
-    console.debug('gcode:load', name, gcode, context)
+    console.debug('gcode:load', name, gcode.length, context)
   })
   socket.on('gcode:unload', function () {
     console.debug('gcode:unload')
