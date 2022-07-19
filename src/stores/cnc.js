@@ -235,19 +235,23 @@ export const useCncStore = defineStore({
       this.locked = val
     },
     setModal(modal) {
-      const changed = this.modal.units !== modal.units
-
-      this.modal = Object.freeze(modal)
-      if (changed) {
+      Object.entries(modal).forEach(([key, value]) => {
+        this.modal[key] = value
+      })
+      if (this.modal.units !== modal.units) {
         this.jogDistance = 1
         this.jogSpeed = this.speedFallback
       }
     },
     setMpos(mpos) {
-      this.mpos = Object.freeze(mpos)
+      Object.entries(mpos).forEach(([key, value]) => {
+        this.mpos[key] = value
+      })
     },
     setWpos(wpos) {
-      this.wpos = Object.freeze(wpos)
+      Object.entries(wpos).forEach(([key, value]) => {
+        this.wpos[key] = value
+      })
     },
     setOverrides(feed, rapid, spindle) {
       this.overrides = {
