@@ -55,7 +55,11 @@ const animatedDraw = async ({
   if (throttle) {
     fps = 1000 / throttle
   }
-  const linesPerFrame = Math.floor(lines.length / ((duration / 1000) * fps))
+  const linesPerFrame = Math.max(
+    1,
+    Math.floor(lines.length / ((duration / 1000) * fps))
+  )
+
   const wait = animatedWait(1000 / fps)
   const gen = chunkLines(lines, linesPerFrame)
   for (const [index, chunk] of gen) {
