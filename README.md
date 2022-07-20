@@ -1,8 +1,8 @@
 # cncjs-pendant-streamdeck
 
-A ridiculously configurable mobile web and Elgato Stream Deck pendant for CNCjs and Grbl
+A ridiculously configurable mobile web and Elgato Stream Deck pendant for CNCjs + Grbl
 
-![Web view with a 3 x 5 grid layout of buttons for jogging cnc](assets/jog.png)
+![Web view with a 3 x 5 grid layout of buttons for jogging cnc](assets/web.gif)
 
 ![Stream Deck device with buttons with buttons for CNC ](assets/streamdeck.jpg)
 
@@ -30,13 +30,14 @@ a handful from [Font Awesome](https://github.com/FortAwesome/Font-Awesome).
 * Excessively customizable
 * Execute one or more actions on press, release, and/or button hold
 * Support up to 6 axes
+* Multi axis smooth jogging
 * Lots of included icons, or add your own
 * Display and animate gcode
 * Manage alarms, hold, and pause events (like macro-triggered tool changes)
 
 ## Compatibility
 
-This has been tested with Grbl 1.1h, CNCjs 1.9.26 and Node 14.20.0
+This has been tested with Grbl 1.1h, CNCjs 1.9.26 and Node 14.20.0+
 
 ## Installation
 
