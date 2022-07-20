@@ -33,6 +33,8 @@ const getStreamdeck = async () => {
 }
 
 const run = async () => {
+  const { directory } = await container.get('options')
+
   let streamdeck
   try {
     ;[, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
@@ -47,7 +49,6 @@ const run = async () => {
   ui.setIconSize(streamdeck.ICON_SIZE)
 
   const { ui: uiConfig } = await container.get('config')
-  const { directory } = await container.get('options')
   const iconDirectory = path.join(directory, 'icons')
   const { wake } = SleepScreen(uiConfig?.timeout, streamdeck)
   const { buttons: fileListButtons, loadFiles } = useFileList()
