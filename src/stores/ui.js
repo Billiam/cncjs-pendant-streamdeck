@@ -12,7 +12,7 @@ export const useUiStore = defineStore({
     columns: 5,
     font: 'monospace',
     fontSize: 12,
-    lineHeight: 14,
+    lineHeight: 1.1,
     feedrateInterval: 1,
     spindleInterval: 1,
     fileDetailsPath: null,
