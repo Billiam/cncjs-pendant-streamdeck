@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+* Fix Stream Deck connection failing before commandline arguments were parsed
+* Fix incorrect default text line height
+
 ## [0.2.0] 2022-07-19
 
 Mostly focused on performance improvements on slower systems.
