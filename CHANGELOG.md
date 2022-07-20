@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.2.0] 2022-07-19
 
 Mostly focused on performance improvements on slower systems.
 
