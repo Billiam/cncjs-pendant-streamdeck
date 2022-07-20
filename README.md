@@ -1,20 +1,26 @@
 # cncjs-pendant-streamdeck
 
-A _highly_ configurable mobile web and Elgato Stream Deck pendant for CNCjs and Grbl
+A ridiculously configurable mobile web and Elgato Stream Deck pendant for CNCjs and Grbl
 
-The web version acts as a prototype for the stream deck, with the side effect of being a powerful and useful
-pendant in its own right.
+![Web view with a 3 x 5 grid layout of buttons for jogging cnc](assets/jog.png)
+
+![Stream Deck device with buttons with buttons for CNC ](assets/streamdeck.jpg)
+
+The web version acts as a prototype for the Stream Deck, and powerful and useful
+pendant as a side effect.
 
 All configuration takes place in `public/config.json`. An example, mostly matching my own interface, is included to get started.
 
-You can use your own images, or those included with the pendant.
+You can use your own images, or those included with the pendant, courtesy [czottmann's](https://github.com/czottmann)
+[system-uicons](https://github.com/czottmann/streamdeck-iconpack-system-uicons) and
+[fluent system icons](https://github.com/carlo/streamdeck-iconpack-fluentui-system-icons/blob/main/LICENSE.md) and
+a handful from [Font Awesome](https://github.com/FortAwesome/Font-Awesome).
 
 ### To-do
 
 * Configurator
 * Web validation
 * Docs site
-* Screenshots
 
 ## Features
 
@@ -133,7 +139,7 @@ Run one or more actions when a button is pressed, released or held for a moment.
 * Fullscreen
 * Scene changing actions (navigation, swap, reset)
 * Store arbitrary values
-* Set brightness (stream deck only)
+* Set brightness (_Stream Deck only_)
 
 Buttons, layout, and other behavior are configured with the `config.json` file.
 
@@ -551,7 +557,7 @@ User flags are arbitrary, temporary variables that can be displayed as [dynamic 
 [conditions](#conditions) for changing a button's visibility or enabled/disabled status. They can be set, removed, or 
 toggled.
 
-These variables are not persisted, and will be reset when the page is reloaded, or when the stream deck process is restarted.
+These variables are not persisted, and will be reset when the page is reloaded, or when the Stream Deck process is restarted.
 
 #### `actions/setUserFlag`
 
@@ -954,8 +960,8 @@ Additionally, the Stream Deck can be connected to a different computer
 
 Several icon sets have been added for convenience
 
-* [carlo -
-  streamdeck-iconpack-fluentui-system-icons - MIT](https://github.com/carlo/streamdeck-iconpack-fluentui-system-icons/blob/main/LICENSE.md)
-* [carlo - streamdeck-iconpack-system-uicons - MIT](https://github.com/carlo/streamdeck-iconpack-system-uicons/blob/main/LICENSE.md)
+* [czottmann -
+  streamdeck-iconpack-fluentui-system-icons - MIT](https://github.com/czottmann/streamdeck-iconpack-fluentui-system-icons/blob/main/LICENSE.md)
+* [czottmann - streamdeck-iconpack-system-uicons - MIT](https://github.com/czottmann/streamdeck-iconpack-system-uicons/blob/main/LICENSE.md)
 * [fontawesome - CC BY 4.0](https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/LICENSE.txt)  
   Alterations: SVG images have been converted to PNG
