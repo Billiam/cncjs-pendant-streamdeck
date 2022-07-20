@@ -21,6 +21,14 @@ export default defineConfig(({ command, mode }) => {
         ),
       },
     },
+    worker: {
+      rollupOptions: {
+        error: true,
+        output: {
+          entryFileNames: '[name].js',
+        },
+      },
+    },
     build: {
       outDir: '../dist/web',
       emptyOutDir: true,
@@ -28,7 +36,6 @@ export default defineConfig(({ command, mode }) => {
         output: {
           assetFileNames: '[name][extname]',
           entryFileNames: '[name].js',
-          chunkFileNames: '[name].js',
         },
       },
     },

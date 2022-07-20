@@ -32,6 +32,9 @@ export default defineConfig(({ command, mode }) => {
     ssr: {
       noExternal: ['cation', 'adapter'],
     },
+    legacy: {
+      buildSsrCjsExternalHeuristics: true,
+    },
     plugins: [vue(), legacy({ targets: ['node 14'] })],
     root: 'src',
     server: {},
