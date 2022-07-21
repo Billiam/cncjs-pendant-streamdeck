@@ -12,7 +12,7 @@ A ridiculously configurable mobile web and Elgato Stream Deck pendant for CNCjs 
 The web version acts as a prototype for the Stream Deck, and powerful and useful
 pendant as a side effect.
 
-All configuration takes place in `public/config.json`. An example, mostly matching my own interface, is included to get started.
+All configuration takes place in `config.json`. An example, mostly matching my own interface, is included to get started.
 
 You can use your own images, or those included with the pendant, courtesy [czottmann's](https://github.com/czottmann)
 [system-uicons](https://github.com/czottmann/streamdeck-iconpack-system-uicons) and
