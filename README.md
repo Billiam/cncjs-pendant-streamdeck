@@ -46,7 +46,7 @@ Full documentation can be found at <https://billiam.github.io/cncjs-pendant-stre
 
 1. Download the latest release and extract it, to ex: `/home/my-name/cncjs-pendant-streamdeck`
 2. Rename `config.example.json` to `config.json`
-3. Update the `config.json` file with your connection information in the [`"cncjs"`](#cncjs) section.
+3. Update the `config.json` file with your connection information in the [`cncjs`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/configure#cncjs) section.
 4. Edit your `~/.cncrc` file, adding a mount point for this pendant
     ```
     "mountPoints": [
