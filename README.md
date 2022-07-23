@@ -116,7 +116,7 @@ cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 ## To-do
 
 * Config builder
-* Web config validator
+* ~~Web config validator~~ Done! [Validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/) on the [docs site](https://billiam.github.io/cncjs-pendant-streamdeck/)
 
 ## Licenses and credits
 
