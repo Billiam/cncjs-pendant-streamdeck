@@ -76,10 +76,10 @@ onBeforeUnmount(() => {
 .html,
 body,
 #app {
-  height: 100%;
+  height: 100vh;
 }
 .status {
-  height: 100%;
+  height: 100vh;
 }
 .message {
   text-align: center;
