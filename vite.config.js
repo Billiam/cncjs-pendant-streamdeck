@@ -15,6 +15,8 @@ export default defineConfig(({ command, mode }) => {
     resolve: {
       alias: {
         vue: 'vue/dist/vue.esm-bundler',
+        'xmlhttprequest-ssl':
+          './node_modules/engine.io-client/lib/xmlhttprequest.js',
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         adapter: fileURLToPath(
           new URL('./src/services/adapter/web.js', import.meta.url)
