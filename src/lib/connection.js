@@ -1,4 +1,5 @@
 import io from 'socket.io-client'
+import { ConnectionError } from './connection-error'
 import mitt from 'mitt'
 
 const Connection = function (opts, token) {
