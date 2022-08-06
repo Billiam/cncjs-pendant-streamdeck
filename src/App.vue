@@ -73,7 +73,7 @@ onBeforeUnmount(() => {
 .no-touch {
   touch-action: none;
 }
-.html,
+html,
 body,
 #app {
   height: 100%;
