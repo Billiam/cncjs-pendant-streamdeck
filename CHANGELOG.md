@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.2] 2022-08-05
+
+### Fixed
+
+* Fix missing 100% height, causing squashed icons in some browsers
+* Fix missing error class during connection failure
+
 ## [0.2.1] 2022-07-20
 
 ### Fixed
