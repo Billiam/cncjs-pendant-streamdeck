@@ -5,7 +5,6 @@ import FixedHeight from '@/components/FixedHeight.vue'
 import FileListScene from '@/components/FileListScene.vue'
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
-import { getActivePinia } from 'pinia'
 
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
