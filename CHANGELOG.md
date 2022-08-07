@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.3] 2022-08-07
+
+### Fixed
+
+* Fixed issue where rapid jog actions could trigger an absolute position move instead, depending on latency
+* [Stream Deck only] Updated [stream deck library](https://github.com/julusian/node-elgato-stream-deck) to add support
+for Stream Deck Mini
+
+### Chore
+
+* Updated dependencies
+
 ## [0.2.2] 2022-08-05
 
 ### Fixed
