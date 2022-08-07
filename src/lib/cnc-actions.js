@@ -12,22 +12,24 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
   }
 
   const withRelative = (callback) => {
-    if (cnc.isRelativeMove) {
-      callback()
-    } else {
-      gcode('G91')
-      callback()
+    const wasRelative = cnc.isRelativeMove
+
+    gcode('G91')
+    callback()
+
+    if (!wasRelative) {
       gcode('G90')
     }
   }
 
   const withAbsolute = (callback) => {
-    if (cnc.isRelativeMove) {
-      gcode('G90')
-      callback()
+    const wasRelative = cnc.isRelativeMove
+
+    gcode('G90')
+    callback()
+
+    if (wasRelative) {
       gcode('G91')
-    } else {
-      callback()
     }
   }
 
