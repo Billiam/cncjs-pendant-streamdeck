@@ -47,6 +47,17 @@ const machineCommands = new Set([
   'stopSmoothJog',
 ])
 
+const runningCommands = new Set([
+  'decreaseFeedrate',
+  'decreaseSpindle',
+  'increaseFeedrate',
+  'increaseSpindle',
+  'resetFeedrate',
+  'resetRapids',
+  'resetSpindle',
+  'setRapids',
+])
+
 // commands that can be run after reset
 const alarmCommands = new Set(['homing', 'unlock'])
 
@@ -389,14 +400,13 @@ export default (actionBus, connectionBus) => {
     }
   }
 
-  const enabled = (cfg) => {
-    return (
-      store.cnc.ready ||
-      !cfg?.every((action) => machineCommands.has(action.action)) ||
-      (store.cnc.alarm &&
-        cfg.some((action) => alarmCommands.has(action.action)))
-    )
-  }
+  const enabled = (cfg) =>
+    store.cnc.ready ||
+    !cfg?.every((action) => machineCommands.has(action.action)) ||
+    (store.cnc.running &&
+      cfg?.some((action) => runningCommands.has(action.action))) ||
+    (store.cnc.alarm && cfg?.some((action) => alarmCommands.has(action.action)))
+
   const getCallback = (cfg) => {
     return cfg.action && actions[cfg.action]
   }

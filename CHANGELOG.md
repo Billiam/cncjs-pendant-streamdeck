@@ -1,5 +1,11 @@
 # Changelog
 
+## Unreleased
+
+### Fixed
+
+* Spindle/rapid/feedrate overrides unavailable while job is running
+
 ## [0.2.3] 2022-08-07
 
 ### Fixed
