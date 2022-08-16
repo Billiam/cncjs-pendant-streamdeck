@@ -14,7 +14,6 @@ export default defineConfig(({ command, mode }) => {
     server: {},
     resolve: {
       alias: {
-        vue: 'vue/dist/vue.esm-bundler',
         'xmlhttprequest-ssl':
           './node_modules/engine.io-client/lib/xmlhttprequest.js',
         '@': fileURLToPath(new URL('./src', import.meta.url)),
@@ -32,6 +31,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     build: {
+      commonjsOptions: { include: [] },
       outDir: '../dist/web',
       emptyOutDir: true,
       rollupOptions: {
@@ -42,6 +42,7 @@ export default defineConfig(({ command, mode }) => {
       },
     },
     optimizeDeps: {
+      disabled: false,
       esbuildOptions: {
         keepNames: true,
       },
