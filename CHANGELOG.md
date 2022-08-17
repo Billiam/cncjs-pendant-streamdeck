@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.2.5] 2022-08-16
+
+### Fixed
+
+* Fixed compilation error in templating library affecting web build
+
 ## [0.2.4] 2022-08-12
 
 ### Fixed
