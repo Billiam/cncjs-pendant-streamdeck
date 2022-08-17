@@ -45,22 +45,27 @@ export default (container) => {
     sceneStore.setScenes(Object.freeze(config.scenes))
     cncStore.setAxes(config.machine?.axes)
 
-    // TODO: make home scene configurable or add validation for home
+    // TODO: make home scene configurable
     uiStore.setScene('home')
-    uiStore.setBrightness(config.ui.brightness)
+    const uiConfig = { ...config.ui }
 
-    uiStore.setPalette(config.ui.palette)
-    uiStore.setGrid(config.ui.rows, config.ui.columns)
-    uiStore.setThrottle(config.ui.throttle)
-    uiStore.setGcodeLimit(config.ui.gcodeLimit)
-    uiStore.textColor = config.ui.textColor ?? uiStore.textColor
-    uiStore.textShadow = config.ui.textShadow
-    uiStore.font = config.ui.font ?? uiStore.font
-    uiStore.fontSize = config.ui.textSize ?? uiStore.fontSize
-    uiStore.lineHeight = config.ui.lineHeight ?? uiStore.lineHeight
-    uiStore.setGcodeColors(config.ui.gcodeColors)
-    uiStore.setBgColor(config.ui.bgColor)
-    uiStore.setProgressColor(config.ui.progressColor)
+    if (import.meta.env.SSR) {
+      Object.assign(uiConfig, config.streamdeckUi || {})
+    }
+
+    uiStore.setBrightness(uiConfig.brightness)
+    uiStore.setPalette(uiConfig.palette)
+    uiStore.setGrid(uiConfig.rows, uiConfig.columns)
+    uiStore.setThrottle(uiConfig.throttle)
+    uiStore.setGcodeLimit(uiConfig.gcodeLimit)
+    uiStore.textColor = uiConfig.textColor ?? uiStore.textColor
+    uiStore.textShadow = uiConfig.textShadow
+    uiStore.font = uiConfig.font ?? uiStore.font
+    uiStore.fontSize = uiConfig.textSize ?? uiStore.fontSize
+    uiStore.lineHeight = uiConfig.lineHeight ?? uiStore.lineHeight
+    uiStore.setGcodeColors(uiConfig.gcodeColors)
+    uiStore.setBgColor(uiConfig.bgColor)
+    uiStore.setProgressColor(uiConfig.progressColor)
 
     // more store population
     await Promise.all([

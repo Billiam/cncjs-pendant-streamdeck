@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+### Added
+
+Added `streamdeckUi` configuration value to config. This allows `ui` configuration to be overwritten with different
+fonts, colors, etc. when using a Stream Deck, so that a single config.json file can be shared between web and Stream
+Deck processes.
+
 ## [0.2.5] 2022-08-16
 
 ### Fixed
