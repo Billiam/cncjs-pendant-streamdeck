@@ -19,7 +19,8 @@
     "package": "npm run cli && bin/cli-package.sh",
     "web-package": "npm run build && bin/web-package.sh",
     "preview": "vite preview --port 5050",
-    "format": "prettier . --write"
+    "format": "prettier . --write",
+    "update-changelog": "git-conventional-commits changelog  -f CHANGELOG.md"
   },
   "dependencies": {
     "@elgato-stream-deck/node": "^5.4.0",
@@ -42,6 +43,7 @@
     "@vitejs/plugin-legacy": "^2.0.0",
     "@vitejs/plugin-vue": "^3.0.1",
     "cation": "https://github.com/billiam/Cation.git",
+    "git-conventional-commits": "https://github.com/billiam/git-conventional-commits.git#custom-formatting",
     "prettier": "^2.6.2",
     "sass": "^1.52.1",
     "vite": "^3.0.1"
