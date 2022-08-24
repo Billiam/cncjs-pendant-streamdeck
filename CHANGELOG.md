@@ -1,3 +1,13 @@
+## Unreleased
+
+### 📖 Documentation
+
+##### `config example`
+
+*  Distinguish between unhold and start feed in default icon config ([189c39c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/189c39c))
+*  Use different background for play button when it means 'unpause' in default config ([4c6176d](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4c6176d))
+*  Add default streamdeckUi section ([4f7848c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4f7848c))
+
 # [0.3.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.5...0.3.0) (2022-08-18)
 
 ### Added
