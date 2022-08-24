@@ -192,6 +192,18 @@
       "bgColor": 4,
       "icon": "fluent-ui/checkmark_circle.png"
     },
+    "continue": {
+      "actions": [
+        {
+          "action": "run",
+          "event": "hold"
+        }
+      ],
+      "bgColor": 3,
+      "disabled": "!gcode.gcode || cnc.running",
+      "if": "cnc.paused",
+      "icon": "fluent-ui/play.png"
+    },
     "dimensions": {
       "if": "gcode.dimensions",
       "text": "Dimensions\nX: {{gcode.displayDimensions.width}}\nY: {{gcode.displayDimensions.depth}}\nZ: {{gcode.displayDimensions.height}}",
@@ -1594,7 +1606,7 @@
           ["machinePosition", "workPosition", "disconnected"]
         ],
         ["loadGcode", "preview", null, null, "runStatus"],
-        ["play", "pause", "stop", "clearGcode", "speedScene"]
+        [["play", "continue"], "pause", "stop", "clearGcode", "speedScene"]
       ]
     },
     "zero": {
