@@ -1,6 +1,4 @@
-# Changelog
-
-## [0.3.0] 2022-08-18
+# [0.3.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.5...0.3.0) (2022-08-18)
 
 ### Added
 
@@ -8,19 +6,19 @@ Added `streamdeckUi` configuration value to config. This allows `ui` configurati
 fonts, colors, etc. when using a Stream Deck, so that a single config.json file can be shared between web and Stream
 Deck processes.
 
-## [0.2.5] 2022-08-16
+## [0.2.5](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.4...0.2.5) (2022-08-17)
 
 ### Fixed
 
 * Fixed compilation error in templating library affecting web build
 
-## [0.2.4] 2022-08-12
+## [0.2.4](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.3...0.2.4) (2022-08-13)
 
 ### Fixed
 
 * Fixed spindle/rapid/feedrate overrides being unavailable while job is running
 
-## [0.2.3] 2022-08-07
+## [0.2.3](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.2...0.2.3) (2022-08-07)
 
 ### Fixed
 
@@ -32,21 +30,21 @@ for Stream Deck Mini
 
 * Updated dependencies
 
-## [0.2.2] 2022-08-05
+## [0.2.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.1...0.2.2) (2022-08-06)
 
 ### Fixed
 
 * Fix missing 100% height, causing squashed icons in some browsers
 * Fix missing error class during connection failure
 
-## [0.2.1] 2022-07-20
+## [0.2.1](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.0...0.2.1) (2022-07-21)
 
 ### Fixed
 
 * Fix Stream Deck connection failing before commandline arguments were parsed
 * Fix incorrect default text line height
 
-## [0.2.0] 2022-07-19
+# [0.2.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.1.0...0.2.0) (2022-07-20)
 
 Mostly focused on performance improvements on slower systems.
 
@@ -78,3 +76,5 @@ affecting both gcode rendering, and gcode dimension display (_Stream Deck only_)
 * When smooth jogging, fix soft limits generating a backlog of unacknowledged moves, resulting in unexpected movement later
 * Reduced unnecessary re-rendering for some button states
 * Fixed very small gcode files not rendering correctly
+
+# [0.1.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/7874c7dd1bacaccfb1fcd04e93f9926dcf712344...0.1.0) (2022-07-17)
