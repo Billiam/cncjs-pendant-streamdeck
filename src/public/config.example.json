@@ -354,8 +354,9 @@
       ],
       "bgColor": 5,
       "disabled": "!cnc.connected",
-      "icon": "fluent-ui/hand_right.png",
+      "icon": "default/small_hand_right.png",
       "if": "!cnc.hold",
+      "text": "Hold",
       "textAlignment": "bottom center"
     },
     "holdScene": {
@@ -613,6 +614,7 @@
       ],
       "bgColor": 5,
       "disabled": "!gcode.gcode || cnc.running",
+      "if": "!cnc.paused",
       "icon": "fluent-ui/play.png"
     },
     "positionScene": {
@@ -1201,8 +1203,10 @@
         }
       ],
       "bgColor": 3,
-      "icon": "fluent-ui-filled/hand_right.png",
-      "if": "cnc.feedPaused"
+      "icon": "default/small_hand_right_filled.png",
+      "if": "cnc.feedPaused",
+      "text": "Start feed",
+      "textAlignment": "bottom center"
     },
     "statusScene": {
       "actions": [
@@ -1268,8 +1272,10 @@
         }
       ],
       "bgColor": 3,
-      "icon": "fluent-ui-filled/hand_right.png",
-      "if": "cnc.hold"
+      "icon": "default/small_hand_right_filled.png",
+      "if": "cnc.hold && !cnc.feedPaused",
+      "text": "Unhold",
+      "textAlignment": "bottom center"
     },
     "unlock": {
       "actions": [
@@ -1582,7 +1588,7 @@
       "buttons": [
         [
           "back",
-          ["hold", "startFeed", "unhold"],
+          ["hold", "unhold", "startFeed"],
           ["feedPauseReason", "pauseReason"],
           ["stopFeed", "error", "alarm"],
           ["machinePosition", "workPosition", "disconnected"]
