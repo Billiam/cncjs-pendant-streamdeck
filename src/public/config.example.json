@@ -1628,6 +1628,7 @@
       ]
     }
   },
+  "streamdeckUi": {},
   "ui": {
     "bgColor": 0,
     "brightness": 60,
