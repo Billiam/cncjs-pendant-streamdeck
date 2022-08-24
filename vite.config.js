@@ -60,6 +60,10 @@ export default defineConfig(({ command, mode }) => {
         target: env.PROXY_URL,
         changeOrigin: true,
       },
+      '/socket.io': {
+        target: env.PROXY_WEBSOCKET,
+        ws: true,
+      },
     }
   }
 
