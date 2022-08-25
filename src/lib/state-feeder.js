@@ -86,6 +86,11 @@ export default (socket, ackBus) => {
     'workflow:state': (status) => {
       cnc.setWorkflowState(status)
     },
+    connect_error: () => {
+      if (cnc.connected) {
+        cnc.setConnected(false)
+      }
+    },
   }
   const workerListeners = {
     message: (e) => {
