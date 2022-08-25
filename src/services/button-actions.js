@@ -181,6 +181,17 @@ export default (actionBus, connectionBus) => {
     }
   }
 
+  const userCommand = async (commandId, commandName) => {
+    if (!commandId && commandName) {
+      commandId = await store.cnc.getCommandId(commandName)
+      if (!commandId) {
+        console.error(`Requested command "${commandName}" could not be found`)
+        return
+      }
+    }
+    store.cnc.runCommand(commandId)
+  }
+
   const macro = async (macroId, macroName) => {
     if (!macroId && macroName) {
       macroId = await store.cnc.getMacroId(macroName)
@@ -334,6 +345,7 @@ export default (actionBus, connectionBus) => {
     brightness,
     clearGcode,
     clearUserFlag,
+    command: userCommand,
     completeInput,
     connect,
     decreaseFeedrate,

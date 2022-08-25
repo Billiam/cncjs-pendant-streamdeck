@@ -11,6 +11,7 @@ import { computed, inject, ref } from 'vue'
 import { useText } from '@/lib/cell/text'
 import { useColor } from '@/lib/cell/color'
 import { useVisibility } from '@/lib/cell/visibility'
+import { useLoading } from '@/lib/cell/loading'
 </script>
 <script setup>
 const cnc = useCncStore()
@@ -48,6 +49,7 @@ const {
   textString,
 } = useText(props.config)
 const { show, enabled } = useVisibility(props.config, buttonActions)
+const { loading } = useLoading(props.config)
 
 const gridPosition = computed(() => {
   return {
@@ -85,6 +87,14 @@ const gridPosition = computed(() => {
       >
         <span class="button-text" v-text="textString"></span>
       </span>
+
+      <svg
+        v-if="loading"
+        class="loading-animation centered-decoration"
+        viewBox="0 0 100 100"
+      >
+        <circle class="loading-circle" cx="50" cy="50" r="40" />
+      </svg>
     </cell-button>
   </div>
 </template>
@@ -165,7 +175,26 @@ const gridPosition = computed(() => {
     text-align: center;
   }
 }
-
+.loading {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  margin: auto;
+  aspect-ratio: 1/1;
+}
+.loading-circle {
+  animation: loading-animation 5s linear infinite;
+  fill: none;
+  stroke-width: 5px;
+  stroke-linecap: round;
+  stroke-dasharray: 360;
+  stroke-dashoffset: 360;
+  transform-origin: 50% 50%;
+  transform: rotate(-90deg);
+  filter: drop-shadow(0 0 10px black);
+}
 .button {
   position: relative;
   border: 0;
@@ -203,7 +232,28 @@ const gridPosition = computed(() => {
     stroke-dashoffset: 0;
   }
 }
-
+@keyframes loading-animation {
+  0% {
+    stroke-dashoffset: 360;
+    transform: rotate(0);
+  }
+  25% {
+    stroke-dashoffset: 235;
+    transform: rotate(360deg);
+  }
+  50% {
+    stroke-dashoffset: 110;
+    transform: rotate(720deg);
+  }
+  75% {
+    stroke-dashoffset: 235;
+    transform: rotate(1080deg);
+  }
+  100% {
+    stroke-dashoffset: 360;
+    transform: rotate(1440deg);
+  }
+}
 .centered-decoration {
   position: absolute;
   margin: 0 auto;
@@ -224,6 +274,9 @@ const gridPosition = computed(() => {
   background-size: contain;
 }
 :deep(.progress-bar-meter) {
+  stroke: v-bind(cellProgressColor);
+}
+.loading-circle {
   stroke: v-bind(cellProgressColor);
 }
 .cell {

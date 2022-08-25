@@ -7,18 +7,28 @@ if (import.meta.env.SSR) {
 }
 
 export default (token, host, port) => {
-  const apiFetch = async (path, params) => {
-    const fetchParams = new URLSearchParams({
+  const url = (path, params) => {
+    const queryParams = new URLSearchParams({
       token,
       ...params,
     })
-    const apiUrl = `http://${host}:${port}/api/${path}?${fetchParams}`
+    return `http://${host}:${port}/api/${path}?${queryParams}`
+  }
 
-    const results = await fetchImplementation(apiUrl)
+  const apiFetch = async (path, params) => {
+    const fetchUrl = url(path, params)
+    const results = await fetchImplementation(fetchUrl)
+    return results.json()
+  }
+
+  const apiPost = async (path, params) => {
+    const postUrl = url(path, params)
+    const results = await fetchImplementation(postUrl, { method: 'POST' })
     return results.json()
   }
 
   return {
     fetch: apiFetch,
+    post: apiPost,
   }
 }

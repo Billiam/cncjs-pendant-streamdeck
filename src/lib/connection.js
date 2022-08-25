@@ -51,6 +51,9 @@ proto.debug = function () {
   socket.on('connecting', (a) => {
     console.debug('Connecting')
   })
+  socket.on('connect', (data) => {
+    console.log('connected', data)
+  })
   socket.on('connect_error', (err) => {
     console.debug(`connect_error due to ${err.message}`, err)
   })

@@ -79,6 +79,7 @@ export const useCncStore = defineStore({
     locked: false,
     client: null,
     macros: null,
+    commands: null,
     elapsedTime: null,
     remainingTime: null,
 
@@ -120,6 +121,8 @@ export const useCncStore = defineStore({
       wcs: 'G54',
     },
     axes: ['x', 'y', 'z', 'a', 'b', 'c'],
+
+    activeCommands: {},
   }),
 
   actions: {
@@ -128,9 +131,6 @@ export const useCncStore = defineStore({
     },
     setConnected(connected) {
       this.connected = connected
-      if (!connected) {
-        this.$reset()
-      }
       this.connecting = false
     },
     setConnecting(connecting = true) {
@@ -273,11 +273,59 @@ export const useCncStore = defineStore({
         return lookup
       }, {})
     },
+    addActiveCommand(commandId, taskId) {
+      this.activeCommands[commandId] = taskId
+    },
+    clearActiveCommand(taskId) {
+      Object.keys(this.activeCommands).forEach((key) => {
+        if (this.activeCommands[key] === taskId) {
+          delete this.activeCommands[key]
+        }
+      })
+    },
+    clearActiveCommands() {
+      Object.keys(this.activeCommands).forEach((key) => {
+        delete this.activeCommands[key]
+      })
+    },
+    commandRunning(id) {
+      return !!this.activeCommands[id]
+    },
+    async loadCommands() {
+      if (!this.client) {
+        return
+      }
+      const commands = await this.client.fetch('commands')
+      if (!commands) {
+        return
+      }
+
+      this.commands = commands.records.reduce((lookup, command) => {
+        lookup[command.title] = command.id
+        return lookup
+      }, {})
+    },
+    async runCommand(id) {
+      if (!this.client) {
+        return
+      }
+      const { taskId } = await this.client.post(`commands/run/${id}`)
+      if (!taskId) {
+        return
+      }
+      this.addActiveCommand(id, taskId)
+    },
     async getMacroId(macroName) {
       if (!this.macros) {
         await this.loadMacros()
       }
       return this.macros?.[macroName]
+    },
+    async getCommandId(commandName) {
+      if (!this.commands) {
+        await this.loadCommands()
+      }
+      return this.commands?.[commandName]
     },
   },
   getters: {

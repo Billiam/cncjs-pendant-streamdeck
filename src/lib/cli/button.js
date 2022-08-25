@@ -1,3 +1,4 @@
+import { useLoading } from '@/lib/cell/loading'
 import { useText } from '@/lib/cell/text'
 import { useVisibility } from '@/lib/cell/visibility'
 import CliButtonHandler from '@/lib/cli/button-handler'
@@ -47,8 +48,8 @@ export default class CliButton {
     })
   }
 
-  watch(key, callback) {
-    this.watchers.push(watch(key, callback))
+  watch(key, callback, options = {}) {
+    this.watchers.push(watch(key, callback, options))
   }
 
   watchEffect(callback) {
@@ -79,6 +80,8 @@ export default class CliButton {
     )
     const { renderGcode, gcodeColors } = useGcode(this.config)
     const { show, enabled } = useVisibility(this.config, this.buttonActions)
+    const { loading } = useLoading(this.config)
+
     this.show = show
     this.enabled = enabled
 
@@ -113,6 +116,31 @@ export default class CliButton {
         holdAnimation.delay(100)
       }
     })
+
+    const loadingPercent = ref(null)
+    let loadingAnimation
+    this.watch(
+      loading,
+      (current) => {
+        if (loadingAnimation) {
+          loadingAnimation.cancel()
+          loadingAnimation = null
+          loadingPercent.value = null
+        }
+        if (current) {
+          loadingAnimation = animation({
+            duration: 5000,
+            fps: 60,
+            loop: true,
+            callback: (percent) => {
+              loadingPercent.value = percent
+            },
+          })
+          loadingAnimation.start()
+        }
+      },
+      { immediate: !!loading.value }
+    )
 
     const gcodeLine = ref()
     const updateGcodeLine = (index) => {
@@ -188,6 +216,7 @@ export default class CliButton {
           fontSize,
           gcodeLine,
           holdPercent,
+          loadingPercent,
           renderGcode,
           textSvgAlignment,
           textSvgVerticalAlignment,

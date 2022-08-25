@@ -69,6 +69,9 @@ export default (socket, ackBus) => {
         cnc.setError(msg)
       }
     },
+    'task:finish': (task, code) => {
+      cnc.clearActiveCommand(task)
+    },
     'feeder:status': (status) => {
       if (!status.hold) {
         cnc.clearFeedHold()
@@ -90,6 +93,9 @@ export default (socket, ackBus) => {
       if (cnc.connected) {
         cnc.setConnected(false)
       }
+    },
+    connect: () => {
+      cnc.clearActiveCommands()
     },
   }
   const workerListeners = {

@@ -120,27 +120,29 @@ const getRender = async (config, canvas, directory) => {
     const holdBuffer = Buffer.from(svg)
     finalComposite.push({ input: holdBuffer, top: 0, left: 0 })
   }
-  // if (config.holdPercent) {
-  //   // if (config.holdPercent === 1) {
-  //   //   console.log({ config })
-  //   // }
-  //   const radius = Math.min(outputHeight, outputWidth) * 0.4
-  //   const circ = radius * 2 * Math.PI
-  //   const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
-  //     <circle
-  //     stroke="${config.cellProgressColor}"
-  //     fill="none"
-  //     stroke-width="25px"
-  //     stroke-linecap="round"
-  //     stroke-dasharray="${circ}"
-  //     stroke-dashoffset="${circ - config.holdPercent * circ}"
-  //     cx="${outputWidth / 2}"
-  //     cy="${outputHeight / 2}"
-  //     r="${radius}" />
-  //   </svg>`
-  //   const holdBuffer = Buffer.from(svg)
-  //   finalComposite.push({ input: holdBuffer, top: 0, left: 0 })
-  // }
+
+  if (config.loadingPercent != null) {
+    const radius = Math.min(outputHeight, outputWidth) * 0.4
+    const circ = radius * 2 * Math.PI
+    const rotation = 360 * config.loadingPercent * 3
+    const dashOffset = ((config.loadingPercent + 0.5) % 1) * 2 - 1
+
+    const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
+      <circle
+      stroke="${config.cellProgressColor}"
+      fill="none"
+      stroke-width="8px"
+      stroke-linecap="round"
+      stroke-dasharray="${circ}"
+      stroke-dashoffset="${circ - dashOffset * circ}"
+      transform="rotate(${rotation} ${outputWidth / 2} ${outputHeight / 2})"
+      cx="${outputWidth / 2}"
+      cy="${outputHeight / 2}"
+      r="${radius}" />
+    </svg>`
+    const holdBuffer = Buffer.from(svg)
+    finalComposite.push({ input: holdBuffer, top: 0, left: 0 })
+  }
 
   if (!config.enabled) {
     finalComposite.push({
