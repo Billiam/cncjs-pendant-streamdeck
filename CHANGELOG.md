@@ -1,3 +1,5 @@
+# Changelog
+
 ## Unreleased
 
 ### 📖 Documentation
@@ -7,6 +9,17 @@
 *  Distinguish between unhold and start feed in default icon config ([189c39c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/189c39c))
 *  Use different background for play button when it means 'unpause' in default config ([4c6176d](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4c6176d))
 *  Add default streamdeckUi section ([4f7848c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4f7848c))
+
+### 🚀 Added
+
+*  Set state to disconnected when a connection error occurs ([1bf77e7](https://github.com/billiam/cncjs-pendant-streamdeck/commit/1bf77e7))
+*  Support custom user commands, loading animations ([380a0d2](https://github.com/billiam/cncjs-pendant-streamdeck/commit/380a0d2), [#8](https://github.com/billiam/cncjs-pendant-streamdeck/issues/8))
+
+### 🩹 Fixes
+
+##### `web`
+
+*  Fixed right-click triggering buttons, especially hold actions ([1943880](https://github.com/billiam/cncjs-pendant-streamdeck/commit/1943880))
 
 # [0.3.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.2.5...0.3.0) (2022-08-18)
 
