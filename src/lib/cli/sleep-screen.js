@@ -13,15 +13,15 @@ export const SleepScreen = (timeout, streamdeck) => {
     fadeoutAnimation?.cancel()
     fadeoutAnimation = null
     if (asleep) {
-      fadeoutAnimation = animation(
-        800 * ui.displayBrightness * 0.01,
-        30,
-        (percent) => {
+      fadeoutAnimation = animation({
+        duration: 800 * ui.displayBrightness * 0.01,
+        fps: 30,
+        callback: (percent) => {
           streamdeck.setBrightness(
             Math.floor(ui.displayBrightness * (1 - percent))
           )
-        }
-      )
+        },
+      })
       fadeoutAnimation.start()
     } else {
       streamdeck.setBrightness(ui.displayBrightness)

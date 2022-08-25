@@ -1,15 +1,15 @@
-export default (duration, fps, callback) => {
+export default ({ duration, fps, loop = false, callback }) => {
   let timeout
   let startTime
   const delayTime = 1000 / fps
-
+  const max = loop ? Infinity : 1
   const percentCallback = () => {
     const percent = Math.max(
       0,
-      Math.min(1, (Date.now() - startTime) / duration)
+      Math.min(max, (Date.now() - startTime) / duration)
     )
-    callback(percent)
-    if (percent < 1) {
+    callback(percent % 1)
+    if (percent < 1 || loop) {
       run()
     }
   }

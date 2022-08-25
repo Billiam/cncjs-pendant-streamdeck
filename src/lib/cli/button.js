@@ -103,8 +103,12 @@ export default class CliButton {
         holdPercent.value = 0
       }
       if (holding) {
-        holdAnimation = animation(400, 60, (percent) => {
-          holdPercent.value = percent
+        holdAnimation = animation({
+          duration: 400,
+          fps: 60,
+          callback: (percent) => {
+            holdPercent.value = percent
+          },
         })
         holdAnimation.delay(100)
       }
