@@ -20,7 +20,7 @@
     "web-package": "npm run build && bin/web-package.sh",
     "preview": "vite preview --port 5050",
     "format": "prettier . --write",
-    "update-changelog": "git-conventional-commits changelog  -f CHANGELOG.md"
+    "update-changelog": "git-conventional-commits changelog  -f CHANGELOG.md --markdown-prefix '# Changelog'"
   },
   "dependencies": {
     "@elgato-stream-deck/node": "^5.4.0",
