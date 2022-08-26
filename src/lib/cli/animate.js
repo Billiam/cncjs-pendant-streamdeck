@@ -8,7 +8,7 @@ export default ({ duration, fps, loop = false, callback }) => {
       0,
       Math.min(max, (Date.now() - startTime) / duration)
     )
-    callback(percent % 1)
+    callback(percent % (loop ? 1 : Infinity))
     if (percent < 1 || loop) {
       run()
     }
