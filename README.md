@@ -21,16 +21,22 @@ a handful from [Font Awesome](https://github.com/FortAwesome/Font-Awesome).
 
 ## Features
 
+* Works with or without a Stream Deck, either as CLI process or web pendant
+* Linux-friendly, does not use default Stream Deck software
 * Unlimited pages
-* Mobile web support
 * Arbitrary grid dimensions for web version
-* Excessively customizable
+* _Excessively_ customizable
 * Execute one or more actions on press, release, and/or button hold
 * Support up to 6 axes
 * Multi axis smooth jogging
+* Templated text for 
 * Lots of included icons, or add your own
 * Display and animate gcode
+* Run macros
+* Run cncjs custom commands (ex: to restart the system or update packages)
 * Manage alarms, hold, and pause events (like macro-triggered tool changes)
+* Custom configuration is [well documented](https://billiam.github.io/cncjs-pendant-streamdeck/)
+* [Configuration validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/)
 
 ## Compatibility
 
@@ -116,7 +122,6 @@ cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 ## To-do
 
 * Config builder
-* ~~Web config validator~~ Done! [Validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/) on the [docs site](https://billiam.github.io/cncjs-pendant-streamdeck/)
 
 ## Licenses and credits
 
