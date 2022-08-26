@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.4.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.3.0...0.4.0?diff=split) (2022-08-25)
 
 ### 📖 Documentation
 
@@ -13,7 +13,7 @@
 ### 🚀 Added
 
 *  Set state to disconnected when a connection error occurs ([1bf77e7](https://github.com/billiam/cncjs-pendant-streamdeck/commit/1bf77e7))
-*  Support custom user commands, loading animations ([380a0d2](https://github.com/billiam/cncjs-pendant-streamdeck/commit/380a0d2), [#8](https://github.com/billiam/cncjs-pendant-streamdeck/issues/8))
+*  Support custom user commands, loading animations ([889ba37](https://github.com/billiam/cncjs-pendant-streamdeck/commit/889ba37), [#8](https://github.com/billiam/cncjs-pendant-streamdeck/issues/8))
 
 ### 🩹 Fixes
 
