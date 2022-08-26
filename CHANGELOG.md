@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.4.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.1...0.4.2?diff=split) (2022-08-25)
+
+### 🩹 Fixes
+
+##### `stream deck`
+
+*  Fix sleep dimming resetting to full brightness ([a8dec87](https://github.com/billiam/cncjs-pendant-streamdeck/commit/a8dec87))
+
 ## [0.4.1](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.0...0.4.1?diff=split) (2022-08-25)
 
 ### 🩹 Fixes
