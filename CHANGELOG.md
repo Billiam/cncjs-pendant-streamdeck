@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.4.1](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.0...0.4.1?diff=split) (2022-08-25)
+
+### 🩹 Fixes
+
+*  Add missing loading module ([556cc93](https://github.com/billiam/cncjs-pendant-streamdeck/commit/556cc93))
+
 ## [0.4.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.3.0...0.4.0?diff=split) (2022-08-25)
 
 ### 📖 Documentation
