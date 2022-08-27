@@ -21,13 +21,13 @@ export const useUiStore = defineStore({
     gcodeColors: {},
     gcodeLimit: 0,
     iconSize: 72,
-    userFlags: {},
     input: {
       value: '',
       previous: 0,
       type: '',
       callback: () => {},
     },
+    pageColor: null,
     palette: ['#000', '#fff'],
     progressColor: 4,
     rows: 3,
@@ -36,6 +36,7 @@ export const useUiStore = defineStore({
     textShadow: false,
     throttle: 0,
     timeout: 0,
+    userFlags: {},
     web: true,
   }),
 
@@ -67,6 +68,7 @@ export const useUiStore = defineStore({
       }
       return new Date(state.fileDetails.ctime).toLocaleString()
     },
+    isWeb: () => !import.meta.env.SSR,
     displayBrightness: (state) => state.brightness,
   },
 

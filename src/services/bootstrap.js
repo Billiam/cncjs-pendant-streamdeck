@@ -63,6 +63,7 @@ export default (container) => {
     uiStore.font = uiConfig.font ?? uiStore.font
     uiStore.fontSize = uiConfig.textSize ?? uiStore.fontSize
     uiStore.lineHeight = uiConfig.lineHeight ?? uiStore.lineHeight
+    uiStore.pageColor = uiConfig.pageColor ?? uiStore.pageColor
     uiStore.setGcodeColors(uiConfig.gcodeColors)
     uiStore.setBgColor(uiConfig.bgColor)
     uiStore.setProgressColor(uiConfig.progressColor)

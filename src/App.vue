@@ -3,6 +3,7 @@ import AutoFullscreen from '@/components/AutoFullscreen.vue'
 import Scene from '@/components/Scene.vue'
 import FixedHeight from '@/components/FixedHeight.vue'
 import FileListScene from '@/components/FileListScene.vue'
+import Theme from '@/components/Theme.vue'
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
 
@@ -56,6 +57,7 @@ onBeforeUnmount(() => {
 <template>
   <fixed-height></fixed-height>
   <auto-fullscreen></auto-fullscreen>
+  <theme></theme>
   <component v-if="scene" :is="sceneType" :buttons="scene.buttons"></component>
   <div class="status" v-else>
     <h1 class="message">
