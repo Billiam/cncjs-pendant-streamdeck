@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.4.3](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.2...0.4.3?diff=split) (2022-08-27)
+
+### 🩹 Fixes
+
+##### `file list`
+
+*  Fix incorrect enabled test for down arrow ([df84469](https://github.com/billiam/cncjs-pendant-streamdeck/commit/df84469))
+*  Fix button state caching causing stuck/incorrect buttons ([9fa195f](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9fa195f))
+
+# Changelog
+
 ## [0.4.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.1...0.4.2?diff=split) (2022-08-25)
 
 ### 🩹 Fixes
