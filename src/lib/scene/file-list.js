@@ -106,15 +106,20 @@ export const useFileList = () => {
     const configButton = buttonConfig.fileListDownArrow ?? {}
     const firstRowColumnsReserved = 3
     const columnsReserved = 1
+    const visibleColumns = columns - columnsReserved
+
     const pages =
       1 +
-      (fileList.files.length - (columns - firstRowColumnsReserved)) /
-        (columns - columnsReserved)
+      Math.ceil(
+        (fileList.files.length - (columns - firstRowColumnsReserved)) /
+          visibleColumns
+      )
+
     const defaultButton = {
       icon: 'fluent-ui/caret_down.png',
       bgColor: 7,
       actions: [{ action: 'fileListScrollDown' }],
-      disabled: (fileList.rowOffset + columns >= pages).toString(),
+      disabled: (fileList.rowOffset + rows >= pages).toString(),
     }
     return Object.assign(defaultButton, configButton)
   }
