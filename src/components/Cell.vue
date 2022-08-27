@@ -1,8 +1,6 @@
 <script>
 import CellButton from './CellButton.vue'
 import GcodePreview from './GcodePreview.vue'
-import evaluate from 'simple-evaluate'
-import TextTemplate from '@/lib/text-template'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 import { useGcodeStore } from '@/stores/gcode'

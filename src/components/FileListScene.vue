@@ -15,7 +15,7 @@ onBeforeMount(() => {
 <template>
   <div class="scene">
     <template v-for="(row, r) in buttons">
-      <template v-for="(cell, c) in row" :key="`${r}-${c}-${cell}`">
+      <template v-for="(cell, c) in row" :key="`${r}-${c}-${cell?.key || 0}`">
         <Cell :config="cell" :row="r" :column="c"></Cell>
       </template>
     </template>

@@ -4,6 +4,18 @@ import { useFileListStore } from '@/stores/file-list'
 import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
 import { computed } from 'vue'
+import SparkMD5 from 'spark-md5'
+
+const mergeConfigs = (...configs) => {
+  const config = Object.assign(...configs)
+  addKey(config)
+  return config
+}
+
+const addKey = (config) => {
+  config['key'] = SparkMD5.hash(JSON.stringify(config))
+  return config
+}
 
 export const useFileList = () => {
   const ui = useUiStore()
@@ -47,7 +59,7 @@ export const useFileList = () => {
         ...activeActions,
       ],
     }
-    return Object.assign(defaultButton, configButton, {
+    return mergeConfigs(defaultButton, configButton, {
       actions: defaultButton.actions,
     })
   }
@@ -67,7 +79,7 @@ export const useFileList = () => {
         },
       ],
     }
-    return Object.assign(defaultButton, configButton, {
+    return mergeConfigs(defaultButton, configButton, {
       actions: defaultButton.actions,
     })
   }
@@ -86,7 +98,7 @@ export const useFileList = () => {
         },
       ],
     }
-    return Object.assign(defaultButton, configButton, {
+    return mergeConfigs(defaultButton, configButton, {
       actions: defaultButton.actions,
     })
   }
@@ -99,7 +111,7 @@ export const useFileList = () => {
       actions: [{ action: 'fileListScrollUp' }],
       disabled: (fileList.rowOffset === 0).toString(),
     }
-    return Object.assign(defaultButton, configButton)
+    return mergeConfigs(defaultButton, configButton)
   }
 
   const downArrow = () => {
@@ -121,7 +133,7 @@ export const useFileList = () => {
       actions: [{ action: 'fileListScrollDown' }],
       disabled: (fileList.rowOffset + rows >= pages).toString(),
     }
-    return Object.assign(defaultButton, configButton)
+    return mergeConfigs(defaultButton, configButton)
   }
 
   const sortMethod = computed(() => {
