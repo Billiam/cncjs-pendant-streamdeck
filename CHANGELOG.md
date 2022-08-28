@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+### 🚀 Added
+
+##### `web`
+
+*  Make overall background color configurable ([06f7921](https://github.com/billiam/cncjs-pendant-streamdeck/commit/06f7921))
+
+### 🩹 Fixes
+
+*  Fix overall font size being ignored ([2dfd088](https://github.com/billiam/cncjs-pendant-streamdeck/commit/2dfd088))
+
 ## [0.4.3](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.2...0.4.3?diff=split) (2022-08-27)
 
 ### 🩹 Fixes
