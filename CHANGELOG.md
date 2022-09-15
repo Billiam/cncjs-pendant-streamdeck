@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.5.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.3...0.5.0?diff=split) (2022-09-15)
 
 ### 🚀 Added
 
@@ -11,6 +11,10 @@
 ### 🩹 Fixes
 
 *  Fix overall font size being ignored ([2dfd088](https://github.com/billiam/cncjs-pendant-streamdeck/commit/2dfd088))
+
+##### `stream deck`
+
+* Fix missing md5 dependency in packaged build ([d468677](https://github.com/billiam/cncjs-pendant-streamdeck/commit/d468677))
 
 ## [0.4.3](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.2...0.4.3?diff=split) (2022-08-27)
 
