@@ -27,7 +27,7 @@ const getStreamdeck = async () => {
   } catch (e) {
     console.error(e)
     console.error('Could not open Stream Deck')
-    process.exit()
+    process.exit(1)
   }
   return streamdeck
 }
@@ -39,6 +39,7 @@ const run = async () => {
   try {
     ;[, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
   } catch (e) {
+    console.error("Connection error", e)
     process.kill(process.pid, 'SIGINT')
   }
 
