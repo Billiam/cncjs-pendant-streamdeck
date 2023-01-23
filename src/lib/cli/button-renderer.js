@@ -76,9 +76,8 @@ const getRender = async (config, canvas, directory) => {
   }
 
   if (config.text) {
-    const fontSize = 16 * (config.textSize || 1)
+    const fontSize = config.fontSize
     const lineHeight = (config.lineHeight ?? 1.1) * fontSize
-
     const spanX = textOffset(config.textSvgAlignment, outputWidth)
     const textSpan = config.textLines.map((line) => {
       const text = line === '' ? ' ' : line
@@ -90,7 +89,6 @@ const getRender = async (config, canvas, directory) => {
       outputHeight,
       config.textLines.length * lineHeight
     )
-
     const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
       <text
         fill="${config.cellTextColor}"

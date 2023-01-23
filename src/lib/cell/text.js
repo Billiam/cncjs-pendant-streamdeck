@@ -49,11 +49,11 @@ export const useText = (config) => {
   })
 
   const fontSize = computed(() => {
-    return `${config.textSize || 1}em`
+    return `${config.textSize ?? 1}em`
   })
 
   const svgFontSize = computed(() => {
-    return ui.fontSize * config.textSize
+    return ui.fontSize * (config.textSize ?? 1)
   })
   const { lineHeight, font } = storeToRefs(ui)
 
