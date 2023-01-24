@@ -1,0 +1,64 @@
+<!doctype html><html lang=en><head><meta charset=utf-8><meta http-equiv=x-ua-compatible content="ie=edge"><title>Tips - CNCjs Pendant Stream Deck</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=icon href=https://billiam.github.io/cncjs-pendant-streamdeck/favicon.png><link rel=stylesheet href=/cncjs-pendant-streamdeck/css/style.min.bb59d5a7c70b2ce4408f747e095893c9227ad560e900452744688da34595f8f1.css></head><body class='page page-default-single'><div id=main-menu-mobile class=main-menu-mobile><ul><li class=menu-item-home><a href=/cncjs-pendant-streamdeck/><span>Home</span></a></li><li class=menu-item-docs><a href=/cncjs-pendant-streamdeck/docs/><span>Docs</span></a></li><li class=menu-item-validator><a href=/cncjs-pendant-streamdeck/validator/><span>Validator</span></a></li></ul></div><div class=wrapper><div class=header><div class=container><div id=main-menu class=main-menu><ul><li class=menu-item-home><a href=/cncjs-pendant-streamdeck/><span>Home</span></a></li><li class=menu-item-docs><a href=/cncjs-pendant-streamdeck/docs/><span>Docs</span></a></li><li class=menu-item-validator><a href=/cncjs-pendant-streamdeck/validator/><span>Validator</span></a></li></ul></div><button id=toggle-main-menu-mobile class="hamburger hamburger--slider" type=button>
+<span class=hamburger-box><span class=hamburger-inner></span></span></button></div></div><div class="container pt-2 pt-md-6 pb-3 pb-md-6"><div class=row><div class="col-12 col-lg-2 pb-3 pb-lg-0"><div class=sidebar><div class=docs-menu><h4>Docs</h4><ul><li><a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/installation/>Installation</a></li><li><a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/configure/>Configuration</a></li><li><a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/actions/>Actions</a></li><li><a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/variables/>Variables</a></li><li class=active><a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/tips/>Tips</a></li></ul></div></div></div><nav class="docs-toc toc-sticky col-12 col-md-3" aria-label="Secondary navigation"><div class=page-links><h4>On this page</h4><nav id=TableOfContents><ul><li><a href=#improving-stream-deck-performance>Improving Stream Deck performance</a></li><li><a href=#toggling-button-appearance>Toggling button appearance</a><ul><li><a href=#toggle-button>Toggle button</a></li><li><a href=#radio-button>Radio button</a></li></ul></li></ul></nav></div></nav><div class="col-12 col-lg-7 col-md-9"><h1 class=title>Tips</h1><div class="content anchor-link-enabled"><h2 id=improving-stream-deck-performance>Improving Stream Deck performance</h2><p>Unlike the web UI, which uses normal DOM operations for button display, Stream Deck rendering is handled by serverside
+image and SVG compositing which can be expensive on low end systems.</p><p>If the interface feels sluggish, there are some configuration changes which can help:</p><ul><li>Limit the number of visible buttons. Ensure that buttons which are covered by other buttons are set to <code>show: false</code></li><li>Limit the number of visible buttons which require frequent updates, including updates to their text content or
+disabled state.</li><li>Limit button rendering complexity: A single, flat image is faster to render than compositing a
+background, overlay image and SVG text (but less convenient).</li><li>Throttle button updates. <code>ui.throttle: 100</code> will ensure that at most 10 updates per second are allowed for a single
+button.</li><li>For very large gcode files, the benefit of displaying accurate gcode dimensions or rendering the gcode may not be worth
+the cost of parsing the gcode. You can limit the number of gcode lines which will be processed with the <code>ui.gcodeLimit</code>
+setting.</li></ul><p>Additionally, the Stream Deck can be connected to a different machine than the one running cncjs, at the cost of some
+additional network latency.</p><h2 id=toggling-button-appearance>Toggling button appearance</h2><p>If you want to change a button&rsquo;s appearance after it&rsquo;s been pressed, you have a few options:</p><h3 id=toggle-button>Toggle button</h3><p>Here&rsquo;s an example of two buttons occupying the same space, with only one visible at a time. This gives the impression
+of having a button with different &ldquo;on&rdquo; and &ldquo;off&rdquo; state.</p><p>Set the <a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/variables/#conditions><code>if</code></a> value for each button to something some mutually-exclusive
+condition, and use a nested array in place of a button id in the scene to display both buttons in the same
+location.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;buttons&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;button_1&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;actions&#34;</span><span class=p>:</span> <span class=p>[{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;setRapids&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;arguments&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;25&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}],</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;if&#34;</span><span class=p>:</span> <span class=s2>&#34;cnc.overrides.rapids === 25&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;button_2&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;actions&#34;</span><span class=p>:</span> <span class=p>[{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;setRapids&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;arguments&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;50&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}],</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;if&#34;</span><span class=p>:</span> <span class=s2>&#34;cnc.overrides.rapids === 50&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;scenes&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;home&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;buttons&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=s2>&#34;back&#34;</span><span class=p>,</span> <span class=p>[</span><span class=s2>&#34;button_1&#34;</span><span class=p>,</span> <span class=s2>&#34;button_2&#34;</span><span class=p>]]</span>
+</span></span><span class=line><span class=cl>      <span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div><h3 id=radio-button>Radio button</h3><p>Here&rsquo;s an example of two buttons that could appear side by side, with only one active at once, and the other being
+grayed out, and non-interactive.</p><p>Set the <a href=https://billiam.github.io/cncjs-pendant-streamdeck/docs/variables/#conditions><code>disabled</code></a> value for each button to something some mutually-exclusive
+condition.</p><div class=highlight><pre tabindex=0 class=chroma><code class=language-json data-lang=json><span class=line><span class=cl><span class=p>{</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;buttons&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;button_1&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;actions&#34;</span><span class=p>:</span> <span class=p>[{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;setRapids&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;arguments&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;25&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}],</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;disabled&#34;</span><span class=p>:</span> <span class=s2>&#34;cnc.overrides.rapids === 25&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>},</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;button_2&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;actions&#34;</span><span class=p>:</span> <span class=p>[{</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;action&#34;</span><span class=p>:</span> <span class=s2>&#34;setRapids&#34;</span><span class=p>,</span>
+</span></span><span class=line><span class=cl>        <span class=nt>&#34;arguments&#34;</span><span class=p>:</span> <span class=p>[</span><span class=s2>&#34;50&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>}],</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;disabled&#34;</span><span class=p>:</span> <span class=s2>&#34;cnc.overrides.rapids === 50&#34;</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>},</span>
+</span></span><span class=line><span class=cl>  <span class=nt>&#34;scenes&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>    <span class=nt>&#34;home&#34;</span><span class=p>:</span> <span class=p>{</span>
+</span></span><span class=line><span class=cl>      <span class=nt>&#34;buttons&#34;</span><span class=p>:</span> <span class=p>[</span>
+</span></span><span class=line><span class=cl>        <span class=p>[</span><span class=s2>&#34;back&#34;</span><span class=p>,</span> <span class=s2>&#34;button_1&#34;</span><span class=p>,</span> <span class=s2>&#34;button_2&#34;</span><span class=p>]</span>
+</span></span><span class=line><span class=cl>      <span class=p>]</span>
+</span></span><span class=line><span class=cl>    <span class=p>}</span>
+</span></span><span class=line><span class=cl>  <span class=p>}</span>
+</span></span><span class=line><span class=cl><span class=p>}</span>
+</span></span></code></pre></div></div></div></div></div></div><div class=sub-footer><div class=container><div class=row><div class=col-12><div class=sub-footer-inner><ul></ul></div></div></div></div></div><script type=text/javascript src=/cncjs-pendant-streamdeck/js/scripts.min.302a6fc365d5139fb98cf60bdb8f715d96257ea189161d36c190ccfa8182e569.js></script></body></html>
