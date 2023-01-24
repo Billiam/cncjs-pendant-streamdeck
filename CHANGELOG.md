@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+### 🩹 Fixes
+
+##### `stream deck`
+
+*  Exit with error when streamdeck is not found ([c7f7ed0](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c7f7ed0))
+*  Fix unconfigurable global font size ([2704fac](https://github.com/billiam/cncjs-pendant-streamdeck/commit/2704fac))
+
+# Changelog
+
 ## [0.5.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.3...0.5.0?diff=split) (2022-09-15)
 
 ### 🚀 Added
