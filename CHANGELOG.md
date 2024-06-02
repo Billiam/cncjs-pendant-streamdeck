@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.5.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.1...0.5.2?diff=split) (2024-06-02)
+
+### 🩹 Fixes
+
+*  Fix errors when binding does not contain actions ([069391f](https://github.com/billiam/cncjs-pendant-streamdeck/commit/069391f))
+
 ## [0.5.1](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.0...0.5.1?diff=split) (2024-06-02)
 
 ### 🩹 Fixes
