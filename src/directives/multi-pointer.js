@@ -26,7 +26,7 @@ const vMultiPointer = {
 
       data.down = true
       document.body.addEventListener('pointerup', data.bodyRelease)
-      binding.value?.down(e)
+      binding.value?.down?.(e)
     })
 
     el.addEventListener('pointerup', (e) => {
@@ -46,7 +46,7 @@ const vMultiPointer = {
       }
       data.down = false
       document.body.removeEventListener('pointerup', data.bodyRelease)
-      binding.value?.up(e)
+      binding.value?.up?.(e)
     })
 
     el.addEventListener('pointercancel', data.bodyRelease)
@@ -76,7 +76,7 @@ const vMultiPointer = {
         return
       }
 
-      binding.value?.up(e)
+      binding.value?.up?.(e)
       data.cancel()
     }
   },
