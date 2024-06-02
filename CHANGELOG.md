@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [0.5.1](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.0...0.5.1?diff=split) (2024-06-02)
 
 ### 🩹 Fixes
 
@@ -9,7 +9,9 @@
 *  Exit with error when streamdeck is not found ([c7f7ed0](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c7f7ed0))
 *  Fix unconfigurable global font size ([2704fac](https://github.com/billiam/cncjs-pendant-streamdeck/commit/2704fac))
 
-# Changelog
+##### `web`
+
+*  Failed pointer release events in mobile browsers ([84adb0d](https://github.com/billiam/cncjs-pendant-streamdeck/commit/84adb0d))
 
 ## [0.5.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.4.3...0.5.0?diff=split) (2022-09-15)
 
