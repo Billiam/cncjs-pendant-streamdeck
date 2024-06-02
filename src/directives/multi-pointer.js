@@ -26,9 +26,7 @@ const vMultiPointer = {
 
       data.down = true
       document.body.addEventListener('pointerup', data.bodyRelease)
-      if (binding.value?.down) {
-        binding.value.down(e)
-      }
+      binding.value?.down(e)
     })
 
     el.addEventListener('pointerup', (e) => {
@@ -48,21 +46,10 @@ const vMultiPointer = {
       }
       data.down = false
       document.body.removeEventListener('pointerup', data.bodyRelease)
-
-      if (binding.value?.up) {
-        binding.value.up(e)
-      }
+      binding.value?.up(e)
     })
 
-    data.cancel = () => {
-      data.down = false
-
-      document.body.removeEventListener('pointerup', data.bodyRelease)
-
-      if (binding.value?.cancel) {
-        binding.value.cancel()
-      }
-    }
+    el.addEventListener('pointercancel', data.bodyRelease)
 
     const checkReleaseEvent = (e) => {
       // release when button is not down
@@ -89,6 +76,7 @@ const vMultiPointer = {
         return
       }
 
+      binding.value?.up(e)
       data.cancel()
     }
   },
