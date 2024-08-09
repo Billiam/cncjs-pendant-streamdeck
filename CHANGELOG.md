@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.6.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.2...0.6.0?diff=split) (2024-08-09)
+
+### 🚀 Added
+
+*  Add \`secure\` cncjs option for api and websocket connections ([6af2bf2](https://github.com/billiam/cncjs-pendant-streamdeck/commit/6af2bf2))
+
 ## [0.5.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.1...0.5.2?diff=split) (2024-06-02)
 
 ### 🩹 Fixes
