@@ -6,6 +6,7 @@ const Connection = function (opts, token) {
   const options = { ...opts }
   options.baudrate ??= 115200
   options.socketAddress ??= 'localhost'
+  options.secure ??= false
   options.socketPort ??= 8000
   options.controllerType ??= 'Grbl'
   options.accessTokenLifetime ??= '30d'
@@ -105,11 +106,11 @@ proto.openSerialPort = function () {
 }
 
 proto.connect = function () {
-  const { socketAddress, socketPort } = this.options
+  const { socketAddress, socketPort, secure } = this.options
   this.validate()
 
   return new Promise((resolve, reject) => {
-    const url = `ws://${socketAddress}:${socketPort}/`
+    const url = `${secure ? 'wss' : 'ws' }://${socketAddress}:${socketPort}/`
 
     const socket = io.connect(url, {
       query: `token=${this.token}`,
@@ -119,8 +120,8 @@ proto.connect = function () {
     this.socket = socket
 
     socket.on('connect_error', (e) => {
-      console.error(e.type, e.description.message)
-      reject(new Error(e.description.message))
+      console.error(e.type, e)
+      reject(new Error(e.description?.message))
     })
 
     socket.on('connect', () => {

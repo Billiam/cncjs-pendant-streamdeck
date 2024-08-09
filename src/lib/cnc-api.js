@@ -6,13 +6,13 @@ if (import.meta.env.SSR) {
   fetchImplementation = window.fetch
 }
 
-export default (token, host, port) => {
+export default (token, host, port, secure) => {
   const url = (path, params) => {
     const queryParams = new URLSearchParams({
       token,
       ...params,
     })
-    return `http://${host}:${port}/api/${path}?${queryParams}`
+    return `${secure ? 'https' : 'http' }://${host}:${port}/api/${path}?${queryParams}`
   }
 
   const apiFetch = async (path, params) => {

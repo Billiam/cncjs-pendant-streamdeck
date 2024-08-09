@@ -1391,6 +1391,7 @@
     "baudRate": 115200,
     "controllerType": "Grbl",
     "port": "/dev/ttyACM0",
+    "secure": false,
     "socketAddress": "localhost",
     "socketPort": 8000
   },
