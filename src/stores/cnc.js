@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 // TODO: Take speeds and distances from config
 const jogDistances = {
-  mm: [0.01, 0.1, 1, 10, 20, 50, 100],
+  mm: [0.001, 0.01, 0.1, 1, 10, 20, 50, 100],
   in: [0.001, 0.01, 0.1, 1, 5, 10, 20],
 }
 const jogSpeeds = {
