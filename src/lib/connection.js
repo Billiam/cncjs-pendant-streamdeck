@@ -110,7 +110,7 @@ proto.connect = function () {
   this.validate()
 
   return new Promise((resolve, reject) => {
-    const url = `${secure ? 'wss' : 'ws' }://${socketAddress}:${socketPort}/`
+    const url = `${secure ? 'wss' : 'ws'}://${socketAddress}:${socketPort}/`
 
     const socket = io.connect(url, {
       query: `token=${this.token}`,

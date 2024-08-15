@@ -12,7 +12,9 @@ export default (token, host, port, secure) => {
       token,
       ...params,
     })
-    return `${secure ? 'https' : 'http' }://${host}:${port}/api/${path}?${queryParams}`
+    return `${
+      secure ? 'https' : 'http'
+    }://${host}:${port}/api/${path}?${queryParams}`
   }
 
   const apiFetch = async (path, params) => {

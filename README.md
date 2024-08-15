@@ -21,22 +21,22 @@ a handful from [Font Awesome](https://github.com/FortAwesome/Font-Awesome).
 
 ## Features
 
-* Works with or without a Stream Deck, either as CLI process or web pendant
-* Linux-friendly, does not use default Stream Deck software
-* Unlimited pages
-* Arbitrary grid dimensions for web version
-* _Excessively_ customizable
-* Execute one or more actions on press, release, and/or button hold
-* Support up to 6 axes
-* Multi axis smooth jogging
-* Templated text for 
-* Lots of included icons, or add your own
-* Display and animate gcode
-* Run macros
-* Run cncjs custom commands (ex: to restart the system or update packages)
-* Manage alarms, hold, and pause events (like macro-triggered tool changes)
-* Custom configuration is [well documented](https://billiam.github.io/cncjs-pendant-streamdeck/)
-* [Configuration validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/)
+- Works with or without a Stream Deck, either as CLI process or web pendant
+- Linux-friendly, does not use default Stream Deck software
+- Unlimited pages
+- Arbitrary grid dimensions for web version
+- _Excessively_ customizable
+- Execute one or more actions on press, release, and/or button hold
+- Support up to 6 axes
+- Multi axis smooth jogging
+- Templated text for
+- Lots of included icons, or add your own
+- Display and animate gcode
+- Run macros
+- Run cncjs custom commands (ex: to restart the system or update packages)
+- Manage alarms, hold, and pause events (like macro-triggered tool changes)
+- Custom configuration is [well documented](https://billiam.github.io/cncjs-pendant-streamdeck/)
+- [Configuration validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/)
 
 ## Compatibility
 
@@ -54,14 +54,14 @@ Full documentation can be found at <https://billiam.github.io/cncjs-pendant-stre
 2. Rename `config.example.json` to `config.json`
 3. Update the `config.json` file with your connection information in the [`cncjs`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/configure#cncjs) section.
 4. Edit your `~/.cncrc` file, adding a mount point for this pendant
-    ```
-    "mountPoints": [
-      {
-        "route": "grid",
-        "target": "/home/pi/cncjs-pendant-streamdeck"
-      }
-    ]
-    ```
+   ```
+   "mountPoints": [
+     {
+       "route": "grid",
+       "target": "/home/pi/cncjs-pendant-streamdeck"
+     }
+   ]
+   ```
 5. Restart CNCjs
 
 ### Streamdeck
@@ -74,7 +74,7 @@ You can skip the `cncrc` step if you do not need the web interface.
 _Instructions borrowed from https://github.com/julusian/node-elgato-stream-deck_
 
 On linux, the udev subsystem blocks access to the StreamDeck without some special configuration.
-Save the following to `/etc/udev/rules.d/50-elgato.rules` and reload the rules with 
+Save the following to `/etc/udev/rules.d/50-elgato.rules` and reload the rules with
 `sudo udevadm control --reload-rules`
 
 ```
@@ -121,14 +121,14 @@ cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 
 ## To-do
 
-* Config builder
+- Config builder
 
 ## Licenses and credits
 
 Several icon sets have been added for convenience
 
-* [czottmann -
+- [czottmann -
   streamdeck-iconpack-fluentui-system-icons - MIT](https://github.com/czottmann/streamdeck-iconpack-fluentui-system-icons/blob/main/LICENSE.md)
-* [czottmann - streamdeck-iconpack-system-uicons - MIT](https://github.com/czottmann/streamdeck-iconpack-system-uicons/blob/main/LICENSE.md)
-* [fontawesome - CC BY 4.0](https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/LICENSE.txt)  
+- [czottmann - streamdeck-iconpack-system-uicons - MIT](https://github.com/czottmann/streamdeck-iconpack-system-uicons/blob/main/LICENSE.md)
+- [fontawesome - CC BY 4.0](https://raw.githubusercontent.com/FortAwesome/Font-Awesome/6.x/LICENSE.txt)  
   Alterations: SVG images have been converted to PNG

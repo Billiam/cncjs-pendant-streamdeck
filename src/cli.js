@@ -39,7 +39,7 @@ const run = async () => {
   try {
     ;[, streamdeck] = await Promise.all([bootstrap.start(), getStreamdeck()])
   } catch (e) {
-    console.error("Connection error", e)
+    console.error('Connection error', e)
     process.kill(process.pid, 'SIGINT')
   }
 
