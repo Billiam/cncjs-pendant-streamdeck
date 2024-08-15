@@ -122,6 +122,9 @@ export const useCncStore = defineStore({
     },
     axes: ['x', 'y', 'z', 'a', 'b', 'c'],
 
+    spindleRpm: 0,
+    feedRate: 0,
+
     activeCommands: {},
   }),
 
@@ -233,6 +236,12 @@ export const useCncStore = defineStore({
     },
     setLocked(val = true) {
       this.locked = val
+    },
+    setSpindleRpm(val = 0) {
+      this.spindleRpm = parseInt(val)
+    },
+    setFeedrate(val = 0) {
+      this.feedRate = parseInt(val)
     },
     setModal(modal) {
       Object.entries(modal).forEach(([key, value]) => {
