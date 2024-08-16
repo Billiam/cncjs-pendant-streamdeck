@@ -1,6 +1,6 @@
 {
   "name": "cncjs-pendant-streamdeck",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "description": "A cncjs pendant for the Elgato Stream Deck",
   "license": "MIT",
   "files": [

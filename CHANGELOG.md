@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.6.0...0.7.0?diff=split) (2024-08-15)
+
+### 🚀 Added
+
+*  Add 0.001 mm step distance ([c957a69](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c957a69))
+*  Add template variables for `spindleRpm` and `feedrate` ([cfc9311](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cfc9311))
+
 ## [0.6.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.2...0.6.0?diff=split) (2024-08-09)
 
 ### 🚀 Added
