@@ -173,13 +173,13 @@ const getRender = async (config, canvas, directory) => {
       raw: { width: outputWidth, height: outputHeight, channels: 4 },
     })
 
-    for (let i = 0; i < columns; i++) {
-      for (let j = 0; j < rows; j++) {
+    for (let currentRow = 0; currentRow < rows; currentRow++) {
+      for (let currentColumn = 0; currentColumn < columns; currentColumn++) {
         grid.push(
           await image
             .extract({
-              left: i * outputSize,
-              top: j * outputSize,
+              left: currentColumn * outputSize,
+              top: currentRow * outputSize,
               width: outputSize,
               height: outputSize,
             })

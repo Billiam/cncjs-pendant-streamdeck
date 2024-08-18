@@ -133,7 +133,7 @@ const run = async () => {
       for (let subR = 0; subR < (config.rows ?? 1); subR++) {
         for (let subC = 0; subC < (config.columns ?? 1); subC++) {
           const subOffset = subC + subR * (config.columns ?? 1)
-          const globalKey = key + subR + subC * ui.columns
+          const globalKey = key + subR * ui.columns + subC
 
           buttonList[globalKey] ??= []
           buttonList[globalKey].push({
