@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.7.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.0...0.7.2?diff=split) (2024-08-18)
+
+### 🩹 Fixes
+
+##### `stream deck`
+
+*  Fix render size being fixed at 72x72 ([4828696](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4828696))
+*  Fix icon rendering in multi column/row buttons ([859066c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/859066c))
+*  Fix transposed render location for multi row/column buttons ([9f50a89](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9f50a89))
+
 ## [0.7.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.6.0...0.7.0?diff=split) (2024-08-15)
 
 ### 🚀 Added
