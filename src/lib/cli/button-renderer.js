@@ -32,7 +32,7 @@ const getRender = async (config, canvas, directory) => {
 
   const columns = config.columns ?? 1
   const rows = config.rows ?? 1
-  const outputSize = config.size ?? 72
+  const outputSize = config.buttonSize ?? 72
 
   const inputWidth = columns * inputSize
   const inputHeight = rows * inputSize
