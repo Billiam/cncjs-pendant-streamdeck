@@ -15,13 +15,13 @@ const getUserHome = function () {
   return process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
 }
 
-const getSecret = async (secret) => {
-  if (secret) {
-    return secret
-  }
+const getSecret = async (isGsender) => {
   try {
-    const cncrc = path.resolve(getUserHome(), '.cncrc')
-    const data = await fs.readFile(cncrc, 'utf8')
+    const rcFile = path.resolve(
+      getUserHome(),
+      isGsender ? '.sender_rc' : '.cncrc'
+    )
+    const data = await fs.readFile(rcFile, 'utf8')
     const config = JSON.parse(data)
     return config.secret
   } catch (e) {}
@@ -43,16 +43,16 @@ export const getOptions = () => {
   return options
 }
 
-export const getAccessToken = async (secret, expiration) => {
-  secret = await getSecret(secret)
-  if (!secret) {
+export const getAccessToken = async (secret, expiration, isGsender) => {
+  const loadedSecret = secret ?? (await getSecret(isGsender))
+  if (!loadedSecret) {
     console.error(
       chalk.red('Secret is required, see --secret command line option'),
     )
     process.exit(1)
   }
   const payload = { id: '', name: 'cncjs-pendant' }
-  return jwt.sign(payload, secret, {
+  return jwt.sign(payload, loadedSecret, {
     expiresIn: expiration,
   })
 }

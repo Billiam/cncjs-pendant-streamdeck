@@ -67,7 +67,7 @@ const runningCommands = new Set([
 const alarmCommands = new Set(['homing', 'unlock'])
 
 // map configuration to actions
-export default (actionBus, connectionBus) => {
+export default (actionBus, connectionBus, isGsender, connectionConfig) => {
   const store = lazyStore()
 
   const backScene = (count = 1) => {
@@ -297,8 +297,13 @@ export default (actionBus, connectionBus) => {
 
   const loadFile = (path) => {
     store.gcode.setLoaded(path, null)
-    command('watchdir:load', path)
+    if (isGsender) {
+      return store.fileList.loadFile(path, connectionConfig.port)
+    } else {
+      command('watchdir:load', path)
+    }
   }
+
   const loadDetailFile = () => {
     if (!store.ui.fileDetailsPath) {
       return

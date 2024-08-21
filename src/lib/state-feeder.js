@@ -66,6 +66,13 @@ export default (socket, ackBus) => {
     'gcode:unload': () => {
       gcode.unload()
     },
+    'file:load': (code, length, file, _visualizer) => {
+      gcodeWorker.postMessage({ name: file, gcode: code, limit: ui.gcodeLimit })
+      gcode.setLoaded(file, code)
+    },
+    'file:unload': () => {
+      gcode.unload()
+    },
     'sender:status': (status) => {
       cnc.setElapsedTime(status.elapsedTime * 0.001)
       cnc.setRemainingTime(status.remainingTime * 0.001)

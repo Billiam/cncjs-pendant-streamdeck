@@ -17,7 +17,7 @@ export default () => {
     singleton: true,
   })
   container.register('accessToken', getAccessToken, {
-    args: ['@secret', '@expiration'],
+    args: ['@secret', '@expiration', '@isGsender'],
     type: 'method',
     singleton: true,
   })
@@ -60,6 +60,16 @@ export default () => {
     args: ['@accessToken', '@socketAddress', '@socketPort', '@secure'],
     type: 'method',
   })
+  container.register(
+    'isGsender',
+    (connectionConfig) =>
+      (connectionConfig.sender ?? '').toLowerCase() === 'gsender',
+    {
+      args: ['@connectionConfig'],
+      type: 'method',
+      singleton: true,
+    }
+  )
   container.register('ackBus', bus(), { type: 'static' })
   container.register('actionBus', bus(), { type: 'static' })
   container.register('connectionBus', bus(), { type: 'static' })
@@ -109,7 +119,7 @@ export default () => {
     singleton: true,
   })
   container.register('buttonActions', ButtonActions, {
-    args: ['@actionBus', '@connectionBus'],
+    args: ['@actionBus', '@connectionBus', '@isGsender', '@connectionConfig'],
     type: 'method',
     singleton: true,
   })

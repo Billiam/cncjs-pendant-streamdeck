@@ -65,6 +65,12 @@ Full documentation can be found at <https://billiam.github.io/cncjs-pendant-stre
    ```
 5. Restart CNCjs
 
+#### GSender
+
+To use `cncjs-pendant-streamdeck` with [gSender](https://sienci.com/gsender), update the  [`cncjs`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/configure#cncjs) section of your configuration to include `"sender": "gsender"`.
+
+The `mountPoints` (and `watchDirectory`) should be added to `~/.sender_rc` for `gSender` instead `.cncrc`.
+
 ### Stream Deck
 
 Follow [Web](#web) steps above to generate create a configuration directory, `config.json` file, and button images.

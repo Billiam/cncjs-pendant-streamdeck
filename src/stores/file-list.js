@@ -29,6 +29,22 @@ export const useFileListStore = defineStore({
       this.path = [this.path, folder].filter(Boolean).join('/')
       this.loadFiles(this.path)
     },
+    async loadFile(path = '', port) {
+      if (!this.client) {
+        return
+      }
+      const fileContent = await this.client.fetch('watch/file', { file: path })
+      const file = new File([fileContent.data], fileContent.file, {
+        type: 'text/x.gcode',
+      })
+
+      return this.client.post(
+        'file',
+        {},
+        { port, visualizer: 'VISUALIZER_PRIMARY' },
+        { field: 'gcode', file }
+      )
+    },
     async loadFiles(path = '') {
       if (!this.client) {
         return

@@ -10,7 +10,7 @@ export default defineConfig(({ command, mode }) => {
   const config = {
     plugins: [vue()],
     root: 'src',
-    base: './',
+    base: '/',
     server: {},
     resolve: {
       alias: {

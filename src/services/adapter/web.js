@@ -3,7 +3,9 @@ export const getAccessToken = () => {
   if (query.has('token')) {
     return query.get('token')
   }
-  const cncConfig = JSON.parse(localStorage.getItem('cnc') || '{}')
+  const cncConfig = JSON.parse(
+    localStorage.getItem('cnc') || localStorage.getItem('sienci') || '{}'
+  )
   return cncConfig?.state?.session?.token || ''
 }
 

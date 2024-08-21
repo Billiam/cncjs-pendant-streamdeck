@@ -23,9 +23,30 @@ export default (token, host, port, secure) => {
     return results.json()
   }
 
-  const apiPost = async (path, params) => {
+  const apiPost = async (path, params, formData = null, file = null) => {
     const postUrl = url(path, params)
-    const results = await fetchImplementation(postUrl, { method: 'POST' })
+
+    let bodyData = null
+
+    if (formData || file) {
+      bodyData = new FormData()
+      if (file) {
+        bodyData.append(file.field, file.file, file.name)
+      }
+      if (formData) {
+        Object.entries(formData).forEach(([key, value]) => {
+          bodyData.append(key, value)
+        })
+      }
+    }
+    const results = await fetchImplementation(postUrl, {
+      method: 'POST',
+      body: bodyData,
+      headers: {
+        'Cache-Control': 'no-cache',
+        Authorization: `Bearer ${token}`,
+      },
+    })
     return results.json()
   }
 
