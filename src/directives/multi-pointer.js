@@ -77,13 +77,13 @@ const vMultiPointer = {
       }
 
       binding.value?.up?.(e)
-      data.cancel()
+      data?.cancel?.()
     }
   },
 
   beforeUnmount: (el) => {
     if (state[el].down) {
-      state[el].cancel()
+      state[el].cancel?.()
     }
     document.body.removeEventListener('pointerup', state[el]?.bodyRelease)
     state.delete(el)
