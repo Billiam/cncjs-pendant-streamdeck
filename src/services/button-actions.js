@@ -153,7 +153,7 @@ export default (actionBus, connectionBus) => {
 
   const clearGcode = () => {
     if (store.cnc.idle && store.gcode.gcode) {
-      command('gcode:unload', 'cake')
+      command('gcode:unload')
     }
   }
 
