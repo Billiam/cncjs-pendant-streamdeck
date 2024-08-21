@@ -11,8 +11,8 @@ export default (socket, ackBus) => {
 
   const listeners = {
     'Grbl:state': (data) => {
-      const { wpos, mpos, ov } = data.status
-      const { modal, spindle, feedrate } = data.parserstate
+      const { wpos, mpos, ov, spindle, feedrate } = data.status
+      const { modal } = data.parserstate
       cnc.setOverrides(...ov)
       cnc.setWpos(wpos)
       cnc.setMpos(mpos)
