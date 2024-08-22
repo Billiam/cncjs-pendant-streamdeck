@@ -129,13 +129,19 @@ export function preview(size, colors, settings, canvas) {
     targetDimensions.width = canvas.width
     targetDimensions.height = canvas.height
   }
+  const ratio = calculateRatio(size, targetDimensions)
+  const minLineWidth = settings.lineWidth ?? 0.08
+  const lineWidth = Math.max(minLineWidth, ratio * 0.003)
+  const drawSettings = {
+    lineWidth
+  }
+
   const imageWidth = Math.abs(size.max.x - size.min.x)
   const imageHeight = Math.abs(size.max.y - size.min.y)
-  const ratio = calculateRatio(size, targetDimensions)
 
   if (settings.autosize) {
-    canvas.height = imageHeight * ratio
-    canvas.width = imageWidth * ratio
+    canvas.height = imageHeight * ratio + lineWidth
+    canvas.width = imageWidth * ratio + lineWidth
   }
 
   const start = {
@@ -145,10 +151,6 @@ export function preview(size, colors, settings, canvas) {
   const cH = parseInt(canvas.height, 10)
   const ctx = canvas.getContext('2d')
   ctx.imageSmoothingEnabled = true
-  const minLineWidth = settings.lineWidth ?? 0.08
-  const drawSettings = {
-    lineWidth: Math.max(minLineWidth, ratio * 0.003),
-  }
 
   // Cleaning
   ctx.clearRect(0, 0, canvas.width, canvas.height)
