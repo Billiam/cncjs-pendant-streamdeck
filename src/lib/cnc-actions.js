@@ -1,8 +1,10 @@
 import { useCncStore } from '@/stores/cnc'
 import { useRunGcode } from '@/lib/run-gcode'
+import { useUiStore } from '@/stores/ui'
 
 export default (socket, port, machineConfig, actionBus, ackBus) => {
   const cnc = useCncStore()
+  const ui = useUiStore()
   const axisSpeeds = machineConfig?.axisSpeeds || {}
 
   const { runGcode, withRelative, withAbsolute } = useRunGcode(socket, port)
@@ -20,7 +22,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
     })
   }
 
-  const smoothJogFrequency = 150
+  const smoothJogFrequency = ui.web ? 150 : 50
   const jogState = {
     timer: null,
     speed: null,
