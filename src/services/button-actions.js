@@ -25,6 +25,7 @@ const lazyStore = () => {
 }
 
 const machineCommands = new Set([
+  'absoluteWorkPosition',
   'clearGcode',
   'enterPosition',
   'enterWcs',
@@ -87,7 +88,7 @@ export default (actionBus, connectionBus) => {
   const enterPosition = (axis, scene = 'numpad') => {
     const label = `${store.cnc.modal.wcs}\nGo to ${axis.toUpperCase()}`
     store.ui.startInput(store.cnc.wpos[axis], label, scene, (result) => {
-      gcode(`G0 ${axis}${result}`)
+      absoluteWorkPosition(`${axis}${result}`)
     })
   }
   const completeInput = () => {
@@ -168,6 +169,11 @@ export default (actionBus, connectionBus) => {
   const gcode = (code) => {
     actionBus.emit('gcode', code)
   }
+
+  const absoluteWorkPosition = (code) => {
+    actionBus.emit('absoluteWorkPosition', code)
+  }
+
   const command = (cmd, ...args) => {
     actionBus.emit('command', { command: cmd, args: args })
   }
@@ -320,7 +326,7 @@ export default (actionBus, connectionBus) => {
       .filter(Boolean)
       .join(' ')
 
-    actionBus.emit('absolutePosition', move)
+    actionBus.emit('machinePosition', move)
   }
   const startFeed = () => {
     command('feeder:start')
@@ -341,6 +347,7 @@ export default (actionBus, connectionBus) => {
   const actionTypes = {}
 
   const actions = {
+    absoluteWorkPosition,
     backScene,
     brightness,
     clearGcode,

@@ -331,8 +331,8 @@
     "goZeroX": {
       "actions": [
         {
-          "action": "gcode",
-          "arguments": ["G0 X0"]
+          "action": "absoluteWorkPosition",
+          "arguments": ["X0"]
         }
       ],
       "bgColor": 5,
@@ -341,8 +341,8 @@
     "goZeroY": {
       "actions": [
         {
-          "action": "gcode",
-          "arguments": ["G0 Y0"]
+          "action": "absoluteWorkPosition",
+          "arguments": ["Y0"]
         }
       ],
       "bgColor": 4,
@@ -351,8 +351,8 @@
     "goZeroZ": {
       "actions": [
         {
-          "action": "gcode",
-          "arguments": ["G0 Z0"]
+          "action": "absoluteWorkPosition",
+          "arguments": ["Z0"]
         }
       ],
       "bgColor": 6,

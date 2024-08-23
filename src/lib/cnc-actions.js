@@ -1,36 +1,14 @@
 import { useCncStore } from '@/stores/cnc'
+import { useRunGcode } from '@/lib/run-gcode'
 
 export default (socket, port, machineConfig, actionBus, ackBus) => {
   const cnc = useCncStore()
   const axisSpeeds = machineConfig?.axisSpeeds || {}
 
+  const { runGcode, withRelative, withAbsolute } = useRunGcode(socket, port)
+
   const command = (...args) => {
     socket.emit('command', port, ...args)
-  }
-  const gcode = (...args) => {
-    command('gcode', ...args)
-  }
-
-  const withRelative = (callback) => {
-    const wasRelative = cnc.isRelativeMove
-
-    gcode('G91')
-    callback()
-
-    if (!wasRelative) {
-      gcode('G90')
-    }
-  }
-
-  const withAbsolute = (callback) => {
-    const wasRelative = cnc.isRelativeMove
-
-    gcode('G90')
-    callback()
-
-    if (wasRelative) {
-      gcode('G91')
-    }
   }
 
   const jog = (direction, axis) => {
@@ -38,7 +16,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
     const signedDistance = direction === '-' ? -distance : distance
 
     withRelative(() => {
-      gcode(`G0 ${axis}${signedDistance}`)
+      runGcode(`G0 ${axis}${signedDistance}`)
     })
   }
 
@@ -114,7 +92,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
 
     const jogGcode = `$J=G91 ${jogAxes} F${throttledSpeed}`
     jogState.ack = false
-    gcode(jogGcode)
+    runGcode(jogGcode)
 
     jogState.cancelTimer = setTimeout(smoothJogTimeout, 1000)
     // slightly reduce the delay for first request to ensure jog overlap
@@ -175,19 +153,25 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
   })
 
   actionBus.on('gcode', (code) => {
-    gcode(code)
+    runGcode(code)
+  })
+
+  actionBus.on('absoluteWorkPosition', (code) => {
+    withAbsolute(() => runGcode(
+      `G0 ${code}`
+    ))
   })
 
   actionBus.on('command', (evt) => {
     command(evt.command, ...(evt.args || []))
   })
 
-  actionBus.on('absolutePosition', (evt) => {
+  actionBus.on('machinePosition', (evt) => {
     if (!evt) {
       return
     }
 
-    gcode(`G53 G0 ${evt}`)
+    runGcode(`G53 G0 ${evt}`)
   })
 
   return {}
