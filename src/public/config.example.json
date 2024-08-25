@@ -563,8 +563,8 @@
     "machinePosition": {
       "actions": [
         {
-          "action": "toggleUserFlag",
-          "arguments": ["showAbsolutePosition"]
+          "action": "setUserFlag",
+          "arguments": ["showAbsolutePosition", false]
         }
       ],
       "bgColor": 8,
@@ -1335,8 +1335,8 @@
     "workPosition": {
       "actions": [
         {
-          "action": "toggleUserFlag",
-          "arguments": ["showAbsolutePosition"]
+          "action": "setUserFlag",
+          "arguments": ["showAbsolutePosition", true]
         }
       ],
       "bgColor": 8,
