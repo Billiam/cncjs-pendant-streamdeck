@@ -11,7 +11,7 @@ import { useGcode } from '@/lib/cell/gcode'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { renderToolpath } from '@/lib/gcode-renderer'
 import { performance } from 'adapter'
-import { throttle } from 'lodash'
+import throttle from 'lodash/throttle'
 
 export default class CliButton {
   constructor(index, config, { size, buttonActions, iconDirectory, throttle }) {
