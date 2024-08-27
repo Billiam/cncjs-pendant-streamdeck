@@ -24,6 +24,15 @@ export const GcodeWorker = () => {
   })
 }
 
+export const OutlineWorker = () => {
+  return new Worker(
+    new URL('../../outline-worker.js?worker', import.meta.url),
+    {
+      type: 'module',
+    }
+  )
+}
+
 export const onWorkerMessage = (fn) => {
   const postMessage = self.postMessage
   self.addEventListener('message', (...args) => {

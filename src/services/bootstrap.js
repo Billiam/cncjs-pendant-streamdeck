@@ -3,9 +3,11 @@ import { useCncStore } from '@/stores/cnc'
 import { useFileListStore } from '@/stores/file-list'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
+
 export default (container) => {
   let stateFeeder
   let cncActions
+  let buttonActions
 
   const start = async () => {
     await initializeStores()
@@ -26,9 +28,13 @@ export default (container) => {
     )
     const busses = await Promise.all(busPromises)
     busses.forEach((bus) => bus.all.clear())
+
     stateFeeder?.destroy()
+    buttonActions?.destroy()
+
     container.remove('stateFeeder')
     container.remove('cncActions')
+    container.remove('buttonActions')
   }
 
   const initializeStores = async () => {
@@ -87,8 +93,11 @@ export default (container) => {
       console.error('socket failed')
     }
 
-    stateFeeder = await container.get('stateFeeder')
-    cncActions = await container.get('cncActions')
+    ;[stateFeeder, cncActions, buttonActions] = await Promise.all([
+      container.get('stateFeeder'),
+      container.get('cncActions'),
+      container.get('buttonActions'),
+    ])
 
     return true
   }

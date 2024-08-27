@@ -58,6 +58,11 @@ export const GcodeWorker = () => {
     type: 'module',
   })
 }
+export const OutlineWorker = () => {
+  return new Worker(path.resolve(__dirname, 'outline-thread-worker.js'), {
+    type: 'module',
+  })
+}
 
 export const onWorkerMessage = (fn) => {
   const parentPort = require('worker_threads').parentPort

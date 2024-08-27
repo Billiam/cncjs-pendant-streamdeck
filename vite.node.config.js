@@ -23,6 +23,10 @@ export default defineConfig(({ command, mode }) => {
             __dirname,
             'src/gcode-thread-worker.js'
           ),
+          'outline-thread-worker': path.resolve(
+            __dirname,
+            'src/outline-thread-worker.js'
+          ),
         },
       },
     },

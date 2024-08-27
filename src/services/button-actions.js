@@ -2,6 +2,9 @@ import { useFileListStore } from '@/stores/file-list'
 import { useUiStore } from '@/stores/ui'
 import { useCncStore } from '@/stores/cnc'
 import { useGcodeStore } from '@/stores/gcode'
+import { OutlineWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
+
+const outlineWorker = OutlineWorker()
 
 const lazyStore = () => {
   return {
@@ -195,7 +198,7 @@ export default (actionBus, connectionBus) => {
         return
       }
     }
-    store.cnc.runCommand(commandId)
+    return store.cnc.runCommand(commandId)
   }
 
   const macro = async (macroId, macroName) => {
@@ -344,6 +347,15 @@ export default (actionBus, connectionBus) => {
     store.ui.setUserFlag(id, !store.ui.userFlags[id])
   }
 
+  const outline = () => {
+    if (store.cnc.idle && store.gcode.gcode) {
+      outlineWorker.postMessage({
+        gcode: store.gcode.gcode,
+        name: store.gcode.name,
+      })
+    }
+  }
+
   const actionTypes = {}
 
   const actions = {
@@ -379,6 +391,7 @@ export default (actionBus, connectionBus) => {
     loadFolder,
     macro,
     navigate,
+    outline,
     pause,
     previousFolder,
     refreshWatchFolder,
@@ -449,9 +462,30 @@ export default (actionBus, connectionBus) => {
       return grouped
     }, {})
   }
+
+  const workerListeners = {
+    message: (e) => {
+      const { perimeter, name } = e.data
+      if (store.gcode.name === name) {
+        gcode(perimeter)
+      }
+    },
+  }
+
+  Object.entries(workerListeners).forEach(([event, listener]) => {
+    onWorkerEvent(outlineWorker, event, listener)
+  })
+
+  const destroy = () => {
+    Object.entries(workerListeners).forEach(([event, listener]) => {
+      offWorkerEvent(outlineWorker, event, listener)
+    })
+  }
+
   return {
     getHandlers,
     ensureHandler,
     enabled,
+    destroy,
   }
 }
