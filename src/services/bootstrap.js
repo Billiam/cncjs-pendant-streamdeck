@@ -93,8 +93,8 @@ export default (container) => {
       console.error('socket failed')
     }
 
-    ;[stateFeeder, cncActions, buttonActions] = await Promise.all([
-      container.get('stateFeeder'),
+    stateFeeder = await container.get('stateFeeder')
+    ;[cncActions, buttonActions] = await Promise.all([
       container.get('cncActions'),
       container.get('buttonActions'),
     ])
