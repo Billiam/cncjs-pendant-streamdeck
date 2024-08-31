@@ -36,6 +36,6 @@ export const useRunGcode = (socket, port) => {
   return {
     runGcode,
     withAbsolute,
-    withRelative
+    withRelative,
   }
 }

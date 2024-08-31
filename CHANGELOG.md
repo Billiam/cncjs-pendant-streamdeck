@@ -6,16 +6,16 @@
 
 ##### `stream deck`
 
-*  Fix render size being fixed at 72x72 ([4828696](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4828696))
-*  Fix icon rendering in multi column/row buttons ([859066c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/859066c))
-*  Fix transposed render location for multi row/column buttons ([9f50a89](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9f50a89))
+- Fix render size being fixed at 72x72 ([4828696](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4828696))
+- Fix icon rendering in multi column/row buttons ([859066c](https://github.com/billiam/cncjs-pendant-streamdeck/commit/859066c))
+- Fix transposed render location for multi row/column buttons ([9f50a89](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9f50a89))
 
 ## [0.7.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.6.0...0.7.0?diff=split) (2024-08-15)
 
 ### 🚀 Added
 
-*  Add 0.001 mm step distance ([c957a69](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c957a69))
-*  Add template variables for `spindleRpm` and `feedrate` ([cfc9311](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cfc9311))
+- Add 0.001 mm step distance ([c957a69](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c957a69))
+- Add template variables for `spindleRpm` and `feedrate` ([cfc9311](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cfc9311))
 
 ## [0.6.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.5.2...0.6.0?diff=split) (2024-08-09)
 

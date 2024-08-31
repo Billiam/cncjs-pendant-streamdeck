@@ -57,7 +57,7 @@ const getRender = async (config, canvas, directory) => {
           height: inputHeight,
           fit: 'contain',
           kernel: 'cubic',
-          background: { r: 0, g: 0, b: 0, alpha: 0 }
+          background: { r: 0, g: 0, b: 0, alpha: 0 },
         })
         .toBuffer()
       icons[config.icon] = overlay

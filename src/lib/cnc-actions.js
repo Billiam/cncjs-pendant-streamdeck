@@ -159,9 +159,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
   })
 
   actionBus.on('absoluteWorkPosition', (code) => {
-    withAbsolute(() => runGcode(
-      `G0 ${code}`
-    ))
+    withAbsolute(() => runGcode(`G0 ${code}`))
   })
 
   actionBus.on('command', (evt) => {
