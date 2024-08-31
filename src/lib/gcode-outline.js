@@ -2,6 +2,19 @@ import { parse } from '@/vendor/gcodetogeometry/gcodetogeometry'
 import { pointsOnBezierCurves } from 'points-on-curve'
 import hull from 'hull.js'
 
+const appendNewPoint = (list, point) => {
+  const lastPoint = list[list.length - 1]
+  if (!lastPoint || lastPoint[0] !== point[0] || lastPoint[1] !== point[1]) {
+    list.push(point)
+  }
+}
+
+const appendNewPoints = (list, ...points) => {
+  points.forEach((point) => {
+    appendNewPoint(list, point)
+  })
+}
+
 export const gcodeToPoints = (gcode) => {
   // strip lines beginning with % or containing [
   const parsedGcode = parse(
@@ -10,7 +23,11 @@ export const gcodeToPoints = (gcode) => {
 
   return parsedGcode.lines.reduce((points, line) => {
     if (line.type === 'G1') {
-      points.push([line.start.x, line.start.y], [line.end.x, line.end.y])
+      appendNewPoints(
+        points,
+        [line.start.x, line.start.y],
+        [line.end.x, line.end.y]
+      )
     } else if (line.type === 'G2' || line.type === 'G3') {
       line.beziers.forEach((point) => {
         if (point.p1.x && point.p1.y && point.p2.x && point.p2.y) {
@@ -24,8 +41,13 @@ export const gcodeToPoints = (gcode) => {
             0.1,
             0.1
           )
+          appendNewPoints(points, ...curvePoints)
         } else {
-          points.push([point.p0.x, point.p0.y], [point.p3.x, point.p3.y])
+          appendNewPoints(
+            points,
+            [point.p0.x, point.p0.y],
+            [point.p3.x, point.p3.y]
+          )
         }
       })
     }
@@ -50,11 +72,14 @@ G0 G20 G91 Z-0.2
 `.trim()
 }
 
+const fixedDigits = (number, limit = 4) =>
+  number.toFixed(limit).replace(/\.?0+$/, '')
+
 export const pointsToGcode = (points, feedbackUnits) => {
   const pointGcode = points.map(
-    ([x, y]) => `G0 X${x.toFixed(4)} Y${y.toFixed(4)}`
+    ([x, y]) => `G0 X${fixedDigits(x)} Y${fixedDigits(y)}`
   )
-  const sleep = 'G04 p.5'
+  const sleep = 'G04 P.5'
   pointGcode.splice(1, 0, sleep)
   pointGcode.push(sleep)
   return withModal(pointGcode.join('\n'), feedbackUnits)
