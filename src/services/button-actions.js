@@ -351,7 +351,10 @@ export default (actionBus, connectionBus) => {
     if (store.cnc.idle && store.gcode.gcode) {
       outlineWorker.postMessage({
         gcode: store.gcode.gcode,
+        x: parseFloat(store.cnc.wpos.x),
+        y: parseFloat(store.cnc.wpos.y),
         name: store.gcode.name,
+        feedbackUnits: store.cnc.settings['$13'] === '1' ? 'in' : 'mm',
       })
     }
   }

@@ -33,28 +33,31 @@ export const gcodeToPoints = (gcode) => {
   }, [])
 }
 
-const withModal = (gcode) =>
-  `
+const withModal = (gcode, feedbackUnits) => {
+  const returnUnits = feedbackUnits === 'mm' ? 'G21' : 'G20'
+
+  return `
 %DISTANCE=modal.distance
 %UNITS=modal.units
-%START_X=mposx
-%START_Y=mposy
+%START_X=posx
+%START_Y=posy
 G0 G20 G91 Z0.2
 G90
 ${gcode}
-G53 G0 G21 G90 X[START_X] Y[START_Y]
-G0 G91 Z-0.2
+G0 ${returnUnits} G90 X[START_X] Y[START_Y]
+G0 G20 G91 Z-0.2
 [DISTANCE][UNITS]
 `.trim()
+}
 
-export const pointsToGcode = (points) => {
+export const pointsToGcode = (points, feedbackUnits) => {
   const pointGcode = points.map(
     ([x, y]) => `G0 X${x.toFixed(4)} Y${y.toFixed(4)}`
   )
   const sleep = 'G04 p.5'
   pointGcode.splice(1, 0, sleep)
   pointGcode.push(sleep)
-  return withModal(pointGcode.join('\n'))
+  return withModal(pointGcode.join('\n'), feedbackUnits)
 }
 
 export const orderByClosest = (points, x, y) => {
@@ -83,14 +86,16 @@ export const orderByClosest = (points, x, y) => {
 
 const returnToEnd = (points) => [...points, points[0]]
 
-export const buildOutline = (gcode, x, y) => {
+export const buildOutline = (gcode, x, y, feedbackUnits = 'mm') => {
   const points = gcodeToPoints(gcode)
 
-  const impX = x / 25.4
-  const impY = y / 25.4
+  const impMultiplier = feedbackUnits === 'mm' ? 25.4 : 1
+
+  const impX = x / impMultiplier
+  const impY = y / impMultiplier
 
   const hullPoints = hull(points)
   const path = returnToEnd(orderByClosest(hullPoints, impX, impY))
 
-  return pointsToGcode(path)
+  return pointsToGcode(path, feedbackUnits)
 }
