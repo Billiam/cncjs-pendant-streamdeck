@@ -19,6 +19,7 @@
     "package": "npm run cli && bin/cli-package.sh",
     "web-package": "npm run build && bin/web-package.sh",
     "preview": "vite preview --port 5050",
+    "test": "vitest",
     "format": "prettier . --write",
     "update-changelog": "git-conventional-commits changelog  -f CHANGELOG.md --markdown-prefix '# Changelog'"
   },
@@ -49,7 +50,8 @@
     "git-conventional-commits": "https://github.com/billiam/git-conventional-commits.git#custom-formatting",
     "prettier": "^2.6.2",
     "sass": "^1.52.1",
-    "vite": "^3.0.1"
+    "vite": "^3.0.1",
+    "vitest": "^2.0.5"
   },
   "optionalDependencies": {
     "canvas": "^2.9.0",
