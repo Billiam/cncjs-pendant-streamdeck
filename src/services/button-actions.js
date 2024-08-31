@@ -29,6 +29,7 @@ const lazyStore = () => {
 
 const machineCommands = new Set([
   'absoluteWorkPosition',
+  'absoluteMachinePosition',
   'clearGcode',
   'enterPosition',
   'enterWcs',
@@ -171,6 +172,10 @@ export default (actionBus, connectionBus) => {
 
   const gcode = (code) => {
     actionBus.emit('gcode', code)
+  }
+
+  const absoluteMachinePosition = (code) => {
+    actionBus.emit('machinePosition', code)
   }
 
   const absoluteWorkPosition = (code) => {
@@ -363,6 +368,7 @@ export default (actionBus, connectionBus) => {
 
   const actions = {
     absoluteWorkPosition,
+    absoluteMachinePosition,
     backScene,
     brightness,
     clearGcode,
