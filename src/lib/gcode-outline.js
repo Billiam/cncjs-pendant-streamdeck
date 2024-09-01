@@ -38,8 +38,8 @@ export const gcodeToPoints = (gcode) => {
               [point.p2.x, point.p2.y],
               [point.p3.x, point.p3.y],
             ],
-            0.1,
-            0.1
+            0.001,
+            0.01
           )
           appendNewPoints(points, ...curvePoints)
         } else {
