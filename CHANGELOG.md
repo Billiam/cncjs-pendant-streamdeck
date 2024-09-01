@@ -1,5 +1,54 @@
 # Changelog
 
+## [0.8.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.2...0.8.0?diff=split) (2024-09-01)
+
+### 📖 Documentation
+
+*  Default absolute position display button to set instead of toggle in example config ([63d45ee](https://github.com/billiam/cncjs-pendant-streamdeck/commit/63d45ee))
+*  Add outline action to example config ([d032783](https://github.com/billiam/cncjs-pendant-streamdeck/commit/d032783))
+
+### 🚀 Added
+
+#### Outline ([c07a1b2](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c07a1b2))
+
+The new `outline` action does a rapid move around the perimeter of the currently loaded gcode. There is some path simplification done here, so smooth arcs in the original gcode are will be translated to a series of points, and will not be as smooth.
+
+The default configuration included in the example config looks like this:
+
+```json
+"outline": {
+  "actions": [
+    {
+      "action": "outline",
+      "event": "hold"
+    }
+  ],
+  "disabled": "!gcode.gcode || !cnc.idle",
+  "bgColor": 5,
+  "icon": "default/perimeter.png"
+}
+```
+
+#### New position actions ([cc163cb](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc163cb), [2f35157](https://github.com/billiam/cncjs-pendant-streamdeck/commit/2f35157))
+
+Two new actions have been added `absoluteMachinePosition` and `absoluteWorkPosition`.
+
+Previously in the example configuration, buttons like `goZeroX` used a `gcode` action with the argument `G0 X0`. This gcode was executed as-is, and would do a rapid move to the coordinate, but only if the controller was already in the absolute (`G90`) modal state. If the controller was in the incremental mode instead, these buttons would do nothing until the state was returned to absolute.
+
+To fix this, the [`absoluteWorkPosition`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/actions/#absoluteworkposition) action has been added. The argument for `absoluteMachinePosition` is a string which will be used with a `G0` rapid move, and will always run in absolute movement mode, regardless of the current modal state.
+
+[`absoluteMachinePosition`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/actions/#absolutemachineposition) has been added for symmetry, though its functionality was already available with the [`goto`](https://billiam.github.io/cncjs-pendant-streamdeck/docs/actions/#goto) action.
+
+### 🩹 Fixes
+
+*  Fixed low update frequency for spindle RPM and feedrate ([7bd7b82](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7bd7b82))
+*  Fix potential error on button release ([7cfe0fd](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7cfe0fd))
+*  Fix outermost gcode line slightly out of frame ([0b828a9](https://github.com/billiam/cncjs-pendant-streamdeck/commit/0b828a9))
+*  Fix axis-to-position actions not working in relative mode ([cc163cb](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc163cb))
+*  Increase jog command frequency for streamdeck usage ([cc4ed5a](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc4ed5a))
+
+# Changelog
+
 ## [0.7.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.0...0.7.2?diff=split) (2024-08-18)
 
 ### 🩹 Fixes
