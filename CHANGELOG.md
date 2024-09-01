@@ -47,8 +47,6 @@ To fix this, the [`absoluteWorkPosition`](https://billiam.github.io/cncjs-pendan
 *  Fix axis-to-position actions not working in relative mode ([cc163cb](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc163cb))
 *  Increase jog command frequency for streamdeck usage ([cc4ed5a](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc4ed5a))
 
-# Changelog
-
 ## [0.7.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.0...0.7.2?diff=split) (2024-08-18)
 
 ### 🩹 Fixes
