@@ -59,9 +59,9 @@ export default () => {
     args: ['@accessToken', '@socketAddress', '@socketPort', '@secure'],
     type: 'method',
   })
-  container.register('ackBus', bus, { type: 'method', singleton: true })
-  container.register('actionBus', bus, { type: 'method', singleton: true })
-  container.register('connectionBus', bus, { type: 'method', singleton: true })
+  container.register('ackBus', bus(), { type: 'static' })
+  container.register('actionBus', bus(), { type: 'static' })
+  container.register('connectionBus', bus(), { type: 'static' })
 
   container.register(
     'connectionConfig',
