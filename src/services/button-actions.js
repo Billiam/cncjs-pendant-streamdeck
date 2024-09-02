@@ -354,6 +354,7 @@ export default (actionBus, connectionBus) => {
 
   const outline = () => {
     if (store.cnc.idle && store.gcode.gcode) {
+      store.cnc.addActiveWorker('outline')
       outlineWorker.postMessage({
         gcode: store.gcode.gcode,
         x: parseFloat(store.cnc.wpos.x),
@@ -473,7 +474,12 @@ export default (actionBus, connectionBus) => {
   }
 
   const workerListeners = {
+    error: (e) => {
+      store.cnc.clearActiveWorker('outline')
+      console.error(e.data.message)
+    },
     message: (e) => {
+      store.cnc.clearActiveWorker('outline')
       const { perimeter, name } = e.data
       if (store.gcode.name === name) {
         gcode(perimeter)

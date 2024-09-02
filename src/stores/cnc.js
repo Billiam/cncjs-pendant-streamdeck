@@ -126,6 +126,7 @@ export const useCncStore = defineStore({
     feedRate: 0,
 
     activeCommands: {},
+    activeWorkers: {},
   }),
 
   actions: {
@@ -299,6 +300,15 @@ export const useCncStore = defineStore({
     },
     commandRunning(id) {
       return !!this.activeCommands[id]
+    },
+    addActiveWorker(workerId) {
+      this.activeWorkers[workerId] = true
+    },
+    clearActiveWorker(workerId) {
+      delete this.activeWorkers[workerId]
+    },
+    workerRunning(workerId) {
+      return !!this.activeWorkers[workerId]
     },
     async loadCommands() {
       if (!this.client) {
