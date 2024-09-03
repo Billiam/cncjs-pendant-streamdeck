@@ -114,40 +114,45 @@ const run = async () => {
     })
   }
 
-  const sceneButtons = computed(() => {
-    //create index of buttons
-    const buttonList = {}
+  //create index of buttons
+  const sceneButtons = ref({})
+  watch(
+    buttons,
+    () => {
+      const buttonList = {}
 
-    eachButton((key, buttonId) => {
-      const config =
-        typeof buttonId === 'string' ? buttonConfig[buttonId] : buttonId
+      eachButton((key, buttonId) => {
+        const config =
+          typeof buttonId === 'string' ? buttonConfig[buttonId] : buttonId
 
-      const button = new CliButton(key, config, {
-        size: streamdeck.ICON_SIZE,
-        buttonActions,
-        iconDirectory,
-        throttle: ui.throttle,
+        const button = new CliButton(key, config, {
+          size: streamdeck.ICON_SIZE,
+          buttonActions,
+          iconDirectory,
+          throttle: ui.throttle,
+        })
+
+        //iterate over all rows/columns of button
+        for (let subR = 0; subR < (config.rows ?? 1); subR++) {
+          for (let subC = 0; subC < (config.columns ?? 1); subC++) {
+            const subOffset = subC + subR * (config.columns ?? 1)
+            const globalKey = key + subR * ui.columns + subC
+
+            buttonList[globalKey] ??= []
+            buttonList[globalKey].push({
+              row: subR,
+              column: subC,
+              offset: subOffset,
+              button,
+            })
+          }
+        }
       })
 
-      //iterate over all rows/columns of button
-      for (let subR = 0; subR < (config.rows ?? 1); subR++) {
-        for (let subC = 0; subC < (config.columns ?? 1); subC++) {
-          const subOffset = subC + subR * (config.columns ?? 1)
-          const globalKey = key + subR * ui.columns + subC
-
-          buttonList[globalKey] ??= []
-          buttonList[globalKey].push({
-            row: subR,
-            column: subC,
-            offset: subOffset,
-            button,
-          })
-        }
-      }
-    })
-
-    return Object.freeze(buttonList)
-  })
+      sceneButtons.value = Object.freeze(buttonList)
+    },
+    { immediate: true }
+  )
 
   const effectiveButtons = computed(() => {
     return Object.entries(sceneButtons.value).reduce(
