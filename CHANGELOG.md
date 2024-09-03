@@ -1,5 +1,11 @@
 # Changelog
 
+## [0.9.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.8.0...0.9.0?diff=split) (2024-09-02)
+
+### 🚀 Added
+
+*  Add loading button overlay while outline is processing ([566faaa](https://github.com/billiam/cncjs-pendant-streamdeck/commit/566faaa))
+
 ## [0.8.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.2...0.8.0?diff=split) (2024-09-01)
 
 ### 📖 Documentation
