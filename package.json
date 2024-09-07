@@ -28,6 +28,7 @@
     "@elgato-stream-deck/node": "^5.4.0",
     "@julusian/jpeg-turbo": "^2.0.0",
     "chalk": "^4.1.2",
+    "cncjs-pendant-streamdeck-validator": "^1.5.0",
     "commander": "^9.3.0",
     "hull.js": "andriiheonia/hull",
     "jsonschema": "^1.4.1",
@@ -37,12 +38,14 @@
     "node-fetch": "^2.6.7",
     "pinia": "^2.0.13",
     "points-on-curve": "^1.0.1",
+    "prettier-plugin-sort-imports": "^1.8.6",
     "sharp": "^0.30.7",
     "simple-evaluate": "^1.4.4",
     "socket.io-client": "^2.4.1",
     "spark-md5": "^3.0.2",
     "tinycolor2": "^1.4.2",
-    "vue": "^3.2.33"
+    "vue": "^3.2.33",
+    "vue-router": "^4.4.3"
   },
   "devDependencies": {
     "@vitejs/plugin-legacy": "^2.0.0",
