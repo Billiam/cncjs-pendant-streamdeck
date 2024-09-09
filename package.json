@@ -27,6 +27,7 @@
   "dependencies": {
     "@elgato-stream-deck/node": "^5.4.0",
     "@julusian/jpeg-turbo": "^2.0.0",
+    "@primevue/themes": "^4.0.5",
     "chalk": "^4.1.2",
     "cncjs-pendant-streamdeck-validator": "^2.0.0",
     "commander": "^9.3.0",
@@ -39,6 +40,7 @@
     "pinia": "^2.0.13",
     "points-on-curve": "^1.0.1",
     "prettier-plugin-sort-imports": "^1.8.6",
+    "primevue": "^4.0.5",
     "sharp": "^0.30.7",
     "simple-evaluate": "^1.4.4",
     "socket.io-client": "^2.4.1",
