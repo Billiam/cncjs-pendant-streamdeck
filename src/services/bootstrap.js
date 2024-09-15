@@ -47,8 +47,8 @@ export default (container) => {
     const config = await container.get('config')
 
     // initialize stores from config data
-    buttonStore.setButtons(Object.freeze(config.buttons))
-    sceneStore.setScenes(Object.freeze(config.scenes))
+    buttonStore.setButtons(config.buttons)
+    sceneStore.setScenes(config.scenes)
     cncStore.setAxes(config.machine?.axes)
 
     // TODO: make home scene configurable

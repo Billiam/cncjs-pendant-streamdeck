@@ -1,44 +1,23 @@
-<script setup>
-import AutoFullscreen from '@/components/AutoFullscreen.vue'
-import Scene from '@/components/Scene.vue'
-import FixedHeight from '@/components/FixedHeight.vue'
-import FileListScene from '@/components/FileListScene.vue'
-import Theme from '@/components/Theme.vue'
+<script>
+import { computed } from 'vue'
+
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
-
-import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
 
+import Theme from '@/components/Theme.vue'
+</script>
+
+<script setup>
 const container = Container()
 const bootstrap = Bootstrap(container)
 
+import { onMounted, onBeforeUnmount, provide, ref } from 'vue'
 import { storeToRefs } from 'pinia'
-import { computed, onMounted, onBeforeUnmount, provide, ref } from 'vue'
 
 const uiStore = useUiStore()
-const sceneStore = useScenesStore()
-
-// needs to be shared with CLI
-const specialScenes = {
-  gcodeList: {
-    type: FileListScene,
-    buttons: [],
-  },
-}
-const sceneType = computed(
-  () => specialScenes[uiStore.sceneName]?.type ?? Scene
-)
 
 const { rows, columns } = storeToRefs(uiStore)
-const configError = ref(false)
-
-const scene = computed(() => {
-  return (
-    specialScenes[uiStore.sceneName] ?? sceneStore.scenes[uiStore.sceneName]
-  )
-})
-
 const buttonActions = ref()
 container.get('buttonActions').then((handler) => {
   buttonActions.value = handler
@@ -62,21 +41,12 @@ const fontSize = computed(() => {
 </script>
 
 <template>
-  <fixed-height></fixed-height>
-  <auto-fullscreen></auto-fullscreen>
+  <router-view />
   <theme></theme>
-  <component v-if="scene" :is="sceneType" :buttons="scene.buttons"></component>
-  <div class="status" v-else>
-    <h1 class="message">
-      <span v-if="configError">
-        Config file (config.json) could not be loaded
-      </span>
-      <span v-else>Loading...</span>
-    </h1>
-  </div>
 </template>
 
 <style>
+/* TODO: un-inline */
 @import './assets/base.css';
 .no-touch {
   touch-action: none;
@@ -101,12 +71,13 @@ body,
   height: 100%;
   font-size: v-bind(smallFontSize);
   display: grid;
-  grid-template-columns: v-bind('"repeat(" + columns + ", minmax(0, 1fr))"');
+  grid-template-columns: v-bind('"repeat(" + columns + ", 1fr)"');
   grid-template-rows: v-bind('"repeat(" + rows + ", minmax(0, 1fr))"');
   grid-gap: 5px;
   align-items: center;
   justify-items: center;
 
+  overflow: hidden;
   min-width: 0;
 }
 .cell {

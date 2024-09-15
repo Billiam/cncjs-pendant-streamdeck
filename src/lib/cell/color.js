@@ -8,7 +8,7 @@ export const useColor = (config) => {
 
   // color configuration
   const cellBgColor = computed(() =>
-    color.normalizeColor(config.bgColor || ui.bgColor)
+    color.normalizeColor(config.value.bgColor || ui.bgColor)
   )
   const cellProgressColor = computed(() =>
     color.normalizeColor(ui.progressColor)

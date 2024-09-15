@@ -1,5 +1,5 @@
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 import TextTemplate from '@/lib/text-template'
 import { useGcodeStore } from '@/stores/gcode'
@@ -37,24 +37,24 @@ export const useText = (config) => {
   const scope = { cnc, ui, gcode }
 
   const color = Color()
-  const textTemplate = computed(() => TextTemplate(config.text))
+  const textTemplate = computed(() => TextTemplate(config.value.text))
 
   const textString = computed(() => {
-    return config.text && textTemplate.value(scope)
+    return config.value.text && textTemplate.value(scope)
   })
   const textLines = computed(() => {
     return (
-      config.text &&
+      config.value.text &&
       textString.value.replace(/</g, '&lt;').replace(/>/g, '&gt;').split('\n')
     )
   })
 
   const fontSize = computed(() => {
-    return `${config.textSize ?? 1}em`
+    return `${config.value.textSize ?? 1}em`
   })
 
   const svgFontSize = computed(() => {
-    return ui.fontSize * (config.textSize ?? 1)
+    return ui.fontSize * (config.value.textSize ?? 1)
   })
   const { lineHeight, font } = storeToRefs(ui)
 
@@ -63,16 +63,16 @@ export const useText = (config) => {
     color.contrastColor(cellTextColor.value)
   )
   const textAlignment = computed(
-    () => alignment[config.textAlignment]?.h ?? 'center'
+    () => alignment[config.value.textAlignment]?.h ?? 'center'
   )
   const textVerticalAlignment = computed(
-    () => alignment[config.textAlignment]?.v ?? 'center'
+    () => alignment[config.value.textAlignment]?.v ?? 'center'
   )
   const textSvgAlignment = computed(
-    () => svgAlignment[config.textAlignment]?.h ?? 'middle'
+    () => svgAlignment[config.value.textAlignment]?.h ?? 'middle'
   )
   const textSvgVerticalAlignment = computed(
-    () => svgAlignment[config.textAlignment]?.v ?? 'middle'
+    () => svgAlignment[config.value.textAlignment]?.v ?? 'middle'
   )
 
   return {

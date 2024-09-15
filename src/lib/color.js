@@ -11,6 +11,21 @@ export default () => {
     return color
   }
 
+  const findColor = (color) => {
+    if (typeof color === 'number') {
+      return color
+    }
+    const lowerColor = color.toLowerCase()
+
+    const palette = Object.keys(ui.palette).find(
+      (key) => ui.palette[key].toLowerCase() === lowerColor
+    )
+    if (palette != null) {
+      return palette * 1
+    }
+    return color
+  }
+
   const highlightColor = (color) => {
     const amount = ui.isWeb ? 10 : 20
 
@@ -29,6 +44,7 @@ export default () => {
   return {
     highlightColor,
     normalizeColor,
+    findColor,
     contrastColor,
   }
 }

@@ -324,6 +324,20 @@ export const useCncStore = defineStore({
         return lookup
       }, {})
     },
+    async listCommands() {
+      if (!this.commands) {
+        await this.loadCommands()
+      }
+
+      return this.commands
+    },
+    async listMacros() {
+      if (!this.macros) {
+        await this.loadMacros()
+      }
+
+      return this.macros
+    },
     async runCommand(id) {
       if (!this.client) {
         return

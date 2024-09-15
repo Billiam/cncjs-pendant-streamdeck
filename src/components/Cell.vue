@@ -1,15 +1,17 @@
 <script>
-import CellButton from './CellButton.vue'
-import GcodePreview from './GcodePreview.vue'
-import { useCncStore } from '@/stores/cnc'
-import { useUiStore } from '@/stores/ui'
-import { useGcodeStore } from '@/stores/gcode'
+import { computed, inject, toRefs } from 'vue'
 import { storeToRefs } from 'pinia'
-import { computed, inject, ref } from 'vue'
-import { useText } from '@/lib/cell/text'
-import { useColor } from '@/lib/cell/color'
+
 import { useVisibility } from '@/lib/cell/visibility'
 import { useLoading } from '@/lib/cell/loading'
+import { useGcodeStore } from '@/stores/gcode'
+import { useColor } from '@/lib/cell/color'
+import { useCncStore } from '@/stores/cnc'
+import { useText } from '@/lib/cell/text'
+import { useUiStore } from '@/stores/ui'
+
+import GcodePreview from './GcodePreview.vue'
+import CellButton from './CellButton.vue'
 </script>
 <script setup>
 const cnc = useCncStore()
@@ -19,7 +21,6 @@ const gcode = useGcodeStore()
 const { textShadow, rows, columns } = storeToRefs(ui)
 
 const buttonActions = inject('buttonActions')
-
 const props = defineProps({
   config: {
     type: Object,
@@ -31,11 +32,13 @@ const props = defineProps({
   column: {
     type: Number,
   },
+  name: {
+    type: String,
+  },
 })
+const { config, row, column } = toRefs(props)
 
-const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(
-  props.config
-)
+const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(config)
 const {
   cellTextColor,
   contrastingTextColor,
@@ -45,18 +48,21 @@ const {
   textAlignment,
   textVerticalAlignment,
   textString,
-} = useText(props.config)
-const { show, enabled } = useVisibility(props.config, buttonActions)
-const { loading } = useLoading(props.config)
+} = useText(config)
+const { show, enabled } = useVisibility(config, buttonActions)
+const { loading } = useLoading(config)
 
 const gridPosition = computed(() => {
   return {
-    startRow: props.row + 1,
-    endRow: props.row + 1 + (props.config.rows || 1),
-    startColumn: props.column + 1,
-    endColumn: props.column + 1 + (props.config.columns || 1),
+    startRow: row.value + 1,
+    endRow: row.value + 1 + (config.value.rows || 1),
+    startColumn: column.value + 1,
+    endColumn: column.value + 1 + (config.value.columns || 1),
   }
 })
+const aspectRatio = computed(
+  () => (config.value.columns || 1) / (config.value.rows || 1)
+)
 </script>
 
 <template>
@@ -64,8 +70,11 @@ const gridPosition = computed(() => {
     class="cell"
     draggable="false"
     :class="{ disabled: !enabled }"
+    :aria-label="config.description"
+    :title="config.description"
     v-if="show"
   >
+    <div class="name" v-if="name">{{ name }}</div>
     <cell-button :actions="config.actions" :disabled="!enabled">
       <span class="image centered-decoration" v-if="config.icon"></span>
 
@@ -267,8 +276,7 @@ const gridPosition = computed(() => {
 </style>
 <style scoped>
 .image {
-  background: v-bind('`url("icons/${props.config.icon}")`') no-repeat center
-    center;
+  background: v-bind('`url("icons/${config.icon}")`') no-repeat center center;
   background-size: contain;
 }
 :deep(.progress-bar-meter) {
@@ -302,5 +310,16 @@ const gridPosition = computed(() => {
   /*text-shadow: v-bind(`0 0.1em #0006`);*/
   /*-webkit-text-stroke: v-bind(`2px ${contrastingTextColor}`);*/
   /*paint-order: stroke fill;*/
+}
+.name {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.75);
+  color: #fff;
+  z-index: 50;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
 }
 </style>

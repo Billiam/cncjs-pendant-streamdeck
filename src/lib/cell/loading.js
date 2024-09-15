@@ -5,10 +5,10 @@ export const useLoading = (config) => {
   const cnc = useCncStore()
 
   const ids = computed(() => {
-    if (!config.actions) {
+    if (!config.value.actions) {
       return []
     }
-    return config.actions.reduce((list, action) => {
+    return config.value.actions.reduce((list, action) => {
       if (action.action === 'command' && action.arguments) {
         if (!cnc.commands) {
           return list
@@ -26,10 +26,10 @@ export const useLoading = (config) => {
   })
   const workerNames = ['outline']
   const workerActions = computed(() => {
-    if (!config.actions) {
+    if (!config.value.actions) {
       return []
     }
-    return config.actions
+    return config.value.actions
       .map((action) => action.action)
       .filter((action) => {
         return workerNames.includes(action)
