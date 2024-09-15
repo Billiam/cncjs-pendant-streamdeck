@@ -1,6 +1,6 @@
 import { useUiStore } from '@/stores/ui'
-import { computed } from 'vue'
 import Color from '@/lib/color'
+import { computed } from 'vue'
 
 export const useColor = (config) => {
   const ui = useUiStore()

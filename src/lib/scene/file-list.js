@@ -1,10 +1,11 @@
-import { useButtonStore } from '@/stores/buttons'
-import { useCncStore } from '@/stores/cnc'
-import { useFileListStore } from '@/stores/file-list'
-import { useGcodeStore } from '@/stores/gcode'
-import { useUiStore } from '@/stores/ui'
-import { computed } from 'vue'
 import SparkMD5 from 'spark-md5'
+import { computed } from 'vue'
+
+import { useFileListStore } from '@/stores/file-list'
+import { useButtonStore } from '@/stores/buttons'
+import { useGcodeStore } from '@/stores/gcode'
+import { useCncStore } from '@/stores/cnc'
+import { useUiStore } from '@/stores/ui'
 
 const mergeConfigs = (...configs) => {
   const config = Object.assign(...configs)

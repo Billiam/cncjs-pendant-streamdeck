@@ -1,7 +1,7 @@
-import { useButtonStore } from '@/stores/buttons'
-import { useCncStore } from '@/stores/cnc'
 import { useFileListStore } from '@/stores/file-list'
+import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
+import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 
 export default (container) => {

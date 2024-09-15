@@ -1,5 +1,5 @@
-import { useCncStore } from '@/stores/cnc'
 import { useRunGcode } from '@/lib/run-gcode'
+import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 
 export default (socket, port, machineConfig, actionBus, ackBus) => {

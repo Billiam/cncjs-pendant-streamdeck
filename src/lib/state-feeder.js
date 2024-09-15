@@ -1,7 +1,8 @@
-import { useUiStore } from '@/stores/ui'
 import { GcodeWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
-import { useCncStore } from '@/stores/cnc'
 import { useGcodeStore } from '@/stores/gcode'
+import { useCncStore } from '@/stores/cnc'
+import { useUiStore } from '@/stores/ui'
+
 const gcodeWorker = GcodeWorker()
 
 export default (socket, ackBus) => {

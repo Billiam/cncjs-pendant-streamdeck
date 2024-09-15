@@ -1,10 +1,12 @@
 <script>
+import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
+import debounce from 'lodash/debounce'
+import { storeToRefs } from 'pinia'
+
 import { renderToolpath } from '@/lib/gcode-renderer'
 import { useGcodeStore } from '@/stores/gcode'
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
-import { storeToRefs } from 'pinia'
-import debounce from 'lodash/debounce'
 </script>
+
 <script setup>
 const gcode = useGcodeStore()
 const canvas = ref(null)

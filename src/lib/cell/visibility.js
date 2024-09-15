@@ -1,6 +1,8 @@
 import { computed } from 'vue'
-import { useEvaluate } from './evaluate'
+
 import watchCompute from '@/lib/watch-compute'
+import { useEvaluate } from './evaluate'
+
 export const useVisibility = (config, buttonActions) => {
   const { scopedEvaluate } = useEvaluate()
 

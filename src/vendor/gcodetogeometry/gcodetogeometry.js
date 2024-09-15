@@ -1,7 +1,7 @@
-import util from './util.js'
 import { StraightLine as StraightLine$0 } from './lines.js'
 import { CurvedLine as CurvedLine$0 } from './lines.js'
 import { parseLine } from '../gcode-parser'
+import util from './util.js'
 
 var StraightLine = { StraightLine: StraightLine$0 }.StraightLine
 var CurvedLine = { CurvedLine: CurvedLine$0 }.CurvedLine

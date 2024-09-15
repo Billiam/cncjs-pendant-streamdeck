@@ -1,6 +1,6 @@
+import escape from 'lodash/escape'
 import sharp from 'sharp'
 import path from 'path'
-import escape from 'lodash/escape'
 const icons = {}
 const inputSize = 144
 

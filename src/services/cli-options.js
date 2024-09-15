@@ -1,6 +1,6 @@
 import program from 'commander'
-import fs from 'fs'
 import path from 'path'
+import fs from 'fs'
 
 program
   .version(__APP_VERSION__)

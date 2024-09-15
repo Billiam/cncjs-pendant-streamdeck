@@ -1,7 +1,7 @@
 import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
-import { computed } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 export const useGcode = (config) => {
   const gcode = useGcodeStore()

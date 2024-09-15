@@ -1,5 +1,5 @@
-import fs from 'fs'
 import sharp from 'sharp'
+import fs from 'fs'
 let canvas
 let isNodeCanvas = false
 let isPureImage = false

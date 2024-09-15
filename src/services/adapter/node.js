@@ -1,11 +1,13 @@
-import jwt from 'jsonwebtoken'
-import cliOptions from '../cli-options'
+const { performance: nodePerformance } = require('perf_hooks')
+const chalk = require('chalk')
 const fsModule = require('fs')
 const path = require('path')
+
 const { Worker } = require('worker_threads')
+import cliOptions from '../cli-options'
+import jwt from 'jsonwebtoken'
+
 const fs = fsModule.promises
-const chalk = require('chalk')
-const { performance: nodePerformance } = require('perf_hooks')
 
 const getUserHome = function () {
   return process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']

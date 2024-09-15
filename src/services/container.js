@@ -1,12 +1,12 @@
-import bus from '@/lib/bus'
-import CncActions from '@/lib/cnc-actions'
-import CncApi from '@/lib/cnc-api'
-import Connection from '@/lib/connection'
-import StateFeeder from '@/lib/state-feeder'
-import ButtonActions from '@/services/button-actions'
-import MethodProvider from '@/lib/cation/method-provider'
 import { fetchConfig, getAccessToken, getOptions } from 'adapter'
+import MethodProvider from '@/lib/cation/method-provider'
+import ButtonActions from '@/services/button-actions'
+import StateFeeder from '@/lib/state-feeder'
+import CncActions from '@/lib/cnc-actions'
+import Connection from '@/lib/connection'
 import Cation from 'cation/dist/cation'
+import CncApi from '@/lib/cnc-api'
+import bus from '@/lib/bus'
 
 export default () => {
   const container = new Cation()

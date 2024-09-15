@@ -1,17 +1,19 @@
-import { SleepScreen } from '@/lib/cli/sleep-screen'
-import { useFileList } from '@/lib/scene/file-list'
-import Container from '@/services/container'
-import Bootstrap from '@/services/bootstrap'
-import { openStreamDeck } from '@elgato-stream-deck/node'
-import { useButtonStore } from '@/stores/buttons'
-import { useScenesStore } from '@/stores/scenes'
-import { useUiStore } from '@/stores/ui'
-import { computed, ref, watch, watchEffect } from 'vue'
-import { arrayWrap } from '@/lib/enumerable'
-import { createPinia, setActivePinia } from 'pinia'
-import CliButton from '@/lib/cli/button'
 import Sharp from 'sharp'
 import path from 'path'
+import { openStreamDeck } from '@elgato-stream-deck/node'
+import { computed, ref, watch, watchEffect } from 'vue'
+import { createPinia, setActivePinia } from 'pinia'
+
+import { SleepScreen } from '@/lib/cli/sleep-screen'
+import { useFileList } from '@/lib/scene/file-list'
+import { useButtonStore } from '@/stores/buttons'
+import { useScenesStore } from '@/stores/scenes'
+import Container from '@/services/container'
+import Bootstrap from '@/services/bootstrap'
+import { arrayWrap } from '@/lib/enumerable'
+import CliButton from '@/lib/cli/button'
+import { useUiStore } from '@/stores/ui'
+
 
 const container = Container()
 setActivePinia(createPinia())

@@ -133,7 +133,7 @@ export function preview(size, colors, settings, canvas) {
   const minLineWidth = settings.lineWidth ?? 0.08
   const lineWidth = Math.max(minLineWidth, ratio * 0.003)
   const drawSettings = {
-    lineWidth
+    lineWidth,
   }
 
   const imageWidth = Math.abs(size.max.x - size.min.x)

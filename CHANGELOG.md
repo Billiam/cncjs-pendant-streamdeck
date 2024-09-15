@@ -4,14 +4,14 @@
 
 ### 🚀 Added
 
-*  Add loading button overlay while outline is processing ([566faaa](https://github.com/billiam/cncjs-pendant-streamdeck/commit/566faaa))
+- Add loading button overlay while outline is processing ([566faaa](https://github.com/billiam/cncjs-pendant-streamdeck/commit/566faaa))
 
 ## [0.8.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.2...0.8.0?diff=split) (2024-09-01)
 
 ### 📖 Documentation
 
-*  Default absolute position display button to set instead of toggle in example config ([63d45ee](https://github.com/billiam/cncjs-pendant-streamdeck/commit/63d45ee))
-*  Add outline action to example config ([d032783](https://github.com/billiam/cncjs-pendant-streamdeck/commit/d032783))
+- Default absolute position display button to set instead of toggle in example config ([63d45ee](https://github.com/billiam/cncjs-pendant-streamdeck/commit/63d45ee))
+- Add outline action to example config ([d032783](https://github.com/billiam/cncjs-pendant-streamdeck/commit/d032783))
 
 ### 🚀 Added
 
@@ -47,11 +47,11 @@ To fix this, the [`absoluteWorkPosition`](https://billiam.github.io/cncjs-pendan
 
 ### 🩹 Fixes
 
-*  Fixed low update frequency for spindle RPM and feedrate ([7bd7b82](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7bd7b82))
-*  Fix potential error on button release ([7cfe0fd](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7cfe0fd))
-*  Fix outermost gcode line slightly out of frame ([0b828a9](https://github.com/billiam/cncjs-pendant-streamdeck/commit/0b828a9))
-*  Fix axis-to-position actions not working in relative mode ([cc163cb](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc163cb))
-*  Increase jog command frequency for streamdeck usage ([cc4ed5a](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc4ed5a))
+- Fixed low update frequency for spindle RPM and feedrate ([7bd7b82](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7bd7b82))
+- Fix potential error on button release ([7cfe0fd](https://github.com/billiam/cncjs-pendant-streamdeck/commit/7cfe0fd))
+- Fix outermost gcode line slightly out of frame ([0b828a9](https://github.com/billiam/cncjs-pendant-streamdeck/commit/0b828a9))
+- Fix axis-to-position actions not working in relative mode ([cc163cb](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc163cb))
+- Increase jog command frequency for streamdeck usage ([cc4ed5a](https://github.com/billiam/cncjs-pendant-streamdeck/commit/cc4ed5a))
 
 ## [0.7.2](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.7.0...0.7.2?diff=split) (2024-08-18)
 

@@ -1,8 +1,8 @@
-import { useFileListStore } from '@/stores/file-list'
-import { useUiStore } from '@/stores/ui'
-import { useCncStore } from '@/stores/cnc'
-import { useGcodeStore } from '@/stores/gcode'
 import { OutlineWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
+import { useFileListStore } from '@/stores/file-list'
+import { useGcodeStore } from '@/stores/gcode'
+import { useCncStore } from '@/stores/cnc'
+import { useUiStore } from '@/stores/ui'
 
 const outlineWorker = OutlineWorker()
 

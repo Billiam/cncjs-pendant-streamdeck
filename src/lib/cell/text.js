@@ -1,10 +1,11 @@
-import Color from '@/lib/color'
+import { computed } from 'vue'
+import { storeToRefs } from 'pinia'
+
 import TextTemplate from '@/lib/text-template'
-import { computed, ref } from 'vue'
+import { useGcodeStore } from '@/stores/gcode'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
-import { useGcodeStore } from '@/stores/gcode'
-import { storeToRefs } from 'pinia'
+import Color from '@/lib/color'
 
 const alignment = {
   'top left': { v: 'top', h: 'left' },
