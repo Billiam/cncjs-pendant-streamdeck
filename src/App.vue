@@ -52,6 +52,13 @@ onMounted(async () => {
 onBeforeUnmount(() => {
   bootstrap.cleanup()
 })
+
+const smallFontSize = computed(() => {
+  return `${12.5 / columns.value}vw`
+})
+const fontSize = computed(() => {
+  return `${14.5 / columns.value}vw`
+})
 </script>
 
 <template>
@@ -92,7 +99,7 @@ body,
 .scene {
   padding: 1px;
   height: 100%;
-  font-size: 0.5rem;
+  font-size: v-bind(smallFontSize);
   display: grid;
   grid-template-columns: v-bind('"repeat(" + columns + ", minmax(0, 1fr))"');
   grid-template-rows: v-bind('"repeat(" + rows + ", minmax(0, 1fr))"');
@@ -111,14 +118,12 @@ body,
   min-width: 0;
   overflow: hidden;
 }
+div.p-component.p-drawer {
+  width: 30rem;
+}
 @media (min-width: 30em) and (min-height: 20em) {
   .scene {
-    font-size: 1rem;
-  }
-}
-@media (min-width: 50em) and (min-height: 45em) {
-  .scene {
-    font-size: 2rem;
+    font-size: v-bind(smallFontSize);
   }
 }
 </style>
