@@ -38,7 +38,6 @@ const machineCommands = new Set([
   'homing',
   'jog',
   'loadDetailFile',
-  'loadGcode',
   'macro',
   'resetFeedrate',
   'resetRapids',
@@ -345,8 +344,8 @@ export default (actionBus, connectionBus) => {
   const setUserFlag = (id, value) => {
     store.ui.setUserFlag(id, value)
   }
-  const clearUserFlag = (id, value) => {
-    store.ui.clearUserFlag(id, value)
+  const clearUserFlag = (id) => {
+    store.ui.clearUserFlag(id)
   }
   const toggleUserFlag = (id) => {
     store.ui.setUserFlag(id, !store.ui.userFlags[id])
