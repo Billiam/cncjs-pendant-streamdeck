@@ -1,17 +1,18 @@
-import { useLoading } from '@/lib/cell/loading'
-import { useText } from '@/lib/cell/text'
-import { useVisibility } from '@/lib/cell/visibility'
+import { computed, ref, watch, watchEffect } from 'vue'
+import throttle from 'lodash/throttle'
+
 import CliButtonHandler from '@/lib/cli/button-handler'
 import buttonRenderer from '@/lib/cli/button-renderer'
-import animation from '@/lib/cli/animate'
-import Canvas from '@/lib/cli/canvas'
-import uncompute from '@/lib/uncompute'
+import { useVisibility } from '@/lib/cell/visibility'
+import { renderToolpath } from '@/lib/gcode-renderer'
+import { useLoading } from '@/lib/cell/loading'
 import { useColor } from '@/lib/cell/color'
 import { useGcode } from '@/lib/cell/gcode'
-import { computed, ref, watch, watchEffect } from 'vue'
-import { renderToolpath } from '@/lib/gcode-renderer'
+import animation from '@/lib/cli/animate'
+import { useText } from '@/lib/cell/text'
+import uncompute from '@/lib/uncompute'
+import Canvas from '@/lib/cli/canvas'
 import { performance } from 'adapter'
-import throttle from 'lodash/throttle'
 
 export default class CliButton {
   constructor(index, config, { size, buttonActions, iconDirectory, throttle }) {
@@ -57,9 +58,9 @@ export default class CliButton {
   }
 
   setup() {
-    const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(
-      this.config
-    )
+    const config = ref(config)
+
+    const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(config)
 
     const {
       cellTextColor,

@@ -1,9 +1,9 @@
-import { describe, expect, test } from 'vitest'
 import {
   orderByClosest,
   gcodeToPoints,
   pointsToGcode,
 } from '@/lib/gcode-outline'
+import { describe, expect, test } from 'vitest'
 
 describe('orderByClosest', () => {
   test.concurrent('begins at nearest point', () => {

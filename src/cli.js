@@ -1,8 +1,8 @@
-import Sharp from 'sharp'
-import path from 'path'
 import { openStreamDeck } from '@elgato-stream-deck/node'
 import { computed, ref, watch, watchEffect } from 'vue'
 import { createPinia, setActivePinia } from 'pinia'
+import Sharp from 'sharp'
+import path from 'path'
 
 import { SleepScreen } from '@/lib/cli/sleep-screen'
 import { useFileList } from '@/lib/scene/file-list'
@@ -13,7 +13,6 @@ import Bootstrap from '@/services/bootstrap'
 import { arrayWrap } from '@/lib/enumerable'
 import CliButton from '@/lib/cli/button'
 import { useUiStore } from '@/stores/ui'
-
 
 const container = Container()
 setActivePinia(createPinia())
