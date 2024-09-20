@@ -5,12 +5,13 @@ import { ConnectionError } from './connection-error'
 
 const Connection = function (opts, token) {
   const options = { ...opts }
-  options.baudrate ??= 115200
+  options.baudRate ??= 115200
   options.socketAddress ??= 'localhost'
   options.secure ??= false
   options.socketPort ??= 8000
   options.controllerType ??= 'Grbl'
-  options.accessTokenLifetime ??= '30d'
+  options.accessTokenExpiration ??= '30d'
+
   this.options = options
   this.emitter = mitt()
   this.token = token
@@ -19,13 +20,13 @@ const Connection = function (opts, token) {
 const proto = Connection.prototype
 
 proto.validate = function () {
-  const { socketAddress, port, baudrate, controllerType } = this.options
+  const { socketAddress, port, baudRate, controllerType } = this.options
 
   const required = {
     token: this.token,
     socketAddress,
     port,
-    baudrate,
+    baudRate,
     controllerType,
   }
   Object.entries(required).forEach(([key, val]) => {
@@ -33,6 +34,10 @@ proto.validate = function () {
       throw new ConnectionError(`${key} is required and was empty`)
     }
   })
+}
+
+proto.updateConfig = function (options) {
+  this.options = { ...this.options, ...options }
 }
 
 proto.on = function (...args) {
@@ -53,8 +58,8 @@ proto.debug = function () {
   socket.on('connecting', (a) => {
     console.debug('Connecting')
   })
-  socket.on('connect', (data) => {
-    console.log('connected', data)
+  socket.on('connect', () => {
+    console.log('connected')
   })
   socket.on('connect_error', (err) => {
     console.debug(`connect_error due to ${err.message}`, err)
@@ -94,26 +99,46 @@ proto.debug = function () {
   })
 }
 
-proto.openPort = function (port, baudrate, controllerType) {
+proto.openPort = function (port, baudRate, controllerType) {
   this.socket.emit('open', port, {
-    baudrate: Number(baudrate),
+    baudrate: Number(baudRate),
     controllerType,
   })
 }
 
 proto.openSerialPort = function () {
-  const { baudrate, controllerType, port } = this.options
-  this.openPort(port, baudrate, controllerType)
+  const { baudRate, controllerType, port } = this.options
+  this.openPort(port, baudRate, controllerType)
+}
+
+proto.closeSerialPort = function () {
+  this.socket.emit('close', this.options.port)
+}
+
+proto.socketUrl = function () {
+  const { socketAddress, socketPort, secure } = this.options
+
+  return `${secure ? 'wss' : 'ws'}://${socketAddress}:${socketPort}/`
+}
+
+proto.reconnect = function () {
+  if (!this.socket) {
+    return
+  }
+  this.socket.disconnect()
+  this.emitter.emit('disconnected')
+
+  this.validate()
+
+  this.socket.io.uri = this.socketUrl()
+  this.socket.connect()
 }
 
 proto.connect = function () {
-  const { socketAddress, socketPort, secure } = this.options
   this.validate()
 
   return new Promise((resolve, reject) => {
-    const url = `${secure ? 'wss' : 'ws'}://${socketAddress}:${socketPort}/`
-
-    const socket = io.connect(url, {
+    const socket = io.connect(this.socketUrl(), {
       query: `token=${this.token}`,
       transports: ['websocket'],
     })
@@ -136,8 +161,8 @@ proto.connect = function () {
       console.log(`Connected to port ${options.port}`)
       // resolve({ socket })
     })
-
     socket.on('serialport:change', ({ port, inuse }) => {
+      console.log({ change: inuse })
       if (inuse) {
         this.openSerialPort()
         this.emitter.emit('reconnected', { port })
@@ -162,6 +187,8 @@ proto.connect = function () {
     if (import.meta.env.DEV) {
       this.debug()
     }
+
+    return socket
   })
 }
 
