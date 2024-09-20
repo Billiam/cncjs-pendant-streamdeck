@@ -22,7 +22,6 @@ export default (socket, ackBus) => {
       cnc.setSpindleRpm(spindle)
       cnc.setRunState(data.status.activeState)
     },
-
     'serialport:read': (data) => {
       switch (true) {
         case data === 'ok':
@@ -38,6 +37,10 @@ export default (socket, ackBus) => {
         case data.includes('Unlocked'):
           cnc.setLocked(false)
       }
+    },
+    disconnect: () => {
+      cnc.setConnected(false)
+      cnc.setSocketConnected(false)
     },
     'serialport:change': ({ inuse }) => {
       cnc.setConnected(inuse)
@@ -98,6 +101,7 @@ export default (socket, ackBus) => {
       }
     },
     connect: () => {
+      cnc.setSocketConnected(true)
       cnc.clearActiveCommands()
     },
   }

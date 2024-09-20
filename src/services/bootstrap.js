@@ -1,3 +1,4 @@
+import { useConnectionStore } from '@/stores/connection'
 import { useFileListStore } from '@/stores/file-list'
 import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
@@ -32,15 +33,13 @@ export default (container) => {
     stateFeeder?.destroy()
     buttonActions?.destroy()
 
-    container.remove('stateFeeder')
-    container.remove('cncActions')
-    container.remove('buttonActions')
+    container.clearCache()
   }
 
   const initializeStores = async () => {
     const uiStore = useUiStore()
     const cncStore = useCncStore()
-    const fileListStore = useFileListStore()
+    const connectionStore = useConnectionStore()
     const buttonStore = useButtonStore()
     const sceneStore = useScenesStore()
 
@@ -74,6 +73,17 @@ export default (container) => {
     uiStore.setBgColor(uiConfig.bgColor)
     uiStore.setProgressColor(uiConfig.progressColor)
 
+    connectionStore.setConfig({ ...config.cncjs })
+
+    await connectListeners()
+
+    return true
+  }
+
+  const connectListeners = async () => {
+    const cncStore = useCncStore()
+    const fileListStore = useFileListStore()
+
     // more store population
     await Promise.all([
       (async () => {
@@ -86,8 +96,8 @@ export default (container) => {
         cncStore.setToken(token)
       })(),
     ])
-    const socket = await container.get('socket')
     try {
+      const socket = await container.get('socket')
       await socket.connect()
     } catch (e) {
       console.error('socket failed')
@@ -98,12 +108,12 @@ export default (container) => {
       container.get('cncActions'),
       container.get('buttonActions'),
     ])
-
-    return true
   }
 
   return {
+    addConnectionListeners,
     cleanup,
+    connectListeners,
     start,
   }
 }

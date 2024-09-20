@@ -76,8 +76,12 @@ export default () => {
   container.register(
     'socket',
     async (connection) => {
-      const { socket } = await connection.connect()
-      return socket
+      try {
+        await connection.connect()
+      } catch (e) {
+        console.error({ e })
+      }
+      return connection.socket
     },
     {
       args: ['@connection'],

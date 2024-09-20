@@ -5,6 +5,14 @@ import { computed } from 'vue'
 import { useDynamicScene } from '@/lib/dynamic-scene'
 import { useUiStore } from '@/stores/ui'
 
+import ToggleSwitch from 'primevue/toggleswitch'
+import TabPanels from 'primevue/tabpanels'
+import TabPanel from 'primevue/tabpanel'
+import TabList from 'primevue/tablist'
+import Tabs from 'primevue/tabs'
+import Tab from 'primevue/tab'
+
+import ConnectionSettings from '@/components/editor/ConnectionSettings.vue'
 import EditButtonList from '@/components/editor/EditButtonList.vue'
 import ButtonEditor from '@/components/editor/ButtonEditor.vue'
 import SceneList from '@/components/editor/SceneList.vue'
@@ -17,7 +25,7 @@ const { scene, sceneType } = useDynamicScene()
 const editor = useEditorStore()
 const ui = useUiStore()
 
-const { rows, columns } = storeToRefs(ui)
+const { rows, columns, web } = storeToRefs(ui)
 const resolution = 144
 const gap = 10
 const width = computed(
@@ -31,25 +39,71 @@ const gridWidth = computed(
   () => columns.value * 144 + (columns.value - 1) * 10 + 12
 )
 const gridHeight = computed(() => rows.value * 144 + (rows.value - 1) * 10 + 12)
+
+const isStreamdeck = computed({
+  get() {
+    return !web.value
+  },
+  set(value) {
+    web.value = !value
+  },
+})
 </script>
 
 <template>
   <div class="page">
-    <div class="column main">
-      <scene-list></scene-list>
-      <div class="preview">
-        <component
-          v-if="scene"
-          :is="sceneType"
-          :editor="true"
-          :buttons="scene.buttons"
-        ></component>
-      </div>
-    </div>
-    <div class="column editor">
-      <edit-button-list></edit-button-list>
-      <button-editor></button-editor>
-    </div>
+    <Tabs value="layout" fluid>
+      <TabList>
+        <Tab value="layout">Layout</Tab>
+        <Tab value="ui">UI</Tab>
+        <Tab value="cnc">CNC</Tab>
+        <Tab value="connection">Connection</Tab>
+      </TabList>
+      <TabPanels>
+        <TabPanel value="layout">
+          <div class="layout-editor">
+            <div class="column main">
+              <h2>Scenes</h2>
+              <scene-list></scene-list>
+              <div class="preview">
+                <component
+                  v-if="scene"
+                  :is="sceneType"
+                  :editor="true"
+                  :buttons="scene.buttons"
+                ></component>
+              </div>
+
+              <div class="scene-settings flex-row flex-center">
+                <ToggleSwitch
+                  inputId="use_streamdeck_display"
+                  v-model="isStreamdeck"
+                ></ToggleSwitch>
+                <label for="use_streamdeck_display"
+                  >Use streamdeck display</label
+                >
+              </div>
+            </div>
+            <div class="column editor">
+              <edit-button-list></edit-button-list>
+              <button-editor></button-editor>
+            </div>
+          </div>
+        </TabPanel>
+        <TabPanel value="ui">
+          <div class="column">
+            <h2>UI settings</h2>
+          </div>
+        </TabPanel>
+        <TabPanel value="cnc"><h2>CNC Settings</h2></TabPanel>
+        <TabPanel value="connection">
+          <div class="column">
+            <h2>Connection Settings</h2>
+            <connection-settings></connection-settings>
+          </div>
+        </TabPanel>
+      </TabPanels>
+    </Tabs>
   </div>
 </template>
 
@@ -63,6 +117,13 @@ const gridHeight = computed(() => rows.value * 144 + (rows.value - 1) * 10 + 12)
 .page {
   padding-top: 30px;
 
+  //display: flex;
+  //flex-wrap: wrap;
+}
+.scene-settings {
+  margin-top: 2rem;
+}
+.layout-editor {
   display: flex;
   flex-wrap: wrap;
   min-width: 850px;
@@ -215,10 +276,4 @@ const gridHeight = computed(() => rows.value * 144 + (rows.value - 1) * 10 + 12)
 ::v-global(button) {
   font-family: inherit;
 }
-//::v-global(.p-dropdown-label),
-//::v-global(.p-dropdown-item) {
-//  font-family: Lato !important;
-//  font-weight: bold !important;
-//  font-size: 1.2vw !important;
-//}
 </style>

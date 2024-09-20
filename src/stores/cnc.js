@@ -72,6 +72,7 @@ export const useCncStore = defineStore({
   state: () => ({
     connected: false,
     connecting: false,
+    socketConnected: false,
     token: null,
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
@@ -139,6 +140,9 @@ export const useCncStore = defineStore({
     },
     setConnecting(connecting = true) {
       this.connecting = connecting
+    },
+    setSocketConnected(connected) {
+      this.socketConnected = connected
     },
     setToken(token) {
       this.token = token

@@ -1,5 +1,5 @@
 <script>
-import { computed } from 'vue'
+import { computed, provide } from 'vue'
 
 import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
@@ -11,6 +11,7 @@ import Theme from '@/components/Theme.vue'
 <script setup>
 const container = Container()
 const bootstrap = Bootstrap(container)
+provide('container', container)
 
 import { onMounted, onBeforeUnmount, provide, ref } from 'vue'
 import { storeToRefs } from 'pinia'
@@ -22,6 +23,7 @@ const buttonActions = ref()
 container.get('buttonActions').then((handler) => {
   buttonActions.value = handler
 })
+container.register('bootstrap', bootstrap, { type: 'static' })
 provide('buttonActions', buttonActions)
 
 onMounted(async () => {
