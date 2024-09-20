@@ -68,7 +68,7 @@ export const useUiStore = defineStore({
       }
       return new Date(state.fileDetails.ctime).toLocaleString()
     },
-    isWeb: () => !import.meta.env.SSR,
+    isWeb: (state) => state.web,
     displayBrightness: (state) => state.brightness,
   },
 

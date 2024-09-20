@@ -7,6 +7,7 @@ export const useEditorStore = defineStore({
     activeRow: null,
     activeColumn: null,
     activeButton: null,
+    tab: null,
   }),
 
   actions: {
