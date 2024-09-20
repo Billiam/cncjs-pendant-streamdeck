@@ -6,6 +6,7 @@ import { groupedActionObjects } from '@/lib/grouped-actions'
 
 const actions = import.meta.glob('./actions/*.vue', { eager: true })
 
+import Fieldset from 'primevue/fieldset'
 import Select from 'primevue/select'
 
 const eventTypes = schema.definitions.action.properties.event.enum
@@ -114,15 +115,14 @@ const documentationLink = computed(() => {
     <label class="label">Mouse trigger</label>
     <Select v-model="eventModel" :options="eventTypes" fluid></Select>
 
-    <fieldset class="options">
-      <legend>Options</legend>
+    <Fieldset class="options" legend="Options">
       <component
         v-if="optionsComponent"
         :is="optionsComponent"
         v-model="optionsModel"
       ></component>
       <div v-else><em>None</em></div>
-    </fieldset>
+    </Fieldset>
   </fieldset>
 </template>
 
@@ -138,8 +138,9 @@ const documentationLink = computed(() => {
     background-color: #0e0e0e;
   }
 }
-.options {
-  border: 1px solid #222;
+.options,
+:deep(.p-fieldset-legend) {
+  background: #131313;
 }
 .action-link {
   display: block;
