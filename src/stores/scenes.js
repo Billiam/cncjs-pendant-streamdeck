@@ -1,3 +1,5 @@
+import { useButtonStore } from '@/stores/buttons'
+import { useUiStore } from '@/stores/ui'
 import { defineStore } from 'pinia'
 
 export const useScenesStore = defineStore('scenes', {
@@ -17,6 +19,30 @@ export const useScenesStore = defineStore('scenes', {
       if (this._scenes[scene] == null) {
         this._scenes[scene] = { buttons: [] }
       }
+    },
+    removeScene(scene) {
+      delete this._scenes[scene]
+
+      const buttonStore = useButtonStore()
+      buttonStore.deleteScene(scene)
+
+      const uiStore = useUiStore()
+      uiStore.deleteScene(scene)
+    },
+    renameScene(oldName, newName) {
+      if (!this._scenes[oldName]) {
+        return
+      }
+      this._scenes[newName] = this._scenes[oldName]
+      delete this._scenes[oldName]
+      this._scenes[newName].name = newName
+
+      const buttonStore = useButtonStore()
+      buttonStore.renameScene(oldName, newName)
+
+      // update navigation stack
+      const uiStore = useUiStore()
+      uiStore.renameScene(oldName, newName)
     },
     addButton(scene, button, row, column) {
       if (button == null) {

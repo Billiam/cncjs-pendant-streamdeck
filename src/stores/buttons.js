@@ -10,6 +10,35 @@ export const useButtonStore = defineStore({
     button: (state) => (buttonName) => state._buttons[buttonName],
   },
   actions: {
+    renameScene(oldName, newName) {
+      const sceneActions = ['setScene', 'swapScene', 'navigate']
+      Object.values(this._buttons).forEach((button) => {
+        button.actions?.forEach((action) => {
+          if (sceneActions.includes(action.action)) {
+            if (action.arguments?.[0] === oldName) {
+              console.log('Setting new action', button)
+              action.arguments[0] = newName
+            }
+          }
+        })
+      })
+    },
+    deleteScene(scene) {
+      const sceneActions = ['setScene', 'swapScene', 'navigate']
+      Object.values(this._buttons).forEach((button) => {
+        if (button.actions) {
+          button.actions = button.actions.filter((action) => {
+            if (!sceneActions.includes(action.action)) {
+              return true
+            }
+            if (action.arguments?.[0] === scene) {
+              console.log('Removing', action)
+            }
+            return action.arguments?.[0] !== scene
+          })
+        }
+      })
+    },
     updateButton(button, key, value) {
       this._buttons[button][key] = value
     },

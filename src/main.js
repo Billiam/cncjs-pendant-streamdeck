@@ -4,6 +4,7 @@ import PrimeVue from 'primevue/config'
 import { createPinia } from 'pinia'
 import { createApp } from 'vue'
 
+import ConfirmationService from 'primevue/confirmationservice'
 import Tooltip from 'primevue/tooltip'
 
 import HomeView from './views/Home.vue'
@@ -30,6 +31,7 @@ app.use(PrimeVue, {
     options: {},
   },
 })
+app.use(ConfirmationService)
 app.directive('tooltip', Tooltip)
 app.provide('pinia', pinia)
 app.mount('#app')

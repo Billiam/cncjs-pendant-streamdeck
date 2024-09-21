@@ -3,6 +3,9 @@ import { computed, ref, watch } from 'vue'
 import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
 
+import ConfirmDialog from 'primevue/confirmdialog'
+import { useConfirm } from 'primevue/useconfirm'
+import ContextMenu from 'primevue/contextmenu'
 import TabPanels from 'primevue/tabpanels'
 import InputText from 'primevue/inputtext'
 import TabPanel from 'primevue/tabpanel'
@@ -23,6 +26,27 @@ const ui = useUiStore()
 
 const { scenes } = storeToRefs(sceneStore)
 const { sceneName } = storeToRefs(ui)
+
+const sortedScenes = computed(() => {
+  return Object.keys(scenes.value).sort((a, b) => a.localeCompare(b))
+})
+
+const confirm = useConfirm()
+
+const confirmDelete = (scene) => {
+  confirm.require({
+    group: 'delete',
+    message: 'Are you sure you want to delete this scene?',
+    header: 'Confirmation',
+    accept: () => {
+      sceneStore.removeScene(scene)
+    },
+    rejectProps: {
+      severity: 'secondary',
+      outlined: true,
+    },
+  })
+}
 
 watch(
   sceneName,
@@ -58,28 +82,84 @@ const addScene = () => {
     sceneStore.addScene(newSceneName.value)
     ui.goToScene(newSceneName.value)
   }
-  dialogOpen.value = false
+  addSceneDialogOpen.value = false
 }
 const newSceneName = ref('')
+const renameSceneName = ref('')
 
-const dialogOpen = ref(false)
+const menu = ref()
+const selectedSceneTab = ref()
+
+const addSceneDialogOpen = ref(false)
+const renameSceneDialogOpen = ref(false)
+
+const sceneToRename = ref('')
+
+watch(sceneToRename, (value) => {
+  renameSceneName.value = value
+})
+
+const contextClick = (event, scene) => {
+  selectedSceneTab.value = scene
+  menu.value.show(event)
+}
+const deleteScene = () => {
+  confirmDelete(selectedSceneTab.value)
+}
+const renameScene = () => {
+  sceneToRename.value = selectedSceneTab.value
+  renameSceneDialogOpen.value = true
+}
+const saveRenameScene = () => {
+  if (renameSceneName.value === '' || sceneStore.scene(renameSceneName.value)) {
+    return
+  }
+  sceneStore.renameScene(sceneToRename.value, renameSceneName.value)
+  renameSceneDialogOpen.value = false
+}
+
+const contextOptions = [
+  {
+    label: 'Delete',
+    command: deleteScene,
+    disabled: () => selectedSceneTab.value === 'home',
+  },
+  {
+    label: 'Rename',
+    command: renameScene,
+    disabled: () => selectedSceneTab.value === 'home',
+  },
+]
 </script>
 
 <template>
+  <ConfirmDialog group="delete"></ConfirmDialog>
+
   <div class="scene-list">
     <div class="flex-row flex-center">
       <Tabs v-model:value="tabModel" scrollable fluid>
         <TabList>
-          <Tab v-for="(buttons, tab) in scenes" :key="tab" :value="tab">
+          <Tab
+            v-for="tab in sortedScenes"
+            :key="tab"
+            :value="tab"
+            @contextmenu="contextClick($event, tab)"
+            aria-haspopup="true"
+          >
             {{ tab }}
           </Tab>
         </TabList>
+        <ContextMenu
+          ref="menu"
+          :model="contextOptions"
+          @hide="selectedSceneTab = null"
+        />
       </Tabs>
-      <Button label="Add" @click="dialogOpen = true"></Button>
+      <Button label="Add" @click="addSceneDialogOpen = true"></Button>
     </div>
   </div>
 
-  <Dialog v-model:visible="dialogOpen" modal header="New scene name">
+  <Dialog v-model:visible="addSceneDialogOpen" modal header="New scene name">
     <InputText
       v-model="newSceneName"
       fluid
@@ -94,7 +174,28 @@ const dialogOpen = ref(false)
         type="button"
         label="Cancel"
         severity="secondary"
-        @click="dialogOpen = false"
+        @click="addSceneDialogOpen = false"
+      ></Button>
+    </div>
+  </Dialog>
+
+  <Dialog v-model:visible="renameSceneDialogOpen" modal header="Rename scene">
+    <p>Rename {{ sceneToRename }} scene to {{ renameSceneName }}</p>
+    <InputText
+      fluid
+      autofocus
+      :invalid="!valid"
+      v-model="renameSceneName"
+    ></InputText>
+
+    <div class="button-row">
+      <Button type="button" label="Save" @click="saveRenameScene"></Button>
+
+      <Button
+        type="button"
+        label="Cancel"
+        severity="secondary"
+        @click="renameSceneDialogOpen = false"
       ></Button>
     </div>
   </Dialog>

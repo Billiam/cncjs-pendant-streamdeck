@@ -182,6 +182,19 @@ export const useUiStore = defineStore({
         this.sceneStack.push(scene)
       }
     },
+    renameScene(oldName, newName) {
+      this.sceneStack.forEach((scene, index) => {
+        if (scene === oldName) {
+          this.sceneStack[index] = newName
+        }
+      })
+    },
+    deleteScene(sceneName) {
+      this.sceneStack = this.sceneStack.filter((scene) => scene !== sceneName)
+      if (this.sceneStack.length === 0) {
+        this.sceneStack.push('home')
+      }
+    },
 
     goBack(count = 1) {
       if (this.sceneStack.length > 1) {
