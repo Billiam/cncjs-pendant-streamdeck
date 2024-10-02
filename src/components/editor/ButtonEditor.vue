@@ -14,6 +14,7 @@ import InputGroup from 'primevue/inputgroup'
 import InputText from 'primevue/inputtext'
 import Textarea from 'primevue/textarea'
 import Checkbox from 'primevue/checkbox'
+import vTooltip from 'primevue/tooltip'
 import Select from 'primevue/select'
 import Drawer from 'primevue/drawer'
 import Button from 'primevue/button'
@@ -182,7 +183,6 @@ const setDimensions = (r, c) => {
       <div class="flex-row">
         <InputGroup>
           <InputNumber
-            inputId="integeronly"
             :min="1"
             :max="uiRows"
             v-model="rows"
@@ -192,7 +192,6 @@ const setDimensions = (r, c) => {
 
         <InputGroup>
           <InputNumber
-            inputId="integeronly"
             :min="1"
             :max="uiColumns"
             v-model="columns"

@@ -1,9 +1,10 @@
 <script>
+import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
+
 import { useArrayVmodel } from '@/lib/array-v-model'
 
 import SelectButton from 'primevue/selectbutton'
 
-import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
 const rapidSpeeds = schema.actionSchemas.rapids.properties.arguments.items.enum
 </script>
 

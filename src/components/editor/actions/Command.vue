@@ -1,8 +1,8 @@
 <script>
 import { ref } from 'vue'
 
-import { useUuidModel } from '@/lib/editor/uuid-model'
 import { useArrayVmodel } from '@/lib/array-v-model'
+import { useUuidModel } from '@/lib/editor/uuid-model'
 import { useCncStore } from '@/stores/cnc'
 
 import Select from 'primevue/select'
@@ -42,5 +42,6 @@ const { uuidArray } = useUuidModel(commandId, commandName)
     editable
     fluid
     filter
+    autoFilterFocus
   ></Select>
 </template>

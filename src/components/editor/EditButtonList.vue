@@ -1,12 +1,13 @@
 <script>
-import { useButtonStore } from '@/stores/buttons'
-import { useScenesStore } from '@/stores/scenes'
-import { useEditorStore } from '@/stores/editor'
-import { computed, nextTick, ref } from 'vue'
-import { arrayWrap } from '@/lib/enumerable'
-import { useUiStore } from '@/stores/ui'
-import { storeToRefs } from 'pinia'
 import omit from 'lodash/omit'
+import { storeToRefs } from 'pinia'
+import { computed, nextTick, ref } from 'vue'
+
+import { arrayWrap } from '@/lib/enumerable'
+import { useButtonStore } from '@/stores/buttons'
+import { useEditorStore } from '@/stores/editor'
+import { useScenesStore } from '@/stores/scenes'
+import { useUiStore } from '@/stores/ui'
 
 import Button from 'primevue/button'
 
@@ -52,7 +53,7 @@ const removeButton = (buttonName) => {
     sceneName.value,
     buttonName,
     activeRow.value,
-    activeColumn.value
+    activeColumn.value,
   )
   if (buttonName === activeButton.value) {
     nextTick(() => {
@@ -73,7 +74,7 @@ const addButton = () => {
       sceneName.value,
       buttonName,
       activeRow.value,
-      activeColumn.value
+      activeColumn.value,
     )
     newButtonName.value = ''
     editor.setActiveButton(buttonName)
@@ -106,8 +107,15 @@ const addButton = () => {
     </div>
 
     <div>
-      <button-list v-model="newButtonName"></button-list>
-      <Button fluid primary label="Add button" @click="addButton"></Button>
+      <div class="flex-row flex-center">
+        <button-list v-model="newButtonName"></button-list>
+        <Button
+          primary
+          label="Add button"
+          @click="addButton"
+          :disabled="newButtonName === ''"
+        />
+      </div>
     </div>
   </div>
 </template>
@@ -123,6 +131,7 @@ const addButton = () => {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  min-height: 100px;
 }
 .cell-wrapper {
   position: relative;
@@ -142,5 +151,8 @@ const addButton = () => {
 .button-list button.remove-button {
   top: 16px;
   right: 16px;
+}
+.p-select {
+  margin-bottom: 0;
 }
 </style>

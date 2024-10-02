@@ -19,5 +19,5 @@ const option0 = itemModel(0)
 
 <template>
   <label class="label">Back count</label>
-  <InputNumber :min="1" integeronly fluid v-model="option0"></InputNumber>
+  <InputNumber :min="1" fluid v-model="option0"></InputNumber>
 </template>

@@ -1,13 +1,13 @@
 <script>
-import { computed, toRefs, watch, ref } from 'vue'
-
 import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
-import { groupedActionObjects } from '@/lib/grouped-actions'
+import { computed, ref, toRefs, watch } from 'vue'
 
-const actions = import.meta.glob('./actions/*.vue', { eager: true })
+import { groupedActionObjects } from '@/lib/grouped-actions'
 
 import Fieldset from 'primevue/fieldset'
 import Select from 'primevue/select'
+
+const actions = import.meta.glob('./actions/*.vue', { eager: true })
 
 const eventTypes = schema.definitions.action.properties.event.enum
 
@@ -32,7 +32,7 @@ const components = Object.entries(schema.actionSchemas).reduce(
 
     return result
   },
-  {}
+  {},
 )
 </script>
 
@@ -88,6 +88,9 @@ watch(optionsComponent, () => {
 })
 
 const documentationLink = computed(() => {
+  if (!props.action.action) {
+    return
+  }
   const anchor = props.action.action.toLowerCase()
   return `https://billiam.github.io/cncjs-pendant-streamdeck/docs/actions/#${anchor}`
 })
@@ -103,12 +106,17 @@ const documentationLink = computed(() => {
       :options="groupedActionObjects"
       optionGroupLabel="label"
       optionGroupChildren="children"
+      autoFilterFocus
       filter
       fluid
     >
     </Select>
 
-    <a :href="documentationLink" target="_blank" class="action-link"
+    <a
+      :href="documentationLink"
+      v-if="documentationLink"
+      target="_blank"
+      class="action-link"
       >{{ action.action }} documentation</a
     >
 
@@ -134,9 +142,10 @@ const documentationLink = computed(() => {
   background-color: #131313;
   padding: 10px;
   margin-bottom: 8px;
-  &:deep(.select, .text-input) {
-    background-color: #0e0e0e;
-  }
+}
+.action:deep(.select),
+.action:deep(.text-input) {
+  background-color: #0e0e0e;
 }
 .options,
 :deep(.p-fieldset-legend) {
@@ -149,7 +158,7 @@ const documentationLink = computed(() => {
 :deep(.p-inputtext),
 :deep(.p-select),
 :deep(.p-inputgroupaddon) {
-  background-color: #1a1a1a;
+  background-color: #101010;
 }
 :deep(.p-inputtext:disabled),
 :deep(.p-togglebutton:disabled) {

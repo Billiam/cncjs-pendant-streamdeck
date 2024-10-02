@@ -2,8 +2,8 @@
 import { useArrayVmodel } from '@/lib/array-v-model'
 import { useScenesStore } from '@/stores/scenes'
 
-import SceneSelect from './SceneSelect.vue'
 import AxisSelect from './AxisSelect.vue'
+import SceneSelect from './SceneSelect.vue'
 </script>
 
 <script setup>

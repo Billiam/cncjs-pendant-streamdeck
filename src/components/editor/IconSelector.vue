@@ -1,7 +1,8 @@
 <script>
-import iconlist from '@/lib/iconlist.json'
-import { ref, watch, computed } from 'vue'
 import debounce from 'lodash/debounce'
+import { computed, ref, watch } from 'vue'
+
+import iconlist from '@/lib/iconlist.json'
 
 import InputText from 'primevue/inputtext'
 </script>
@@ -14,8 +15,10 @@ defineProps({
 const emits = defineEmits(['update:modelValue'])
 const emit = (value) => emits('update:modelValue', value)
 
-const icons = Object.entries(iconlist).flatMap(([key, icons]) =>
-  icons.map((icon) => `${key}/${icon}`)
+const icons = Object.freeze(
+  Object.entries(iconlist).flatMap(([key, icons]) =>
+    icons.map((icon) => `${key}/${icon}`),
+  ),
 )
 
 const input = ref('')
@@ -27,7 +30,7 @@ watch(
   input,
   debounce(() => {
     debouncedInput.value = input.value
-  }, 300)
+  }, 300),
 )
 const groups = Object.keys(iconlist)
 

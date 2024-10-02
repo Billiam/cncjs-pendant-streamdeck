@@ -1,12 +1,13 @@
 <script>
+import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
+
 import { useArrayVmodel } from '@/lib/array-v-model'
 import { useScenesStore } from '@/stores/scenes'
 
-import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
+import Select from 'primevue/select'
+
 const inputCommands =
   schema.actionSchemas.inputCommand.properties['arguments'].items[0].enum
-
-import Select from 'primevue/select'
 </script>
 
 <script setup>

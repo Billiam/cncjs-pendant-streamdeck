@@ -1,7 +1,8 @@
 <script>
-import { useScenesStore } from '@/stores/scenes'
-import { useVmodel } from '@/lib/v-model'
 import { storeToRefs } from 'pinia'
+
+import { useVmodel } from '@/lib/v-model'
+import { useScenesStore } from '@/stores/scenes'
 
 import Select from 'primevue/select'
 </script>
@@ -27,5 +28,6 @@ const { sceneNames } = storeToRefs(sceneStore)
     :options="sceneNames"
     fluid
     filter
+    autoFilterFocus
   ></Select>
 </template>

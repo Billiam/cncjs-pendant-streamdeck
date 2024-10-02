@@ -1,19 +1,20 @@
 <script>
-import { computed, ref, watch } from 'vue'
-import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
+import { computed, ref, watch } from 'vue'
 
-import ConfirmDialog from 'primevue/confirmdialog'
-import { useConfirm } from 'primevue/useconfirm'
-import ContextMenu from 'primevue/contextmenu'
-import TabPanels from 'primevue/tabpanels'
-import InputText from 'primevue/inputtext'
-import TabPanel from 'primevue/tabpanel'
-import TabList from 'primevue/tablist'
-import Dialog from 'primevue/dialog'
+import { useUiStore } from '@/stores/ui'
+
 import Button from 'primevue/button'
-import Tabs from 'primevue/tabs'
+import ConfirmDialog from 'primevue/confirmdialog'
+import ContextMenu from 'primevue/contextmenu'
+import Dialog from 'primevue/dialog'
+import InputText from 'primevue/inputtext'
 import Tab from 'primevue/tab'
+import TabList from 'primevue/tablist'
+import TabPanel from 'primevue/tabpanel'
+import TabPanels from 'primevue/tabpanels'
+import Tabs from 'primevue/tabs'
+import { useConfirm } from 'primevue/useconfirm'
 </script>
 
 <script setup>
@@ -53,9 +54,12 @@ watch(
   (name) => {
     editorStore.setActiveRow(0)
     editorStore.setActiveColumn(0)
-    editorStore.setActiveButton(scenes.value[name]?.buttons?.[0]?.[0])
+
+    const scene = sceneStore.scene(name)
+    const button = scene?.buttons?.[0]?.[0]
+    editorStore.setActiveButton(button)
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 const setScene = (name) => {

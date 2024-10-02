@@ -3,8 +3,8 @@ import { defineEmits, defineProps } from 'vue'
 
 import { useArrayVmodel } from '@/lib/array-v-model'
 
-import SceneSelect from './SceneSelect.vue'
 import AxisSelect from './AxisSelect.vue'
+import SceneSelect from './SceneSelect.vue'
 import SignSelect from './SignSelect.vue'
 </script>
 

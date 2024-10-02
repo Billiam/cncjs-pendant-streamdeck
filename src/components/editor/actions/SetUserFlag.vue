@@ -4,10 +4,10 @@ import { computed, ref, watch } from 'vue'
 import { useArrayVmodel } from '@/lib/array-v-model'
 import { useScenesStore } from '@/stores/scenes'
 
-import SelectButton from 'primevue/selectbutton'
-import RadioButton from 'primevue/radiobutton'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
+import RadioButton from 'primevue/radiobutton'
+import SelectButton from 'primevue/selectbutton'
 </script>
 
 <script setup>

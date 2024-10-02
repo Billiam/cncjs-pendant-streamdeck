@@ -1,11 +1,12 @@
 <script>
-import { useArrayVmodel } from '@/lib/array-v-model'
-import { useScenesStore } from '@/stores/scenes'
 import { computed, watch } from 'vue'
 
+import { useArrayVmodel } from '@/lib/array-v-model'
+import { useScenesStore } from '@/stores/scenes'
+
+import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import InputNumber from 'primevue/inputnumber'
-import InputGroup from 'primevue/inputgroup'
 </script>
 
 <script setup>
@@ -65,7 +66,7 @@ watch(
   () => {
     migrateInputs()
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

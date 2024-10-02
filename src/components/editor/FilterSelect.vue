@@ -1,6 +1,6 @@
 <script>
-import { ref, computed, watch } from 'vue'
 import debounce from 'lodash/debounce'
+import { computed, ref, watch } from 'vue'
 </script>
 
 <script setup>
@@ -28,8 +28,8 @@ watch(
       debouncedInput.value = input.value
     },
     200,
-    { leading: true }
-  )
+    { leading: true },
+  ),
 )
 
 const filteredOptions = computed(() => {

@@ -1,9 +1,10 @@
 <script>
-import { useButtonStore } from '@/stores/buttons'
-import { useVmodel } from '@/lib/v-model'
-import { useUiStore } from '@/stores/ui'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
+
+import { useVmodel } from '@/lib/v-model'
+import { useButtonStore } from '@/stores/buttons'
+import { useUiStore } from '@/stores/ui'
 
 import AutoComplete from 'primevue/autocomplete'
 import Select from 'primevue/select'
@@ -37,15 +38,27 @@ const search = ({ query }) => {
   const lowerQuery = query.toLowerCase()
 
   filteredButtons.value = buttonNames.value.filter((name) =>
-    name.toLowerCase().includes(lowerQuery)
+    name.toLowerCase().includes(lowerQuery),
   )
   return filteredButtons
 }
+const emptyLabel = computed(() => {
+  if (model.value === '') {
+    return 'Enter button name'
+  } else {
+    return `Create new button named ${model.value}`
+  }
+})
 </script>
 
 <template>
-  <label class="label">Button name</label>
-  <Select editable v-model="model" :options="buttonNames" fluid></Select>
+  <Select
+    editable
+    v-model="model"
+    :options="buttonNames"
+    fluid
+    :emptyMessage="emptyLabel"
+  ></Select>
 </template>
 
 <style scoped>
