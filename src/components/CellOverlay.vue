@@ -34,7 +34,7 @@ const gridColumn = computed(() => props.column + 1)
 
 const buttons = computed(() => {
   return arrayWrap(
-    scenes.scene(sceneName.value)?.buttons?.[props.row]?.[props.column]
+    scenes.scene(sceneName.value)?.buttons?.[props.row]?.[props.column],
   )
 })
 
@@ -53,7 +53,11 @@ const edit = () => {
       empty: buttons.length === 0,
     }"
   >
-    <button class="btn" @click="edit">edit {{ buttons.length }}</button>
+    <button class="btn" @click="edit">
+      <img src="/icons/fluent-ui/edit.png" />
+
+      {{ buttons.length }}
+    </button>
   </div>
 </template>
 
@@ -74,6 +78,12 @@ const edit = () => {
   z-index: 100;
   position: relative;
 
+  transition: border-radius 0.2s;
+
+  //
+  &:hover {
+    opacity: 1;
+  }
   &.active {
     border-color: green;
     outline: 2px solid var(--color-highlight);
@@ -81,22 +91,31 @@ const edit = () => {
   }
   &.empty:not(.active) {
     border-color: rgba(255, 255, 255, 0.3);
-    .btn {
-      opacity: 0.4;
-    }
   }
   .btn {
     pointer-events: all;
     position: absolute;
-    bottom: 0;
-    right: 0;
+    bottom: 2px;
+    right: 2px;
     padding: 6px;
 
     cursor: pointer;
     border: 1px solid rgba(255, 255, 255, 0.8);
     background: rgba(0, 0, 0, 0.7);
     color: #efefef;
-    border-radius: 2px;
+    border-radius: 100px;
+
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    &:hover {
+      opacity: 1;
+      border-color: #fff;
+    }
+
+    img {
+      vertical-align: middle;
+      max-width: 20px;
+    }
   }
 }
 </style>
