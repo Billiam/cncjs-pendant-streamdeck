@@ -1,12 +1,13 @@
 import { fetchConfig, getAccessToken, getOptions } from 'adapter'
-import MethodProvider from '@/lib/cation/method-provider'
-import ButtonActions from '@/services/button-actions'
-import StateFeeder from '@/lib/state-feeder'
-import CncActions from '@/lib/cnc-actions'
-import Connection from '@/lib/connection'
 import Cation from 'cation/dist/cation'
-import CncApi from '@/lib/cnc-api'
+
 import bus from '@/lib/bus'
+import MethodProvider from '@/lib/cation/method-provider'
+import CncActions from '@/lib/cnc-actions'
+import CncApi from '@/lib/cnc-api'
+import Connection from '@/lib/connection'
+import StateFeeder from '@/lib/state-feeder'
+import ButtonActions from '@/services/button-actions'
 
 export default () => {
   const container = new Cation()
@@ -33,7 +34,7 @@ export default () => {
     {
       args: ['@connectionConfig'],
       type: 'method',
-    }
+    },
   )
   container.register('port', (config) => config.port, {
     args: ['@connectionConfig'],
@@ -65,13 +66,13 @@ export default () => {
 
   container.register(
     'connectionConfig',
-    (config, options) => {
+    (config = {}, options) => {
       return {
         ...(config.cncjs || {}),
         ...(options || {}),
       }
     },
-    { args: ['@config', '@options'], type: 'method', singleton: true }
+    { args: ['@config', '@options'], type: 'method', singleton: true },
   )
   container.register(
     'socket',
@@ -87,7 +88,7 @@ export default () => {
       args: ['@connection'],
       type: 'method',
       singleton: true,
-    }
+    },
   )
   container.register('cncjsConfig', (config) => config.cncjs, {
     args: ['@config'],
@@ -103,7 +104,7 @@ export default () => {
     singleton: true,
   })
   container.register('cncActions', CncActions, {
-    args: ['@socket', '@port', '@machineConfig', '@actionBus', '@ackBus'],
+    args: ['@socket', '@actionBus', '@ackBus'],
     type: 'method',
     singleton: true,
   })
