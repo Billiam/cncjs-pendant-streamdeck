@@ -63,8 +63,9 @@ export const useButtonStore = defineStore({
       this._buttons[buttonName] = button
     },
     setButtons(buttons) {
-      console.log({ buttons })
-      this._buttons = buttons
+      if (buttons) {
+        this._buttons = buttons
+      }
     },
   },
 })

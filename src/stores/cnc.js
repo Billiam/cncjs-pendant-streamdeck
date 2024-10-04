@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 // TODO: Take speeds and distances from config
 const jogDistances = {
   mm: [0.001, 0.01, 0.1, 1, 10, 20, 50, 100],
@@ -121,7 +122,8 @@ export const useCncStore = defineStore({
       units: 'G21',
       wcs: 'G54',
     },
-    axes: ['x', 'y', 'z', 'a', 'b', 'c'],
+    axes: ['x', 'y', 'z'],
+    axisSpeeds: {},
 
     spindleRpm: 0,
     feedRate: 0,
@@ -186,7 +188,12 @@ export const useCncStore = defineStore({
     },
     setAxes(axes) {
       if (axes) {
-        this.axes = Object.freeze(axes)
+        this.axes = axes
+      }
+    },
+    setAxisSpeeds(speeds) {
+      if (speeds) {
+        this.axisSpeeds = speeds
       }
     },
     setVersion(version) {
@@ -209,7 +216,7 @@ export const useCncStore = defineStore({
       this.jogSpeed = listIncrease(
         this.jogSpeed,
         this.speeds,
-        this.speedFallback
+        this.speedFallback,
       )
     },
 
@@ -217,7 +224,7 @@ export const useCncStore = defineStore({
       this.jogSpeed = listDecrease(
         this.jogSpeed,
         this.speeds,
-        this.speedFallback
+        this.speedFallback,
       )
     },
     setError(error) {

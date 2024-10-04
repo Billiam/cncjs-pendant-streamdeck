@@ -1,10 +1,13 @@
+import { defineStore } from 'pinia'
+
 import { useButtonStore } from '@/stores/buttons'
 import { useUiStore } from '@/stores/ui'
-import { defineStore } from 'pinia'
 
 export const useScenesStore = defineStore('scenes', {
   state: () => ({
-    _scenes: {},
+    _scenes: {
+      home: { buttons: [] },
+    },
   }),
   getters: {
     scenes: (state) => state._scenes,
@@ -13,7 +16,9 @@ export const useScenesStore = defineStore('scenes', {
   },
   actions: {
     setScenes(scenes) {
-      this._scenes = scenes
+      if (scenes) {
+        this._scenes = scenes
+      }
     },
     addScene(scene) {
       if (this._scenes[scene] == null) {

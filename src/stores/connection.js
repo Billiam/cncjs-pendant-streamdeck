@@ -18,7 +18,7 @@ export const useConnectionStore = defineStore({
       this.port = config.port
       this.secure = config.secure ?? false
       this.socketAddress = config.socketAddress ?? 'localhost'
-      this.socketPort = config.socketPort ?? '8000'
+      this.socketPort = config.socketPort ?? 8000
       this.controllerType = config.controllerType ?? 'Grbl'
     },
   },

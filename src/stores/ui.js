@@ -1,4 +1,29 @@
+import { isObject } from 'lodash/lang'
 import { defineStore } from 'pinia'
+
+const streamdeckFields = [
+  'bgColor',
+  'brightness',
+  'columns',
+  'rows',
+  'font',
+  'fontSize',
+  'gcodeColors',
+  'gcodeLimit',
+  'lineHeight',
+  'palette',
+  'progressColor',
+  'textColor',
+  'textShadow',
+  'throttle',
+]
+const streamdeckGetters = streamdeckFields.reduce((fields, fieldName) => {
+  fields[fieldName] = (state) =>
+    state.web || state.streamdeckOverride[fieldName] !== true
+      ? state[`_${fieldName}`]
+      : (state.streamdeckConfig[fieldName] ?? state[`_${fieldName}`])
+  return fields
+}, {})
 
 export const useUiStore = defineStore({
   id: 'ui',
@@ -7,19 +32,19 @@ export const useUiStore = defineStore({
     active: true,
     activityTimeout: null,
     asleep: false,
-    bgColor: 2,
-    brightness: 60,
-    columns: 5,
-    font: 'monospace',
-    fontSize: 12,
-    lineHeight: 1.1,
+    _bgColor: 2,
+    _brightness: 60,
+    _columns: 5,
+    _font: 'monospace',
+    _fontSize: 12,
+    _lineHeight: 1.1,
     feedrateInterval: 1,
     spindleInterval: 1,
     fileDetailsPath: null,
     fileDetails: {},
     fileDetailsSort: 'alpha_asc',
-    gcodeColors: {},
-    gcodeLimit: 0,
+    _gcodeColors: {},
+    _gcodeLimit: 0,
     iconSize: 72,
     input: {
       value: '',
@@ -27,17 +52,35 @@ export const useUiStore = defineStore({
       type: '',
       callback: () => {},
     },
-    pageColor: null,
-    palette: ['#000', '#fff'],
-    progressColor: 4,
-    rows: 3,
-    sceneStack: [],
-    textColor: 1,
-    textShadow: false,
-    throttle: 0,
+    pageColor: '#111111',
+    _palette: ['#000000', '#ffffff'],
+    _progressColor: 4,
+    _rows: 3,
+    sceneStack: ['home'],
+    _textColor: 1,
+    _textShadow: false,
+    _throttle: 0,
     timeout: 0,
     userFlags: {},
     web: true,
+
+    streamdeckConfig: {},
+    streamdeckOverride: {
+      bgColor: false,
+      brightness: false,
+      columns: false,
+      font: false,
+      fontSize: false,
+      lineHeight: false,
+      gcodeColors: false,
+      gcodeLimit: false,
+      palette: false,
+      progressColor: false,
+      rows: false,
+      textColor: false,
+      textShadow: false,
+      throttle: false,
+    },
   }),
 
   getters: {
@@ -70,6 +113,7 @@ export const useUiStore = defineStore({
     },
     isWeb: (state) => state.web,
     displayBrightness: (state) => state.brightness,
+    ...streamdeckGetters,
   },
 
   actions: {
@@ -106,19 +150,33 @@ export const useUiStore = defineStore({
     toggleSpindleInterval() {
       this.spindleInterval = this.spindleInterval === 1 ? 10 : 1
     },
+    setStreamdeckConfig(config) {
+      this.streamdeckConfig = config ?? {}
+      // establish override value
+      for (const [key, value] of Object.entries(this.streamdeckConfig)) {
+        if (value != null && this.streamdeckOverride.hasOwnProperty(key)) {
+          this.streamdeckOverride[key] = true
+        }
+      }
+    },
+    setWebConfig(config) {
+      this.webConfig = config
+    },
     setGrid(rows, columns) {
-      this.columns = columns
-      this.rows = rows
+      if (rows && columns) {
+        this._columns = columns
+        this._rows = rows
+      }
     },
     setBgColor(color) {
-      this.bgColor = color
+      this._bgColor = color
     },
     clearUserFlag(id) {
       delete this.userFlags[id]
     },
     setBrightness(brightness) {
       if (brightness != null) {
-        this.brightness = Math.max(Math.min(100, brightness), 10)
+        this._brightness = Math.max(Math.min(100, brightness), 10)
       }
     },
     setIconSize(size) {
@@ -128,7 +186,7 @@ export const useUiStore = defineStore({
       if (!colors) {
         return
       }
-      this.gcodeColors = Object.freeze(colors)
+      this._gcodeColors = Object.freeze(colors)
     },
     activity() {
       this.active = true
@@ -145,7 +203,7 @@ export const useUiStore = defineStore({
       this.setBrightness(this.brightness + 10)
     },
     setGcodeLimit(limit) {
-      this.gcodeLimit = limit
+      this._gcodeLimit = limit
     },
     setTimeout(timeout) {
       this.timeout = timeout
@@ -157,16 +215,18 @@ export const useUiStore = defineStore({
       this.userFlags[id] = value
     },
     setProgressColor(color) {
-      this.progressColor = color
+      this._progressColor = color
     },
     setPalette(colors) {
-      this.palette = colors
+      if (colors) {
+        this._palette = colors
+      }
     },
     setThrottle(throttle) {
       if (throttle != null) {
         const millis = parseInt(throttle)
         if (millis) {
-          this.throttle = millis
+          this._throttle = millis
         }
       }
     },
