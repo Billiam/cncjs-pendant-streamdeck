@@ -4,7 +4,7 @@ export const useRunGcode = (socket, port) => {
   const cnc = useCncStore()
 
   const command = (...args) => {
-    socket.emit('command', port, ...args)
+    socket.emit('command', port.value, ...args)
   }
 
   const runGcode = (...args) => {
