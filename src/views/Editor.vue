@@ -1,25 +1,32 @@
 <script>
 import { storeToRefs } from 'pinia'
-import { computed } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useDynamicScene } from '@/lib/dynamic-scene'
+import { useMediaQuery } from '@/lib/media-query'
+import { usePrimevue } from '@/lib/primevue'
+import { useEditorStore } from '@/stores/editor'
 import { useUiStore } from '@/stores/ui'
 
-import ToggleSwitch from 'primevue/toggleswitch'
-import TabPanels from 'primevue/tabpanels'
-import TabPanel from 'primevue/tabpanel'
-import TabList from 'primevue/tablist'
-import Tabs from 'primevue/tabs'
+import Dialog from 'primevue/dialog'
 import Tab from 'primevue/tab'
+import TabList from 'primevue/tablist'
+import TabPanel from 'primevue/tabpanel'
+import TabPanels from 'primevue/tabpanels'
+import Tabs from 'primevue/tabs'
+import ToggleSwitch from 'primevue/toggleswitch'
 
+import ButtonEditor from '@/components/editor/ButtonEditor.vue'
+import CncSettings from '@/components/editor/CncSettings.vue'
 import ConnectionSettings from '@/components/editor/ConnectionSettings.vue'
 import EditButtonList from '@/components/editor/EditButtonList.vue'
-import ButtonEditor from '@/components/editor/ButtonEditor.vue'
 import SceneList from '@/components/editor/SceneList.vue'
+import StreamdeckSettings from '@/components/editor/StreamdeckSettings.vue'
+import UiSettings from '@/components/editor/UiSettings.vue'
 </script>
 
 <script setup>
-import { useEditorStore } from '@/stores/editor'
+usePrimevue()
 
 const { scene, sceneType } = useDynamicScene()
 const editor = useEditorStore()
@@ -27,19 +34,31 @@ const ui = useUiStore()
 
 const { rows, columns, web } = storeToRefs(ui)
 const resolution = 144
-const gap = 10
+
+const showSettings = ref(false)
+const settingsTab = ref('connection')
+
+const gap = computed(() => 10 * (isStreamdeck.value ? 2 : 1))
 const width = computed(
-  () => columns.value * resolution + (columns.value + 1) * gap
+  () => columns.value * resolution + (columns.value + 1) * gap.value,
 )
-const height = computed(() => rows.value * resolution + (rows.value + 1) * 10)
+const height = computed(
+  () => rows.value * resolution + (rows.value + 1) * gap.value,
+)
 
 const gridColumns = computed(() => `repeat(${columns.value}, 144px)`)
 const gridRows = computed(() => `repeat(${rows.value}, 144px)`)
 const gridWidth = computed(
-  () => columns.value * 144 + (columns.value - 1) * 10 + 12
+  () => columns.value * 144 + (columns.value - 1) * gap.value + 12,
 )
-const gridHeight = computed(() => rows.value * 144 + (rows.value - 1) * 10 + 12)
+const gridHeight = computed(
+  () => rows.value * 144 + (rows.value - 1) * gap.value + 12,
+)
+const minWidth = computed(
+  () => `(min-width: calc(${gridWidth.value}px + 20rem))`,
+)
 
+const { match } = useMediaQuery(minWidth)
 const isStreamdeck = computed({
   get() {
     return !web.value
@@ -52,58 +71,82 @@ const isStreamdeck = computed({
 
 <template>
   <div class="page">
-    <Tabs value="layout" fluid>
-      <TabList>
-        <Tab value="layout">Layout</Tab>
-        <Tab value="ui">UI</Tab>
-        <Tab value="cnc">CNC</Tab>
-        <Tab value="connection">Connection</Tab>
-      </TabList>
-      <TabPanels>
-        <TabPanel value="layout">
-          <div class="layout-editor">
-            <div class="column main">
-              <h2>Scenes</h2>
-              <scene-list></scene-list>
-              <div class="preview">
-                <component
-                  v-if="scene"
-                  :is="sceneType"
-                  :editor="true"
-                  :buttons="scene.buttons"
-                ></component>
-              </div>
+    <button class="settings-button" @click="showSettings = true">
+      <img class="icon" src="/icons/fluent-ui/settings.png" />
+    </button>
+    <Dialog
+      v-model:visible="showSettings"
+      modal
+      header="Settings"
+      position="top"
+      style="width: 40rem"
+      :dismissableMask="true"
+    >
+      <Tabs v-model:value="settingsTab" fluid>
+        <TabList>
+          <Tab value="ui">UI</Tab>
+          <Tab value="streamdeck">Streamdeck</Tab>
+          <Tab value="cnc">CNC</Tab>
+          <Tab value="connection">Connection</Tab>
+        </TabList>
+        <TabPanels>
+          <TabPanel value="ui">
+            <div class="column">
+              <h2>UI settings</h2>
+              <ui-settings></ui-settings>
+            </div>
+          </TabPanel>
+          <TabPanel value="streamdeck">
+            <div class="column">
+              <h2>Streamdeck settings</h2>
+              <p>
+                These settings are optional and override the existing
+                <span>UI settings</span>
+              </p>
+              <streamdeck-settings></streamdeck-settings>
+            </div>
+          </TabPanel>
+          <TabPanel value="cnc">
+            <div class="column">
+              <h2>CNC Settings</h2>
+              <cnc-settings></cnc-settings>
+            </div>
+          </TabPanel>
+          <TabPanel value="connection">
+            <div class="column">
+              <h2>Connection Settings</h2>
+              <connection-settings></connection-settings>
+            </div>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
+    </Dialog>
 
-              <div class="scene-settings flex-row flex-center">
-                <ToggleSwitch
-                  inputId="use_streamdeck_display"
-                  v-model="isStreamdeck"
-                ></ToggleSwitch>
-                <label for="use_streamdeck_display"
-                  >Use streamdeck display</label
-                >
-              </div>
-            </div>
-            <div class="column editor">
-              <edit-button-list></edit-button-list>
-              <button-editor></button-editor>
-            </div>
-          </div>
-        </TabPanel>
-        <TabPanel value="ui">
-          <div class="column">
-            <h2>UI settings</h2>
-          </div>
-        </TabPanel>
-        <TabPanel value="cnc"><h2>CNC Settings</h2></TabPanel>
-        <TabPanel value="connection">
-          <div class="column">
-            <h2>Connection Settings</h2>
-            <connection-settings></connection-settings>
-          </div>
-        </TabPanel>
-      </TabPanels>
-    </Tabs>
+    <div class="layout-editor" :class="{ wide: match }">
+      <div class="column main">
+        <scene-list></scene-list>
+        <div class="preview" :class="{ streamdeck: isStreamdeck }">
+          <component
+            v-if="scene"
+            :is="sceneType"
+            :editor="true"
+            :buttons="scene.buttons"
+          ></component>
+        </div>
+
+        <div class="scene-settings flex-row flex-center">
+          <ToggleSwitch
+            inputId="use_streamdeck_display"
+            v-model="isStreamdeck"
+          ></ToggleSwitch>
+          <label for="use_streamdeck_display">Use streamdeck display</label>
+        </div>
+      </div>
+      <div class="column editor">
+        <edit-button-list></edit-button-list>
+        <button-editor></button-editor>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -111,14 +154,27 @@ const isStreamdeck = computed({
 :root {
   --color-highlight: #15cbcb;
 }
+body {
+  background: #111;
+}
 </style>
 
 <style lang="scss" scoped>
+.settings-button {
+  position: absolute;
+  top: 0.5rem;
+  right: 0.5rem;
+  background: none;
+  border: 0;
+  cursor: pointer;
+
+  .icon {
+    max-width: 30px;
+    max-height: 30px;
+  }
+}
 .page {
   padding-top: 30px;
-
-  //display: flex;
-  //flex-wrap: wrap;
 }
 .scene-settings {
   margin-top: 2rem;
@@ -126,29 +182,36 @@ const isStreamdeck = computed({
 .layout-editor {
   display: flex;
   flex-wrap: wrap;
-  min-width: 850px;
+}
+.wide {
+  .layout-editor {
+    flex-wrap: nowrap;
+  }
+  .main {
+    position: sticky;
+    top: 30px;
+  }
+  .editor {
+    flex-basis: 20rem;
+  }
 }
 .main {
-  position: sticky;
-  top: 30px;
+  padding-left: 20px;
 }
 .column {
-  flex-grow: 1;
   flex-shrink: 1;
-  flex-basis: 20em;
-  padding: 0 20px;
   height: 100%;
-  max-width: 850px;
 }
 .editor {
-  max-width: none;
+  padding-top: 2.5rem;
+  flex-grow: 1;
+  flex-basis: 100%;
 }
 
 .preview {
   padding: 8px;
-  background-color: #111;
   display: inline-block;
-
+  background: var(--color-background);
   :deep(.scene) {
     font-size: 1.2rem;
     grid-gap: 10px;
@@ -158,6 +221,21 @@ const isStreamdeck = computed({
     overflow: hidden;
     width: v-bind('gridWidth + "px"');
     height: v-bind('gridHeight + "px"');
+  }
+  &.streamdeck {
+    background: #111;
+    &:deep(.scene) {
+      font-size: 31px; // !important;
+      grid-gap: 20px;
+
+      .cell,
+      .overlay {
+        border-radius: 20px;
+      }
+      .cell:not(.disabled) .button::before {
+        border-radius: 15px 15px 0 0;
+      }
+    }
   }
 }
 :deep() {
@@ -176,13 +254,29 @@ const isStreamdeck = computed({
     border-bottom: 1px solid #333;
     padding: 10px 0;
   }
+  .form-row:last-of-type {
+    border-bottom: 0;
+    padding-bottom: 0;
+  }
+  .form-row:first-of-type {
+    padding-top: 0;
+  }
   .flex-row {
     display: flex;
     gap: 10px;
     margin-bottom: 10px;
   }
+  .flex-wrap {
+    flex-wrap: wrap;
+  }
+  .flex-row:last-child {
+    margin-bottom: 0;
+  }
   .flex-center {
     align-items: center;
+  }
+  .flex-stretch {
+    align-items: stretch;
   }
   .text-input {
     background-color: #131313;
@@ -250,7 +344,8 @@ const isStreamdeck = computed({
     width: 26px;
     height: 26px;
     border: 1px solid rgba(255, 255, 255, 0.7);
-    background: url('/icons/system-uicons/trash.png') no-repeat center,
+    background:
+      url('/icons/system-uicons/trash.png') no-repeat center,
       rgba(0, 0, 0, 0.7);
     background-size: 18px 18px;
     position: absolute;
