@@ -1,8 +1,8 @@
 <script>
 import { computed, provide } from 'vue'
 
-import Container from '@/services/container'
 import Bootstrap from '@/services/bootstrap'
+import Container from '@/services/container'
 import { useUiStore } from '@/stores/ui'
 
 import Theme from '@/components/Theme.vue'
@@ -81,6 +81,7 @@ body,
 
   overflow: hidden;
   min-width: 0;
+  transition: grid-gap 0.2s;
 }
 .cell {
   width: 100%;
@@ -90,6 +91,8 @@ body,
 
   min-width: 0;
   overflow: hidden;
+
+  transition: border-radius 0.5s;
 }
 div.p-component.p-drawer {
   width: 30rem;
