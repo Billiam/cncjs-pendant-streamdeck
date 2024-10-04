@@ -56,5 +56,5 @@ export const groupedActions = {
 export const groupedActionObjects = Object.entries(groupedActions).map(
   ([group, children]) => {
     return { label: group, children }
-  }
+  },
 )

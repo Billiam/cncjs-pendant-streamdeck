@@ -1,11 +1,13 @@
+import jwt from 'jsonwebtoken'
+
+import cliOptions from '../cli-options'
+
 const { performance: nodePerformance } = require('perf_hooks')
 const chalk = require('chalk')
 const fsModule = require('fs')
 const path = require('path')
 
 const { Worker } = require('worker_threads')
-import cliOptions from '../cli-options'
-import jwt from 'jsonwebtoken'
 
 const fs = fsModule.promises
 
@@ -45,7 +47,7 @@ export const getAccessToken = async (secret, expiration) => {
   secret = await getSecret(secret)
   if (!secret) {
     console.error(
-      chalk.red('Secret is required, see --secret command line option')
+      chalk.red('Secret is required, see --secret command line option'),
     )
     process.exit(1)
   }

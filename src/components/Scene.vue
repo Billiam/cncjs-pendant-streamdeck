@@ -1,12 +1,12 @@
 <script>
 import { storeToRefs } from 'pinia'
 
-import { useButtonStore } from '@/stores/buttons'
 import { arrayWrap } from '@/lib/enumerable'
+import { useButtonStore } from '@/stores/buttons'
 import { useUiStore } from '@/stores/ui'
 
-import CellOverlay from './CellOverlay.vue'
 import Cell from './Cell.vue'
+import CellOverlay from './CellOverlay.vue'
 </script>
 
 <script setup>

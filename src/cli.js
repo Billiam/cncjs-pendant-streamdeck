@@ -1,17 +1,17 @@
 import { openStreamDeck } from '@elgato-stream-deck/node'
-import { computed, ref, watch, watchEffect } from 'vue'
+import path from 'path'
 import { createPinia, setActivePinia } from 'pinia'
 import Sharp from 'sharp'
-import path from 'path'
+import { computed, ref, watch, watchEffect } from 'vue'
 
+import CliButton from '@/lib/cli/button'
 import { SleepScreen } from '@/lib/cli/sleep-screen'
+import { arrayWrap } from '@/lib/enumerable'
 import { useFileList } from '@/lib/scene/file-list'
+import Bootstrap from '@/services/bootstrap'
+import Container from '@/services/container'
 import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
-import Container from '@/services/container'
-import Bootstrap from '@/services/bootstrap'
-import { arrayWrap } from '@/lib/enumerable'
-import CliButton from '@/lib/cli/button'
 import { useUiStore } from '@/stores/ui'
 
 const container = Container()
@@ -152,7 +152,7 @@ const run = async () => {
 
       sceneButtons.value = Object.freeze(buttonList)
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   const effectiveButtons = computed(() => {
@@ -164,7 +164,7 @@ const run = async () => {
           .find((buttonPosition) => buttonPosition.button.show.value)
         return buttonList
       },
-      {}
+      {},
     )
   })
   watch(sceneButtons, (current, previous) => {

@@ -1,25 +1,25 @@
-import { computed, ref, watch, watchEffect } from 'vue'
+import { performance } from 'adapter'
 import throttle from 'lodash/throttle'
+import { computed, ref, watch, watchEffect } from 'vue'
 
-import CliButtonHandler from '@/lib/cli/button-handler'
-import buttonRenderer from '@/lib/cli/button-renderer'
-import { useVisibility } from '@/lib/cell/visibility'
-import { renderToolpath } from '@/lib/gcode-renderer'
-import { useLoading } from '@/lib/cell/loading'
 import { useColor } from '@/lib/cell/color'
 import { useGcode } from '@/lib/cell/gcode'
-import animation from '@/lib/cli/animate'
+import { useLoading } from '@/lib/cell/loading'
 import { useText } from '@/lib/cell/text'
-import uncompute from '@/lib/uncompute'
+import { useVisibility } from '@/lib/cell/visibility'
+import animation from '@/lib/cli/animate'
+import CliButtonHandler from '@/lib/cli/button-handler'
+import buttonRenderer from '@/lib/cli/button-renderer'
 import Canvas from '@/lib/cli/canvas'
-import { performance } from 'adapter'
+import { renderToolpath } from '@/lib/gcode-renderer'
+import uncompute from '@/lib/uncompute'
 
 export default class CliButton {
   constructor(index, config, { size, buttonActions, iconDirectory, throttle }) {
     this.index = index
     this.config = config
     this.buffers = Array.from(
-      Array((config.rows ?? 1) * (config.columns ?? 1))
+      Array((config.rows ?? 1) * (config.columns ?? 1)),
     ).map(() => ref())
     this.size = size
     this.buttonActions = buttonActions
@@ -77,7 +77,7 @@ export default class CliButton {
     const height = (this.config.rows ?? 1) * this.size
     this.buttonHandler = new CliButtonHandler(
       this.config.actions,
-      this.buttonActions
+      this.buttonActions,
     )
     const { renderGcode, gcodeColors } = useGcode(this.config)
     const { show, enabled } = useVisibility(this.config, this.buttonActions)
@@ -95,7 +95,7 @@ export default class CliButton {
           color = cellBgColor.value
         }
       }
-      return color ?? '#000'
+      return color ?? '#000000'
     })
     const holdPercent = ref(0)
     let holdAnimation
@@ -140,7 +140,7 @@ export default class CliButton {
           loadingAnimation.start()
         }
       },
-      { immediate: !!loading.value }
+      { immediate: !!loading.value },
     )
 
     const gcodeLine = ref()
@@ -173,7 +173,7 @@ export default class CliButton {
           renderGcode.value,
           settings,
           updateGcodeLine,
-          halted
+          halted,
         )
       })
     }
@@ -190,7 +190,7 @@ export default class CliButton {
           this.buffers.forEach((buffer, i) => {
             buffer.value = newBuffers[i] || null
           })
-        }
+        },
       )
     }
     const throttledRender = this.throttle

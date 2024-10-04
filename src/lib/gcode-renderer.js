@@ -13,7 +13,7 @@ export const renderToolpath = (
   parsedGcode,
   settings,
   callback = () => {},
-  halted = () => false
+  halted = () => false,
 ) => {
   const colors = { ...defaultColors, ...(settings.colors || {}) }
   const options = { autosize: true, ...settings }
@@ -57,7 +57,7 @@ const animatedDraw = async ({
   }
   const linesPerFrame = Math.max(
     1,
-    Math.floor(lines.length / ((duration / 1000) * fps))
+    Math.floor(lines.length / ((duration / 1000) * fps)),
   )
 
   const wait = animatedWait(1000 / fps)

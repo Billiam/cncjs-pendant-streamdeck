@@ -1,4 +1,4 @@
-import { token, Compiler } from 'simple-evaluate'
+import { Compiler, token } from 'simple-evaluate'
 
 const splitText = (text) => text.split(/(?={{(?:.*?)}})|(?<={{(?:.*?)}})/g)
 

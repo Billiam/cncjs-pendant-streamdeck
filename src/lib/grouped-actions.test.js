@@ -1,6 +1,7 @@
 import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
-import { groupedActions } from '@/lib/grouped-actions'
 import { describe, expect, test } from 'vitest'
+
+import { groupedActions } from '@/lib/grouped-actions'
 
 const actionTypes = schema.definitions.action.properties.action.enum
 

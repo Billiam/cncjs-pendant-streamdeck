@@ -1,4 +1,4 @@
-import { computed, defineProps, defineEmits } from 'vue'
+import { computed, defineEmits, defineProps } from 'vue'
 
 export const useVmodel = (props, emits, defaultValue = null) => {
   const model = computed({

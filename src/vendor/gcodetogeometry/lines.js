@@ -1,4 +1,5 @@
 import util from './util.js'
+
 /**
  * This file contains the classes managing the lines. The lines are
  * the representation of the G0, G1, G2 and G3 commands.
@@ -218,7 +219,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
       angle = util.findAngleOrientedVectors2(
         { x: bez90.p0[axes.re], y: bez90.p0[axes.im] },
         cs,
-        that.clockwise === false
+        that.clockwise === false,
       )
       for (i = 0; i < num90; i++) {
         arcs.push(util.copyObject(bez90))
@@ -232,7 +233,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
       angle = util.findAngleOrientedVectors2(
         { x: bezSmall.p0[axes.re], y: bezSmall.p0[axes.im] },
         cs,
-        that.clockwise === false
+        that.clockwise === false,
       )
       if (num90 !== 0) {
         angle += num90 * 1.570796326794897 * sign
@@ -379,7 +380,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
         x: start[axes.re] - center[axes.re],
         y: start[axes.im] - center[axes.im],
       },
-      { x: end[axes.re] - center[axes.re], y: end[axes.im] - center[axes.im] }
+      { x: end[axes.re] - center[axes.re], y: end[axes.im] - center[axes.im] },
     )
     if (clockwise === true) {
       if (radius > 0 && -Math.PI <= aCSCE && aCSCE <= 0) {
@@ -440,7 +441,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
         end,
         parsedCommand.r * delta,
         clockwise,
-        crossAxe
+        crossAxe,
       )
       if (center === false) {
         return false
@@ -454,7 +455,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
     var a = util.findAngleOrientedVectors2(
       cs,
       { x: reValue, y: imValue },
-      that.clockwise === false
+      that.clockwise === false,
     )
     return util.isInclude(a, 0, angleBezier) === true
   }
@@ -521,7 +522,7 @@ var CurvedLine = function (index, start, end, parsedCommand, settings) {
       parsedCommand,
       that.clockwise,
       settings.crossAxe,
-      settings.inMm
+      settings.inMm,
     )
     that.crossAxe = settings.crossAxe
     if (parsedCommand.f === undefined) {

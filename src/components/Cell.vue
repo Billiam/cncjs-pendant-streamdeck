@@ -1,17 +1,17 @@
 <script>
-import { computed, inject, toRefs } from 'vue'
 import { storeToRefs } from 'pinia'
+import { computed, inject, toRefs } from 'vue'
 
-import { useVisibility } from '@/lib/cell/visibility'
-import { useLoading } from '@/lib/cell/loading'
-import { useGcodeStore } from '@/stores/gcode'
 import { useColor } from '@/lib/cell/color'
-import { useCncStore } from '@/stores/cnc'
+import { useLoading } from '@/lib/cell/loading'
 import { useText } from '@/lib/cell/text'
+import { useVisibility } from '@/lib/cell/visibility'
+import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
 
-import GcodePreview from './GcodePreview.vue'
 import CellButton from './CellButton.vue'
+import GcodePreview from './GcodePreview.vue'
 </script>
 <script setup>
 const cnc = useCncStore()
@@ -61,7 +61,7 @@ const gridPosition = computed(() => {
   }
 })
 const aspectRatio = computed(
-  () => (config.value.columns || 1) / (config.value.rows || 1)
+  () => (config.value.columns || 1) / (config.value.rows || 1),
 )
 </script>
 

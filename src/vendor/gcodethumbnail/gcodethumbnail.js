@@ -50,7 +50,7 @@ function drawStraightLine(
   line,
   height,
   color,
-  settings = {}
+  settings = {},
 ) {
   const startX = ratio * (line.start.x - start.x)
   const startY = height - ratio * (line.start.y - start.y)
@@ -92,7 +92,7 @@ function drawCurvedLine(ctx, ratio, start, line, height, color, settings = {}) {
       ratio * (l.p2.x - start.x),
       height - ratio * (l.p2.y - start.y),
       ratio * (l.p3.x - start.x),
-      height - ratio * (l.p3.y - start.y)
+      height - ratio * (l.p3.y - start.y),
     )
   }
   ctx.strokeStyle = color

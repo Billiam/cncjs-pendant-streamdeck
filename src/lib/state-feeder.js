@@ -1,6 +1,7 @@
-import { GcodeWorker, onWorkerEvent, offWorkerEvent } from 'adapter'
-import { useGcodeStore } from '@/stores/gcode'
+import { GcodeWorker, offWorkerEvent, onWorkerEvent } from 'adapter'
+
 import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
 
 const gcodeWorker = GcodeWorker()
@@ -101,6 +102,7 @@ export default (socket, ackBus) => {
       }
     },
     connect: () => {
+      console.log('CONNECTED')
       cnc.setSocketConnected(true)
       cnc.clearActiveCommands()
     },
@@ -113,7 +115,9 @@ export default (socket, ackBus) => {
       }
     },
   }
-
+  if (socket?.connected) {
+    cnc.setSocketConnected(true)
+  }
   Object.entries(listeners).forEach(([event, listener]) => {
     socket.on(event, listener)
   })

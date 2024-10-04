@@ -1,5 +1,6 @@
-import sharp from 'sharp'
 import fs from 'fs'
+import sharp from 'sharp'
+
 let canvas
 let isNodeCanvas = false
 let isPureImage = false
@@ -56,7 +57,7 @@ class pureImage {
     await canvas.encodePNGToStream(this.canvas, passThroughStream)
     await canvas.encodePNGToStream(
       this.canvas,
-      fs.createWriteStream('canvas.png')
+      fs.createWriteStream('canvas.png'),
     )
     return sharp(Buffer.concat(pngData))
       .resize({
@@ -74,7 +75,7 @@ class noop {
     this.width = width
     this.height = height
     console.warn(
-      'Requested a new canvas but pureimage or node-canvas are not installed'
+      'Requested a new canvas but pureimage or node-canvas are not installed',
     )
   }
 

@@ -1,6 +1,6 @@
 import program from 'commander'
-import path from 'path'
 import fs from 'fs'
+import path from 'path'
 
 program
   .version(__APP_VERSION__)
@@ -8,7 +8,7 @@ program
   .option(
     '-d, --directory <directory>',
     'path to configuration directory',
-    process.cwd()
+    process.cwd(),
   )
 
 export default () => {
@@ -17,7 +17,7 @@ export default () => {
   if (options.example) {
     fs.copyFileSync(
       path.join(__dirname, 'config.example.json'),
-      'config.example.json'
+      'config.example.json',
     )
     console.log(`${process.cwd()}/config.example.json saved`)
     process.exit()

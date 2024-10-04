@@ -1,7 +1,8 @@
 <script>
 import { computed, onMounted, watchEffect } from 'vue'
-import { useUiStore } from '@/stores/ui'
+
 import Color from '@/lib/color'
+import { useUiStore } from '@/stores/ui'
 </script>
 
 <script setup>

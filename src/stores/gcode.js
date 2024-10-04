@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
+
 import { useCncStore } from './cnc'
+
 const lazyStore = {
   get cnc() {
     delete this.cnc
@@ -32,7 +34,7 @@ export const useGcodeStore = defineStore({
             res[k] = v * 25.4
             return res
           },
-          {}
+          {},
         )
       })
       return Object.freeze(res)
@@ -48,7 +50,7 @@ export const useGcodeStore = defineStore({
             res[k] = v.toFixed(3)
             return res
           },
-          {}
+          {},
         )
       })
       return Object.freeze(res)

@@ -1,9 +1,12 @@
 <script setup>
+import { onBeforeMount } from 'vue'
+
 import { useFileList } from '@/lib/scene/file-list'
 import { useUiStore } from '@/stores/ui'
-const { rows, columns } = useUiStore()
-import { onBeforeMount } from 'vue'
+
 import Cell from './Cell.vue'
+
+const { rows, columns } = useUiStore()
 
 const { buttons, loadFiles } = useFileList()
 

@@ -1,6 +1,7 @@
 import escape from 'lodash/escape'
-import sharp from 'sharp'
 import path from 'path'
+import sharp from 'sharp'
+
 const icons = {}
 const inputSize = 144
 
@@ -88,7 +89,7 @@ const getRender = async (config, canvas, directory) => {
     const y = textVOffset(
       config.textSvgVerticalAlignment,
       outputHeight,
-      config.textLines.length * lineHeight
+      config.textLines.length * lineHeight,
     )
     const svg = `<svg width="${outputWidth}px" height="${outputHeight}px">
       <text
@@ -184,7 +185,7 @@ const getRender = async (config, canvas, directory) => {
               height: outputSize,
             })
             .raw()
-            .toBuffer()
+            .toBuffer(),
         )
       }
     }

@@ -1,6 +1,6 @@
+import { parseLine } from '../gcode-parser'
 import { StraightLine as StraightLine$0 } from './lines.js'
 import { CurvedLine as CurvedLine$0 } from './lines.js'
-import { parseLine } from '../gcode-parser'
 import util from './util.js'
 
 var StraightLine = { StraightLine: StraightLine$0 }.StraightLine
@@ -198,14 +198,14 @@ var parse = function (code) {
       settings.position,
       command,
       settings.relative,
-      settings.inMm
+      settings.inMm,
     )
     var line = new StraightLine(
       lineNumber,
       settings.position,
       nextPosition,
       command,
-      settings
+      settings,
     )
     settings.previousMoveCommand = command.type
     checkTotalSize(totalSize, line.getSize())
@@ -227,20 +227,20 @@ var parse = function (code) {
     lineNumber,
     lines,
     totalSize,
-    errorList
+    errorList,
   ) {
     var nextPosition = findPosition(
       settings.position,
       command,
       settings.relative,
-      settings.inMm
+      settings.inMm,
     )
     var line = new CurvedLine(
       lineNumber,
       settings.position,
       nextPosition,
       command,
-      settings
+      settings,
     )
     if (line.center !== false) {
       var temp = line.returnLine()
@@ -269,7 +269,7 @@ var parse = function (code) {
     lineNumber,
     lines,
     totalSize,
-    errorList
+    errorList,
   ) {
     //Empty line
     if (command.type === undefined && Object.keys(command).length === 0) {
@@ -354,7 +354,7 @@ var parse = function (code) {
         i + 1,
         lines,
         totalSize,
-        errorList
+        errorList,
       )
       j++
     }

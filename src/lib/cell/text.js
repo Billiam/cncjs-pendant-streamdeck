@@ -1,11 +1,11 @@
 import { storeToRefs } from 'pinia'
 import { computed } from 'vue'
 
-import TextTemplate from '@/lib/text-template'
-import { useGcodeStore } from '@/stores/gcode'
-import { useCncStore } from '@/stores/cnc'
-import { useUiStore } from '@/stores/ui'
 import Color from '@/lib/color'
+import TextTemplate from '@/lib/text-template'
+import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
+import { useUiStore } from '@/stores/ui'
 
 const alignment = {
   'top left': { v: 'top', h: 'left' },
@@ -60,19 +60,19 @@ export const useText = (config) => {
 
   const cellTextColor = computed(() => color.normalizeColor(ui.textColor))
   const contrastingTextColor = computed(() =>
-    color.contrastColor(cellTextColor.value)
+    color.contrastColor(cellTextColor.value),
   )
   const textAlignment = computed(
-    () => alignment[config.value.textAlignment]?.h ?? 'center'
+    () => alignment[config.value.textAlignment]?.h ?? 'center',
   )
   const textVerticalAlignment = computed(
-    () => alignment[config.value.textAlignment]?.v ?? 'center'
+    () => alignment[config.value.textAlignment]?.v ?? 'center',
   )
   const textSvgAlignment = computed(
-    () => svgAlignment[config.value.textAlignment]?.h ?? 'middle'
+    () => svgAlignment[config.value.textAlignment]?.h ?? 'middle',
   )
   const textSvgVerticalAlignment = computed(
-    () => svgAlignment[config.value.textAlignment]?.v ?? 'middle'
+    () => svgAlignment[config.value.textAlignment]?.v ?? 'middle',
   )
 
   return {

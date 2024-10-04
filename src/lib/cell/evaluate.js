@@ -1,7 +1,8 @@
-import { useGcodeStore } from '@/stores/gcode'
-import { useCncStore } from '@/stores/cnc'
-import { useUiStore } from '@/stores/ui'
 import evaluate from 'simple-evaluate'
+
+import { useCncStore } from '@/stores/cnc'
+import { useGcodeStore } from '@/stores/gcode'
+import { useUiStore } from '@/stores/ui'
 
 export const useEvaluate = () => {
   const cnc = useCncStore()

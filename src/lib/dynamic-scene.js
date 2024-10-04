@@ -1,8 +1,10 @@
-import FileListScene from '@/components/FileListScene.vue'
-import { useScenesStore } from '@/stores/scenes'
-import Scene from '@/components/Scene.vue'
-import { useUiStore } from '@/stores/ui'
 import { computed } from 'vue'
+
+import { useScenesStore } from '@/stores/scenes'
+import { useUiStore } from '@/stores/ui'
+
+import FileListScene from '@/components/FileListScene.vue'
+import Scene from '@/components/Scene.vue'
 
 export const useDynamicScene = () => {
   const uiStore = useUiStore()
@@ -17,7 +19,7 @@ export const useDynamicScene = () => {
   }
 
   const sceneType = computed(
-    () => specialScenes[uiStore.sceneName]?.type ?? Scene
+    () => specialScenes[uiStore.sceneName]?.type ?? Scene,
   )
 
   const scene = computed(() => {

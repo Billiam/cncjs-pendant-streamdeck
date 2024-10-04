@@ -1,5 +1,5 @@
-import ServiceProvider from 'cation/dist/providers/serviceprovider'
 import { resolveDependencies } from 'cation/dist/helpers/service'
+import ServiceProvider from 'cation/dist/providers/serviceprovider'
 
 // acts the same as ServiceProvider but doesn't use "new" constructor
 class MethodProvider extends ServiceProvider {
@@ -19,7 +19,7 @@ class MethodProvider extends ServiceProvider {
     // resolve arguments
     let serviceDepsPromise = resolveDependencies(
       this.container,
-      this.options.args
+      this.options.args,
     )
 
     return serviceDepsPromise.then((serviceDeps) => {

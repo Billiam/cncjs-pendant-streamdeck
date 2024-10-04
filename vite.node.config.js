@@ -1,11 +1,10 @@
-import { fileURLToPath, URL } from 'url'
-import { defineConfig } from 'vite'
-import path from 'path'
-
-import vue from '@vitejs/plugin-vue'
-
 // https://vitejs.dev/config/
 import legacy from '@vitejs/plugin-legacy'
+import vue from '@vitejs/plugin-vue'
+import path from 'path'
+import { fileURLToPath, URL } from 'url'
+import { defineConfig } from 'vite'
+
 export default defineConfig(({ command, mode }) => {
   const pkg = require('./package.json')
   const config = {
@@ -21,11 +20,11 @@ export default defineConfig(({ command, mode }) => {
           cli: path.resolve(__dirname, 'src/cli.js'),
           'gcode-thread-worker': path.resolve(
             __dirname,
-            'src/gcode-thread-worker.js'
+            'src/gcode-thread-worker.js',
           ),
           'outline-thread-worker': path.resolve(
             __dirname,
-            'src/outline-thread-worker.js'
+            'src/outline-thread-worker.js',
           ),
         },
       },
@@ -46,7 +45,7 @@ export default defineConfig(({ command, mode }) => {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         adapter: fileURLToPath(
-          new URL('./src/services/adapter/node.js', import.meta.url)
+          new URL('./src/services/adapter/node.js', import.meta.url),
         ),
       },
     },

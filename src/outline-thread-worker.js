@@ -1,13 +1,13 @@
-const parentPort = require('worker_threads').parentPort
-
 import { buildOutline } from '@/lib/gcode-outline'
+
+const parentPort = require('worker_threads').parentPort
 
 parentPort.on('message', (event) => {
   let perimeter = buildOutline(
     event.gcode,
     event.x,
     event.y,
-    event.feedbackUnits
+    event.feedbackUnits,
   )
 
   parentPort.postMessage({

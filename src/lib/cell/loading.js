@@ -1,5 +1,6 @@
-import { useCncStore } from '@/stores/cnc'
 import { computed } from 'vue'
+
+import { useCncStore } from '@/stores/cnc'
 
 export const useLoading = (config) => {
   const cnc = useCncStore()

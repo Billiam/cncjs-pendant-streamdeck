@@ -1,4 +1,5 @@
 import mitt from 'mitt'
+
 export default () => {
   const inst = mitt()
 

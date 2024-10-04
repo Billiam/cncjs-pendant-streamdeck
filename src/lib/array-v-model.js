@@ -1,4 +1,4 @@
-import { computed, ref, watch, onMounted } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 export const useArrayVmodel = (props, emits) => {
   const proxy = ref(props.modelValue)
@@ -8,7 +8,7 @@ export const useArrayVmodel = (props, emits) => {
     () => {
       proxy.value = [...(props.modelValue ?? [])]
     },
-    { immediate: true }
+    { immediate: true },
   )
 
   const itemModel = (index, initialValue = null) => {

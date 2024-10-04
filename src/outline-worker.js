@@ -6,7 +6,7 @@ self.addEventListener('message', (event) => {
       event.data.gcode,
       event.data.x,
       event.data.y,
-      event.data.feedbackUnits
+      event.data.feedbackUnits,
     )
     self.postMessage({
       name: event.data.name,

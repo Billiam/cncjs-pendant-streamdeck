@@ -1,7 +1,7 @@
 <script>
-import { ref, watch, nextTick, onMounted, onUnmounted } from 'vue'
 import debounce from 'lodash/debounce'
 import { storeToRefs } from 'pinia'
+import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 
 import { renderToolpath } from '@/lib/gcode-renderer'
 import { useGcodeStore } from '@/stores/gcode'
