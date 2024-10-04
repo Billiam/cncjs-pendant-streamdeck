@@ -1,8 +1,8 @@
+import { useButtonStore } from '@/stores/buttons'
+import { useCncStore } from '@/stores/cnc'
 import { useConnectionStore } from '@/stores/connection'
 import { useFileListStore } from '@/stores/file-list'
-import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
-import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
 
 export default (container) => {
@@ -25,7 +25,7 @@ export default (container) => {
 
   const cleanup = async () => {
     const busPromises = ['actionBus', 'ackBus', 'connectionBus'].map(
-      (busName) => container.get(busName)
+      (busName) => container.get(busName),
     )
     const busses = await Promise.all(busPromises)
     busses.forEach((bus) => bus.all.clear())
@@ -43,36 +43,35 @@ export default (container) => {
     const buttonStore = useButtonStore()
     const sceneStore = useScenesStore()
 
-    const config = await container.get('config')
+    const config = (await container.get('config')) ?? {}
 
     // initialize stores from config data
     buttonStore.setButtons(config.buttons)
     sceneStore.setScenes(config.scenes)
+
     cncStore.setAxes(config.machine?.axes)
+    cncStore.setAxisSpeeds(config.machine?.axisSpeeds)
 
     // TODO: make home scene configurable
     uiStore.setScene('home')
     const uiConfig = { ...config.ui }
 
-    if (import.meta.env.SSR) {
-      Object.assign(uiConfig, config.streamdeckUi || {})
-    }
+    uiStore.setStreamdeckConfig(config.streamdeckUi)
 
     uiStore.setBrightness(uiConfig.brightness)
     uiStore.setPalette(uiConfig.palette)
     uiStore.setGrid(uiConfig.rows, uiConfig.columns)
     uiStore.setThrottle(uiConfig.throttle)
     uiStore.setGcodeLimit(uiConfig.gcodeLimit)
-    uiStore.textColor = uiConfig.textColor ?? uiStore.textColor
-    uiStore.textShadow = uiConfig.textShadow
-    uiStore.font = uiConfig.font ?? uiStore.font
-    uiStore.fontSize = uiConfig.fontSize ?? uiStore.fontSize
-    uiStore.lineHeight = uiConfig.lineHeight ?? uiStore.lineHeight
-    uiStore.pageColor = uiConfig.pageColor ?? uiStore.pageColor
+    uiStore._textColor = uiConfig.textColor ?? uiStore._textColor
+    uiStore._textShadow = uiConfig.textShadow
+    uiStore._font = uiConfig.font ?? uiStore._font
+    uiStore._fontSize = uiConfig.fontSize ?? uiStore._fontSize
+    uiStore._lineHeight = uiConfig.lineHeight ?? uiStore._lineHeight
+    uiStore._pageColor = uiConfig.pageColor ?? uiStore._pageColor
     uiStore.setGcodeColors(uiConfig.gcodeColors)
     uiStore.setBgColor(uiConfig.bgColor)
     uiStore.setProgressColor(uiConfig.progressColor)
-
     connectionStore.setConfig({ ...config.cncjs })
 
     await connectListeners()
@@ -100,7 +99,7 @@ export default (container) => {
       const socket = await container.get('socket')
       await socket.connect()
     } catch (e) {
-      console.error('socket failed')
+      console.error('socket connection failed', e)
     }
 
     ;[stateFeeder, cncActions, buttonActions] = await Promise.all([
