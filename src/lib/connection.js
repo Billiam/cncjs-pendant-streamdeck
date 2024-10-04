@@ -1,5 +1,5 @@
-import io from 'socket.io-client'
 import mitt from 'mitt'
+import io from 'socket.io-client'
 
 import { ConnectionError } from './connection-error'
 
@@ -135,8 +135,6 @@ proto.reconnect = function () {
 }
 
 proto.connect = function () {
-  this.validate()
-
   return new Promise((resolve, reject) => {
     const socket = io.connect(this.socketUrl(), {
       query: `token=${this.token}`,
