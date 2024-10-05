@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 
 import { useDynamicScene } from '@/lib/dynamic-scene'
+
+import FixedHeight from '@/components/FixedHeight.vue'
 </script>
 <script setup>
 const { scene, sceneType } = useDynamicScene()

@@ -9,6 +9,8 @@ import Theme from '@/components/Theme.vue'
 </script>
 
 <script setup>
+defineProps(['child'])
+
 const container = Container()
 const bootstrap = Bootstrap(container)
 provide('container', container)
@@ -43,7 +45,7 @@ const fontSize = computed(() => {
 </script>
 
 <template>
-  <router-view />
+  <component :is="child"></component>
   <theme></theme>
 </template>
 

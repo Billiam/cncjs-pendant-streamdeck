@@ -1,4 +1,5 @@
 import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 import { fileURLToPath, URL } from 'url'
 import { defineConfig, loadEnv } from 'vite'
 
@@ -34,6 +35,10 @@ export default defineConfig(({ command, mode }) => {
       outDir: '../dist/web',
       emptyOutDir: true,
       rollupOptions: {
+        input: {
+          index: resolve(__dirname, 'src/index.html'),
+          editor: resolve(__dirname, 'src/editor.html'),
+        },
         output: {
           assetFileNames: '[name][extname]',
           entryFileNames: '[name].js',
