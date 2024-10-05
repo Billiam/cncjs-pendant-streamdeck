@@ -1,7 +1,7 @@
 <script>
 import omit from 'lodash/omit'
 import { storeToRefs } from 'pinia'
-import { computed, nextTick, ref } from 'vue'
+import { computed, nextTick, ref, watch } from 'vue'
 
 import { arrayWrap } from '@/lib/enumerable'
 import { useButtonStore } from '@/stores/buttons'
@@ -40,12 +40,14 @@ const buttonNames = computed(() => {
 })
 
 const buttonList = computed(() => {
-  return buttonNames.value.map((buttonName) => {
-    const button = buttonStore.button(buttonName)
-    if (button) {
-      return omit(button, ['actions', 'if', 'disabled'])
-    }
-  })
+  return buttonNames.value
+    .map((buttonName) => {
+      const button = buttonStore.button(buttonName)
+      if (button) {
+        return omit(button, ['actions', 'if', 'disabled'])
+      }
+    })
+    .filter(Boolean)
 })
 
 const removeButton = (buttonName) => {
@@ -80,6 +82,15 @@ const addButton = () => {
     editor.setActiveButton(buttonName)
   }
 }
+watch(buttonNames, (newList, oldList) => {
+  if (
+    editor.activeButton == null &&
+    newList.length > 0 &&
+    oldList.length === 0
+  ) {
+    editor.setActiveButton(newList[0])
+  }
+})
 </script>
 
 <template>
