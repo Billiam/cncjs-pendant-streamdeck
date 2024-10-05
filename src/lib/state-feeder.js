@@ -102,7 +102,6 @@ export default (socket, ackBus) => {
       }
     },
     connect: () => {
-      console.log('CONNECTED')
       cnc.setSocketConnected(true)
       cnc.clearActiveCommands()
     },

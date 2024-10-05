@@ -157,10 +157,8 @@ proto.connect = function () {
     socket.on('serialport:open', (options = {}) => {
       this.options = { ...this.options, options }
       console.log(`Connected to port ${options.port}`)
-      // resolve({ socket })
     })
     socket.on('serialport:change', ({ port, inuse }) => {
-      console.log({ change: inuse })
       if (inuse) {
         this.openSerialPort()
         this.emitter.emit('reconnected', { port })

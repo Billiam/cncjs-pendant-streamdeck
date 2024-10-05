@@ -16,7 +16,6 @@ export const useButtonStore = defineStore({
         button.actions?.forEach((action) => {
           if (sceneActions.includes(action.action)) {
             if (action.arguments?.[0] === oldName) {
-              console.log('Setting new action', button)
               action.arguments[0] = newName
             }
           }
@@ -30,9 +29,6 @@ export const useButtonStore = defineStore({
           button.actions = button.actions.filter((action) => {
             if (!sceneActions.includes(action.action)) {
               return true
-            }
-            if (action.arguments?.[0] === scene) {
-              console.log('Removing', action)
             }
             return action.arguments?.[0] !== scene
           })
