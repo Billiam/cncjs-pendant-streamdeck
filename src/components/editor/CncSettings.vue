@@ -53,7 +53,7 @@ const y = { x: ax }
   </Fieldset>
 
   <Fieldset legend="Axis smooth jog speeds">
-    <div v-for="axis in axisModels">
+    <div v-for="axis in axisModels" class="axis">
       <InputGroup>
         <InputGroupAddon>{{ axis.label }}</InputGroupAddon>
         <InputNumber v-model="axis.model.value" />
@@ -64,6 +64,9 @@ const y = { x: ax }
 </template>
 
 <style scoped>
+.axis {
+  margin-bottom: 0.5rem;
+}
 .current-url {
   margin-left: 1rem;
 }
