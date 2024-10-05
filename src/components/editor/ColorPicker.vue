@@ -1,4 +1,5 @@
 <script>
+import TimesIcon from '@primevue/icons/times'
 import { computed, ref } from 'vue'
 
 import Color from '@/lib/color'
@@ -29,7 +30,9 @@ const colorValue = computed({
     emit(findColor(value))
   },
 })
-
+const clear = () => {
+  emit(null)
+}
 const instance = getCurrentInstance()
 const uuid = ref(instance.uid)
 </script>
@@ -40,7 +43,7 @@ const uuid = ref(instance.uid)
       <button
         class="btn"
         v-for="(color, index) in ui.palette"
-        :class="{ active: modelValue == index }"
+        :class="{ active: modelValue === index }"
         :style="{
           backgroundColor: color,
           color: contrastColor(color),
@@ -50,6 +53,9 @@ const uuid = ref(instance.uid)
         :disabled="disabled"
       >
         {{ index }}
+      </button>
+      <button class="btn clear" @click="clear">
+        <TimesIcon />
       </button>
     </div>
 
@@ -75,7 +81,6 @@ const uuid = ref(instance.uid)
   appearance: none;
   width: 30px;
   height: 30px;
-  border-radius: 5px;
   margin-right: 8px;
   margin-bottom: 8px;
   border-radius: 50%;
@@ -93,6 +98,12 @@ const uuid = ref(instance.uid)
       transform: translateY(-3px);
     }
   }
+  svg {
+    vertical-align: middle;
+  }
+}
+.clear {
+  background: none;
 }
 .color-picker {
   margin-top: 10px;

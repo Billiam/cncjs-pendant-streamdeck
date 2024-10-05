@@ -71,9 +71,22 @@ const isStreamdeck = computed({
 
 <template>
   <div class="page">
-    <button class="settings-button" @click="showSettings = true">
-      <img class="icon" src="/icons/fluent-ui/settings.png" />
-    </button>
+    <div class="actions">
+      <button
+        class="action-button"
+        v-tooltip.left="'Save configuration'"
+        @click="saveConfig"
+      >
+        <img class="icon" src="/icons/fluent-ui/save.png" />
+      </button>
+      <button
+        class="action-button"
+        @click="showSettings = true"
+        v-tooltip="'Settings'"
+      >
+        <img class="icon" src="/icons/fluent-ui/settings.png" />
+      </button>
+    </div>
     <Dialog
       v-model:visible="showSettings"
       modal
@@ -160,10 +173,12 @@ body {
 </style>
 
 <style lang="scss" scoped>
-.settings-button {
+.actions {
   position: absolute;
   top: 0.5rem;
   right: 0.5rem;
+}
+.action-button {
   background: none;
   border: 0;
   cursor: pointer;
@@ -182,10 +197,13 @@ body {
 .layout-editor {
   display: flex;
   flex-wrap: wrap;
+  gap: 20px;
+  padding-top: 1rem;
 }
 .wide {
-  .layout-editor {
+  &.layout-editor {
     flex-wrap: nowrap;
+    padding-top: 0;
   }
   .main {
     position: sticky;
@@ -197,6 +215,7 @@ body {
 }
 .main {
   padding-left: 20px;
+  width: v-bind('gridWidth + 20 + "px"');
 }
 .column {
   flex-shrink: 1;
@@ -219,13 +238,13 @@ body {
     grid-template-rows: v-bind(gridRows);
     padding: 6px;
     overflow: hidden;
-    width: v-bind('gridWidth + "px"');
-    height: v-bind('gridHeight + "px"');
+    width: v-bind('gridWidth -22 + "px"');
+    height: v-bind('gridHeight -22 + "px"');
   }
   &.streamdeck {
     background: #111;
     &:deep(.scene) {
-      font-size: 31px; // !important;
+      font-size: 31px;
       grid-gap: 20px;
 
       .cell,

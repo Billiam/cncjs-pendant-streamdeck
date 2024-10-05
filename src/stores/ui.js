@@ -255,6 +255,10 @@ export const useUiStore = defineStore({
         this.sceneStack.push('home')
       }
     },
+    deletePalette(index) {
+      this._palette.splice(index, 1)
+      // TODO: Update color settings and button backgrounds
+    },
 
     goBack(count = 1) {
       if (this.sceneStack.length > 1) {

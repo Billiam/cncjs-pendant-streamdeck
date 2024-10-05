@@ -1,9 +1,11 @@
 <script>
 import { storeToRefs } from 'pinia'
+import { ref } from 'vue'
 
 import { useUiStore } from '@/stores/ui'
 
 import Button from 'primevue/button'
+import ContextMenu from 'primevue/contextmenu'
 import Fieldset from 'primevue/fieldset'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
@@ -33,6 +35,22 @@ const {
 const addWebColor = () => {
   palette.value.push('#000000')
 }
+const paletteMenu = ref()
+const contextClick = (event, paletteIndex) => {
+  selectedPalette.value = paletteIndex
+  paletteMenu.value.show(event)
+}
+const selectedPalette = ref()
+
+const deletePaletteColor = () => {
+  ui.deletePalette(selectedPalette.value)
+}
+const paletteOptions = [
+  {
+    label: 'Delete',
+    command: deletePaletteColor,
+  },
+]
 </script>
 <template>
   <Fieldset legend="Button layout">
@@ -49,7 +67,7 @@ const addWebColor = () => {
   </Fieldset>
 
   <Fieldset legend="Theme">
-    <span class="label">Palette </span>
+    <span class="label">Palette</span>
     <div class="form-row flex-row flex-center flex-wrap">
       <input
         type="color"
@@ -58,9 +76,15 @@ const addWebColor = () => {
         :value="color"
         :key="index"
         @change="(event) => (palette[index] = event.target.value)"
+        @contextmenu="contextClick($event, index)"
         :title="index"
       />
       <Button @click="addWebColor">Add color</Button>
+      <ContextMenu
+        ref="paletteMenu"
+        :model="paletteOptions"
+        @hide="selectedSceneTab = null"
+      />
     </div>
 
     <div class="form-row">
