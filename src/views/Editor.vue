@@ -1,11 +1,12 @@
 <script>
 import { storeToRefs } from 'pinia'
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 import { useDynamicScene } from '@/lib/dynamic-scene'
 import { useMediaQuery } from '@/lib/media-query'
 import { usePrimevue } from '@/lib/primevue'
 import { saveConfig } from '@/lib/save-config'
+import { useCncStore } from '@/stores/cnc'
 import { useEditorStore } from '@/stores/editor'
 import { useUiStore } from '@/stores/ui'
 
@@ -33,12 +34,19 @@ usePrimevue()
 const { scene, sceneType } = useDynamicScene()
 const editor = useEditorStore()
 const ui = useUiStore()
+const cnc = useCncStore()
 
 const { rows, columns, web } = storeToRefs(ui)
+const { connected, socketConnected } = storeToRefs(cnc)
+
 const resolution = 144
 
 const showSettings = ref(false)
-const settingsTab = ref('connection')
+const defaultTab = ref('connection')
+const settingsTab = ref(defaultTab)
+watch([connected, socketConnected], ([conn, socket]) => {
+  defaultTab.value = conn && socket ? 'ui' : 'connection'
+})
 
 const gap = computed(() => 10 * (isStreamdeck.value ? 2 : 1))
 const width = computed(
