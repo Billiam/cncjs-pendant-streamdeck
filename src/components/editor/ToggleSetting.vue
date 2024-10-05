@@ -41,6 +41,7 @@ const { model } = useVmodel(props, emits)
 }
 .setting {
   transition: opacity 0.2s;
+  flex: 1;
 }
 .disabled {
   opacity: 0.5;

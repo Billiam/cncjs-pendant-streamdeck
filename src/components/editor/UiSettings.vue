@@ -10,6 +10,7 @@ import Fieldset from 'primevue/fieldset'
 import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import InputNumber from 'primevue/inputnumber'
+import vTooltip from 'primevue/tooltip'
 
 import ColorPicker from '@/components/editor/ColorPicker.vue'
 import FontSelect from '@/components/editor/FontSelect.vue'
@@ -27,6 +28,7 @@ const {
   _lineHeight: lineHeight,
   _fontSize: fontSize,
   _gcodeColors: gcodeColors,
+  _gcodeLimit: gcodeLimit,
   _palette: palette,
   _progressColor: progressColor,
   _textColor: textColor,
@@ -63,6 +65,33 @@ const paletteOptions = [
         <InputNumber v-model="columns" />
         <InputGroupAddon>columns</InputGroupAddon>
       </InputGroup>
+    </div>
+  </Fieldset>
+
+  <Fieldset legend="Text">
+    <div class="form-row">
+      <label class="label">Font</label>
+      <font-select v-model="font" fluid />
+    </div>
+
+    <div class="form-row">
+      <label class="label">Font size</label>
+      <InputNumber
+        v-model="fontSize"
+        :minFractionDigits="0"
+        :maxFractionDigits="2"
+        fluid
+      />
+    </div>
+
+    <div class="form-row">
+      <label class="label">Line height</label>
+      <InputNumber
+        v-model="lineHeight"
+        :minFractionDigits="0"
+        :maxFractionDigits="2"
+        fluid
+      />
     </div>
   </Fieldset>
 
@@ -121,28 +150,23 @@ const paletteOptions = [
     </div>
   </Fieldset>
 
-  <Fieldset legend="Text">
+  <Fieldset legend="General">
     <div class="form-row">
-      <label class="label">Font</label>
-      <font-select v-model="font" />
-    </div>
-
-    <div class="form-row">
-      <label class="label">Font size</label>
-      <InputNumber
-        v-model="fontSize"
-        :minFractionDigits="0"
-        :maxFractionDigits="2"
-      />
-    </div>
-
-    <div class="form-row">
-      <label class="label">Line height</label>
-      <InputNumber
-        v-model="lineHeight"
-        :minFractionDigits="0"
-        :maxFractionDigits="2"
-      />
+      <div class="flex-row flex-center">
+        <label class="label">GCode limit</label>
+        <span
+          class="help"
+          v-tooltip="
+            'Hard limit for the number of lines of gcode that will be processed. Affects rendering and boundary data.'
+          "
+        >
+          <img src="/icons/fluent-ui/question_circle.png" alt="help" />
+        </span>
+      </div>
+      <InputGroup fluid>
+        <InputNumber v-model="gcodeLimit" />
+        <InputGroupAddon>lines</InputGroupAddon>
+      </InputGroup>
     </div>
   </Fieldset>
 </template>

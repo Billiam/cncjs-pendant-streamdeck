@@ -15,7 +15,6 @@ const streamdeckFields = [
   'progressColor',
   'textColor',
   'textShadow',
-  'throttle',
 ]
 const streamdeckGetters = streamdeckFields.reduce((fields, fieldName) => {
   fields[fieldName] = (state) =>
@@ -59,7 +58,7 @@ export const useUiStore = defineStore({
     sceneStack: ['home'],
     _textColor: 1,
     _textShadow: false,
-    _throttle: 0,
+    throttle: 0,
     timeout: 0,
     userFlags: {},
     web: true,
@@ -79,7 +78,6 @@ export const useUiStore = defineStore({
       rows: false,
       textColor: false,
       textShadow: false,
-      throttle: false,
     },
   }),
 
@@ -100,7 +98,7 @@ export const useUiStore = defineStore({
         '_rows',
         '_textColor',
         '_textShadow',
-        '_throttle',
+        'throttle',
         'timeout',
       ]
       const config = {}
@@ -267,7 +265,7 @@ export const useUiStore = defineStore({
       if (throttle != null) {
         const millis = parseInt(throttle)
         if (millis) {
-          this._throttle = millis
+          this.throttle = millis
         }
       }
     },
