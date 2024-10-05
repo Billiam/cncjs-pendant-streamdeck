@@ -84,6 +84,47 @@ export const useUiStore = defineStore({
   }),
 
   getters: {
+    output: (state) => {
+      const fields = [
+        '_bgColor',
+        '_brightness',
+        '_columns',
+        '_font',
+        '_fontSize',
+        '_lineHeight',
+        '_gcodeColors',
+        '_gcodeLimit',
+        'pageColor',
+        '_palette',
+        '_progressColor',
+        '_rows',
+        '_textColor',
+        '_textShadow',
+        '_throttle',
+        'timeout',
+      ]
+      const config = {}
+      fields.forEach((field) => {
+        const saveField = field.startsWith('_') ? field.slice(1) : field
+
+        if (state[field] != null) {
+          config[saveField] = state[field]
+        }
+      })
+      return config
+    },
+    streamdeckOutput: (state) => {
+      const config = {}
+      Object.entries(state.streamdeckConfig).forEach(([key, value]) => {
+        if (
+          state.streamdeckOverride[key] &&
+          state.streamdeckConfig[key] != null
+        ) {
+          config[key] = state.streamdeckConfig[key]
+        }
+      })
+      return config
+    },
     sceneName: (state) => {
       return state.sceneStack[state.sceneStack.length - 1]
     },
@@ -186,7 +227,7 @@ export const useUiStore = defineStore({
       if (!colors) {
         return
       }
-      this._gcodeColors = Object.freeze(colors)
+      this._gcodeColors = colors
     },
     activity() {
       this.active = true

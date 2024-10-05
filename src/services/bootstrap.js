@@ -68,10 +68,11 @@ export default (container) => {
     uiStore._font = uiConfig.font ?? uiStore._font
     uiStore._fontSize = uiConfig.fontSize ?? uiStore._fontSize
     uiStore._lineHeight = uiConfig.lineHeight ?? uiStore._lineHeight
-    uiStore._pageColor = uiConfig.pageColor ?? uiStore._pageColor
+    uiStore.pageColor = uiConfig.pageColor ?? uiStore._pageColor
     uiStore.setGcodeColors(uiConfig.gcodeColors)
     uiStore.setBgColor(uiConfig.bgColor)
     uiStore.setProgressColor(uiConfig.progressColor)
+    uiStore.setTimeout(uiConfig.timeout)
     connectionStore.setConfig({ ...config.cncjs })
 
     await connectListeners()

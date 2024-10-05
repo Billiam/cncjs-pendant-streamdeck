@@ -373,6 +373,11 @@ export const useCncStore = defineStore({
     },
   },
   getters: {
+    output: (state) => {
+      const fields = ['axes', 'axisSpeeds']
+
+      return Object.fromEntries(fields.map((field) => [field, state[field]]))
+    },
     isRelativeMove: (state) => state.modal.distance === 'G91',
     distanceUnit: (state) => (state.modal.units === 'G21' ? 'mm' : 'in'),
     distances: (state) => jogDistances[state.distanceUnit],

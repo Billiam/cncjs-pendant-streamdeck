@@ -52,7 +52,6 @@ watch(
 
     container.remove('connectionConfig')
     container.register('connectionConfig', currentConfig, { type: 'static' })
-    console.log({ currentConfig })
 
     const connection = await container.get('connection')
     connection.closeSerialPort()

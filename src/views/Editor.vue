@@ -5,6 +5,7 @@ import { computed, ref } from 'vue'
 import { useDynamicScene } from '@/lib/dynamic-scene'
 import { useMediaQuery } from '@/lib/media-query'
 import { usePrimevue } from '@/lib/primevue'
+import { saveConfig } from '@/lib/save-config'
 import { useEditorStore } from '@/stores/editor'
 import { useUiStore } from '@/stores/ui'
 
@@ -15,6 +16,7 @@ import TabPanel from 'primevue/tabpanel'
 import TabPanels from 'primevue/tabpanels'
 import Tabs from 'primevue/tabs'
 import ToggleSwitch from 'primevue/toggleswitch'
+import vTooltip from 'primevue/tooltip'
 
 import ButtonEditor from '@/components/editor/ButtonEditor.vue'
 import CncSettings from '@/components/editor/CncSettings.vue'
@@ -49,10 +51,10 @@ const height = computed(
 const gridColumns = computed(() => `repeat(${columns.value}, 144px)`)
 const gridRows = computed(() => `repeat(${rows.value}, 144px)`)
 const gridWidth = computed(
-  () => columns.value * 144 + (columns.value - 1) * gap.value + 12,
+  () => columns.value * 144 + (columns.value - 1) * gap.value + 12 + 16,
 )
 const gridHeight = computed(
-  () => rows.value * 144 + (rows.value - 1) * gap.value + 12,
+  () => rows.value * 144 + (rows.value - 1) * gap.value + 12 + 16,
 )
 const minWidth = computed(
   () => `(min-width: calc(${gridWidth.value}px + 20rem))`,

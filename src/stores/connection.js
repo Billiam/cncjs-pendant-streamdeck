@@ -11,7 +11,20 @@ export const useConnectionStore = defineStore({
     socketPort: 8000,
     socketAddress: 'localhost',
   }),
+  getters: {
+    output: (state) => {
+      const fields = [
+        'baudRate',
+        'controllerType',
+        'port',
+        'secure',
+        'socketPort',
+        'socketAddress',
+      ]
 
+      return Object.fromEntries(fields.map((field) => [field, state[field]]))
+    },
+  },
   actions: {
     setConfig(config) {
       this.baudRate = config.baudRate ?? 115200
