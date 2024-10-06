@@ -128,8 +128,8 @@ export const useCncStore = defineStore({
     spindleRpm: 0,
     feedRate: 0,
 
-    activeCommands: {},
-    activeWorkers: {},
+    _activeCommands: {},
+    _activeWorkers: {},
   }),
 
   actions: {
@@ -295,31 +295,31 @@ export const useCncStore = defineStore({
       }, {})
     },
     addActiveCommand(commandId, taskId) {
-      this.activeCommands[commandId] = taskId
+      this._activeCommands[commandId] = taskId
     },
     clearActiveCommand(taskId) {
-      Object.keys(this.activeCommands).forEach((key) => {
-        if (this.activeCommands[key] === taskId) {
-          delete this.activeCommands[key]
+      Object.keys(this._activeCommands).forEach((key) => {
+        if (this._activeCommands[key] === taskId) {
+          delete this._activeCommands[key]
         }
       })
     },
     clearActiveCommands() {
-      Object.keys(this.activeCommands).forEach((key) => {
-        delete this.activeCommands[key]
+      Object.keys(this._activeCommands).forEach((key) => {
+        delete this._activeCommands[key]
       })
     },
     commandRunning(id) {
-      return !!this.activeCommands[id]
+      return !!this._activeCommands[id]
     },
     addActiveWorker(workerId) {
-      this.activeWorkers[workerId] = true
+      this._activeWorkers[workerId] = true
     },
     clearActiveWorker(workerId) {
-      delete this.activeWorkers[workerId]
+      delete this._activeWorkers[workerId]
     },
     workerRunning(workerId) {
-      return !!this.activeWorkers[workerId]
+      return !!this._activeWorkers[workerId]
     },
     async loadCommands() {
       if (!this.client) {
@@ -373,7 +373,7 @@ export const useCncStore = defineStore({
     },
   },
   getters: {
-    output: (state) => {
+    _output: (state) => {
       const fields = ['axes', 'axisSpeeds']
 
       return Object.fromEntries(fields.map((field) => [field, state[field]]))

@@ -13,12 +13,12 @@ export const buildConfig = () => {
 
   const config = {}
   config.buttons = buttons.buttons
-  config.cncjs = connection.output
+  config.cncjs = connection._output
 
-  config.machine = cnc.output
+  config.machine = cnc._output
   config.scenes = scenes.scenes
-  config.streamdeckUi = ui.streamdeckOutput
-  config.ui = ui.output
+  config.streamdeckUi = ui._streamdeckOutput
+  config.ui = ui._output
 
   return config
 }

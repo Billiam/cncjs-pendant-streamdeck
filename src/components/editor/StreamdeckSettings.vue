@@ -19,8 +19,8 @@ import ToggleSetting from '@/components/editor/ToggleSetting.vue'
 <script setup>
 const ui = useUiStore()
 const {
-  streamdeckConfig: sd,
-  streamdeckOverride,
+  _streamdeckConfig: sd,
+  _streamdeckOverride: streamdeckOverride,
   timeout,
   throttle,
 } = storeToRefs(ui)

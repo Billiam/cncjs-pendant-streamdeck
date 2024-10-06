@@ -12,7 +12,7 @@ export const useConnectionStore = defineStore({
     socketAddress: 'localhost',
   }),
   getters: {
-    output: (state) => {
+    _output: (state) => {
       const fields = [
         'baudRate',
         'controllerType',

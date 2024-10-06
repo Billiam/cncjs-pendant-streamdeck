@@ -18,9 +18,9 @@ const streamdeckFields = [
 ]
 const streamdeckGetters = streamdeckFields.reduce((fields, fieldName) => {
   fields[fieldName] = (state) =>
-    state.web || state.streamdeckOverride[fieldName] !== true
+    state.web || state._streamdeckOverride[fieldName] !== true
       ? state[`_${fieldName}`]
-      : (state.streamdeckConfig[fieldName] ?? state[`_${fieldName}`])
+      : (state._streamdeckConfig[fieldName] ?? state[`_${fieldName}`])
   return fields
 }, {})
 
@@ -63,8 +63,8 @@ export const useUiStore = defineStore({
     userFlags: {},
     web: true,
 
-    streamdeckConfig: {},
-    streamdeckOverride: {
+    _streamdeckConfig: {},
+    _streamdeckOverride: {
       bgColor: false,
       brightness: false,
       columns: false,
@@ -82,7 +82,7 @@ export const useUiStore = defineStore({
   }),
 
   getters: {
-    output: (state) => {
+    _output: (state) => {
       const fields = [
         '_bgColor',
         '_brightness',
@@ -111,14 +111,14 @@ export const useUiStore = defineStore({
       })
       return config
     },
-    streamdeckOutput: (state) => {
+    _streamdeckOutput: (state) => {
       const config = {}
-      Object.entries(state.streamdeckConfig).forEach(([key, value]) => {
+      Object.entries(state._streamdeckConfig).forEach(([key, value]) => {
         if (
-          state.streamdeckOverride[key] &&
-          state.streamdeckConfig[key] != null
+          state._streamdeckOverride[key] &&
+          state._streamdeckConfig[key] != null
         ) {
-          config[key] = state.streamdeckConfig[key]
+          config[key] = state._streamdeckConfig[key]
         }
       })
       return config
@@ -190,11 +190,11 @@ export const useUiStore = defineStore({
       this.spindleInterval = this.spindleInterval === 1 ? 10 : 1
     },
     setStreamdeckConfig(config) {
-      this.streamdeckConfig = config ?? {}
+      this._streamdeckConfig = config ?? {}
       // establish override value
-      for (const [key, value] of Object.entries(this.streamdeckConfig)) {
-        if (value != null && this.streamdeckOverride.hasOwnProperty(key)) {
-          this.streamdeckOverride[key] = true
+      for (const [key, value] of Object.entries(this._streamdeckConfig)) {
+        if (value != null && this._streamdeckOverride.hasOwnProperty(key)) {
+          this._streamdeckOverride[key] = true
         }
       }
     },
