@@ -94,6 +94,9 @@ body {
 .p-inputtext.p-invalid {
   background-color: var(--p-red-950);
 }
+textarea {
+  display: block;
+}
 input[type='color']::-webkit-color-swatch-wrapper {
   padding: 0;
 }

@@ -396,6 +396,11 @@ body {
     cursor: pointer;
     margin-bottom: 8px;
   }
+  .p-tablist {
+    background: var(--p-tabs-tablist-background);
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
 }
 ::v-global(button) {
   font-family: inherit;
