@@ -22,6 +22,8 @@ import Button from 'primevue/button'
 import IconSelector from '@/components/editor/IconSelector.vue'
 import ColorPicker from '@/components/editor/ColorPicker.vue'
 import Action from '@/components/editor/Action.vue'
+import VariableSelect from '@/components/editor/VariableSelect.vue'
+
 
 const actions = schema.definitions.action.properties.action.enum
 const buttonTypes =
@@ -43,6 +45,7 @@ const sortedAlignments = [
 </script>
 
 <script setup>
+
 const color = Color()
 
 const editor = useEditorStore()
@@ -123,6 +126,15 @@ const setDimensions = (r, c) => {
   rows.value = r
   columns.value = c
 }
+const addTextVariable = ({ value }) => {
+  text.value += `{{ ${value } }}`
+}
+const addIfVariable = ({ value }) => {
+  ifAttr.value += (ifAttr.value === '' ? '' : ' ') + value
+}
+const addDisabledVariable = ({value}) => {
+  disabledAttr.value += (disabledAttr.value === '' ? '' : ' ') + value
+}
 </script>
 
 <template>
@@ -176,7 +188,7 @@ const setDimensions = (r, c) => {
           />
         </span>
       </label>
-      <InputText v-model="description"></InputText>
+      <InputText v-model="description" fluid></InputText>
     </div>
     <div class="form-row">
       <label class="label">Dimensions</label>
@@ -223,8 +235,10 @@ const setDimensions = (r, c) => {
           v-tooltip="'Templating documentation'"
           ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
-      <Textarea v-model="text" rows="5" fluid></Textarea>
-
+      <Textarea v-model="text" fluid></Textarea>
+      <VariableSelect @change="addTextVariable"></VariableSelect>
+    </div>
+    <div class="form-row">
       <label class="label">Text alignment</label>
       <div class="flex-row flex-center">
         <div class="grid-buttons">
@@ -256,6 +270,7 @@ const setDimensions = (r, c) => {
           ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
       <InputText v-model="ifAttr" fluid></InputText>
+      <VariableSelect @change="addIfVariable"></VariableSelect>
     </div>
 
     <div class="form-row">
@@ -269,6 +284,7 @@ const setDimensions = (r, c) => {
           ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
       <InputText v-model="disabledAttr" fluid></InputText>
+      <VariableSelect @change="addDisabledVariable"></VariableSelect>
     </div>
 
     <div class="form-row">
