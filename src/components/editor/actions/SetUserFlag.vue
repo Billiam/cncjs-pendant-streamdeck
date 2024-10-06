@@ -1,5 +1,5 @@
 <script>
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch } from 'vue'
 
 import { useArrayVmodel } from '@/lib/array-v-model'
 import { useScenesStore } from '@/stores/scenes'
@@ -28,10 +28,17 @@ const option1 = itemModel(1)
 const typeSelect = ref('text')
 const booleans = [true, false]
 
-watch(typeSelect, (value) => {
-  option1.value = null
-})
+onMounted(() => {
+  if (typeof option1.value === 'boolean') {
+    typeSelect.value = 'boolean'
+  } else if (typeof option1.value === 'number') {
+    typeSelect.value = 'number'
+  }
 
+  watch(typeSelect, (value) => {
+    option1.value = null
+  })
+})
 const textValue = computed({
   get() {
     if (typeSelect.value !== 'text') {
