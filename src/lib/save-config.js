@@ -12,11 +12,11 @@ export const buildConfig = () => {
   const ui = useUiStore()
 
   const config = {}
-  config.buttons = buttons.buttons
+  config.buttons = buttons.output
   config.cncjs = connection._output
 
   config.machine = cnc._output
-  config.scenes = scenes.scenes
+  config.scenes = scenes.output
   config.streamdeckUi = ui._streamdeckOutput
   config.ui = ui._output
 

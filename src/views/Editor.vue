@@ -29,17 +29,22 @@ import UiSettings from '@/components/editor/UiSettings.vue'
 </script>
 
 <script setup>
+import { useScenesStore } from '@/stores/scenes'
+
 usePrimevue()
 
 const { scene, sceneType } = useDynamicScene()
 const editor = useEditorStore()
 const ui = useUiStore()
 const cnc = useCncStore()
+const sceneStore = useScenesStore()
 
 const { rows, columns, web } = storeToRefs(ui)
 const { connected, socketConnected } = storeToRefs(cnc)
 
 const resolution = 144
+
+sceneStore.loadEditorScenes()
 
 const showSettings = ref(false)
 const defaultTab = ref('connection')
@@ -59,10 +64,10 @@ const height = computed(
 const gridColumns = computed(() => `repeat(${columns.value}, 144px)`)
 const gridRows = computed(() => `repeat(${rows.value}, 144px)`)
 const gridWidth = computed(
-  () => columns.value * 144 + (columns.value - 1) * gap.value + 12 + 16,
+  () => columns.value * 144 + (columns.value - 1) * gap.value + 12 + 24,
 )
 const gridHeight = computed(
-  () => rows.value * 144 + (rows.value - 1) * gap.value + 12 + 16,
+  () => rows.value * 144 + (rows.value - 1) * gap.value + 12 + 24,
 )
 const minWidth = computed(
   () => `(min-width: calc(${gridWidth.value}px + 20rem))`,

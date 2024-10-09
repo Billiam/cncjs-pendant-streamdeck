@@ -18,6 +18,33 @@ const addKey = (config) => {
   return config
 }
 
+export const fileButton = {
+  text: 'filename',
+  textAlignment: 'bottom left',
+  icon: 'default/small_document.png',
+  bgColor: 5,
+}
+export const folderButton = {
+  text: 'folder path',
+  icon: 'default/small_folder.png',
+  textAlignment: 'bottom left',
+  bgColor: 4,
+}
+export const previousFolder = {
+  text: '..',
+  icon: 'default/small_folder_open_back.png',
+  textAlignment: 'bottom center',
+  bgColor: 4,
+}
+export const upArrow = {
+  icon: 'fluent-ui/caret_up.png',
+  bgColor: 7,
+}
+export const downArrow = {
+  icon: 'fluent-ui/caret_down.png',
+  bgColor: 7,
+}
+
 export const useFileList = () => {
   const ui = useUiStore()
   const cnc = useCncStore()
@@ -28,7 +55,7 @@ export const useFileList = () => {
   const rows = ui.rows
   const columns = ui.columns
 
-  const fileButton = (filename, file) => {
+  const buildFileButton = (filename, file) => {
     const fullPath = [fileList.path, filename].filter(Boolean).join('/')
     const selected = fullPath === gcode.name
     const configButton = buttonConfig.fileListFile ?? {}
@@ -47,10 +74,9 @@ export const useFileList = () => {
       : []
 
     const defaultButton = {
+      ...fileButton,
       text: filename,
-      textAlignment: 'bottom left',
       bgColor: selected || !cnc.idle ? 8 : 5,
-      icon: 'default/small_document.png',
       actions: [
         {
           action: 'fileDetails',
@@ -61,17 +87,17 @@ export const useFileList = () => {
       ],
     }
     return mergeConfigs(defaultButton, configButton, {
+      text: defaultButton.text,
       actions: defaultButton.actions,
+      name: 'fileListFile',
     })
   }
-  const folderButton = (path) => {
+  const buildFolderButton = (path) => {
     const configButton = buttonConfig.fileListFolder ?? {}
 
     const defaultButton = {
+      ...folderButton,
       text: path,
-      icon: 'default/small_folder.png',
-      textAlignment: 'bottom left',
-      bgColor: 4,
       actions: [
         {
           action: 'loadFolder',
@@ -81,12 +107,16 @@ export const useFileList = () => {
       ],
     }
     return mergeConfigs(defaultButton, configButton, {
+      text: defaultButton.text,
       actions: defaultButton.actions,
+      name: 'fileListFolder',
     })
   }
-  const previousFolder = () => {
+
+  const buildPreviousFolder = () => {
     const configButton = buttonConfig.fileListPreviousFolder ?? {}
     const defaultButton = {
+      ...previousFolder,
       text: '..',
       icon: 'default/small_folder_open_back.png',
       textAlignment: 'bottom center',
@@ -100,22 +130,26 @@ export const useFileList = () => {
       ],
     }
     return mergeConfigs(defaultButton, configButton, {
+      text: defaultButton.text,
       actions: defaultButton.actions,
+      name: 'fileListPreviousFolder',
     })
   }
-  const upArrow = () => {
+  const buildUpArrow = () => {
     const configButton = buttonConfig.fileListUpArrow ?? {}
 
     const defaultButton = {
-      icon: 'fluent-ui/caret_up.png',
-      bgColor: 7,
+      ...upArrow,
       actions: [{ action: 'fileListScrollUp' }],
       disabled: (fileList.rowOffset === 0).toString(),
     }
-    return mergeConfigs(defaultButton, configButton)
+    return mergeConfigs(defaultButton, configButton, {
+      actions: defaultButton.actions,
+      name: 'fileListUpArrow',
+    })
   }
 
-  const downArrow = () => {
+  const buildDownArrow = () => {
     const configButton = buttonConfig.fileListDownArrow ?? {}
     const firstRowColumnsReserved = 3
     const columnsReserved = 1
@@ -129,12 +163,14 @@ export const useFileList = () => {
       )
 
     const defaultButton = {
-      icon: 'fluent-ui/caret_down.png',
-      bgColor: 7,
+      ...downArrow,
       actions: [{ action: 'fileListScrollDown' }],
       disabled: (fileList.rowOffset + rows >= pages).toString(),
     }
-    return mergeConfigs(defaultButton, configButton)
+    return mergeConfigs(defaultButton, configButton, {
+      name: 'fileListDownArrow',
+      actions: defaultButton.actions,
+    })
   }
 
   const sortMethod = computed(() => {
@@ -168,14 +204,14 @@ export const useFileList = () => {
     sortedFiles.sort(sortMethod.value)
     const files = sortedFiles.map((file) => {
       if (file.type === 'd') {
-        return folderButton(file.name)
+        return buildFolderButton(file.name)
       } else {
-        return fileButton(file.name, file)
+        return buildFileButton(file.name, file)
       }
     })
 
     const list = [[null]]
-    list[0].push(previousFolder())
+    list[0].push(buildPreviousFolder())
     let reserved = 3
     let row = 0
 
@@ -200,14 +236,14 @@ export const useFileList = () => {
       []
     pagedList[0] = [...pagedList[0]]
     pagedList[0][0] = buttonConfig.back
-    pagedList[0][columns - 1] = upArrow()
+    pagedList[0][columns - 1] = buildUpArrow()
     if (rows > 2) {
       pagedList[1] = pagedList.length > 1 ? [...pagedList[1]] : []
       pagedList[1][columns - 1] = buttonConfig.sortScene
     }
     pagedList[rows - 1] =
       pagedList.length === rows ? [...pagedList[rows - 1]] : []
-    pagedList[rows - 1][columns - 1] = downArrow()
+    pagedList[rows - 1][columns - 1] = buildDownArrow()
     return pagedList
   })
 

@@ -53,7 +53,7 @@ const buttonStore = useButtonStore()
 const ui = useUiStore()
 
 const { activeButton } = storeToRefs(editor)
-const { buttons } = storeToRefs(buttonStore)
+const { buttons, fileButtonNames } = storeToRefs(buttonStore)
 
 const button = computed(() => buttons.value[activeButton.value])
 
@@ -129,12 +129,18 @@ const setDimensions = (r, c) => {
 const addTextVariable = ({ value }) => {
   text.value += `{{ ${value } }}`
 }
+const appendWord = (source, word) =>
+  source + (source === '' ? '' : ' ') + word
+
 const addIfVariable = ({ value }) => {
-  ifAttr.value += (ifAttr.value === '' ? '' : ' ') + value
+  ifAttr.value = appendWord(ifAttr.value, value)
 }
 const addDisabledVariable = ({value}) => {
-  disabledAttr.value += (disabledAttr.value === '' ? '' : ' ') + value
+  disabledAttr.value = appendWord(disabledAttr.value, value)
 }
+const fileListButton = computed(() => {
+  return fileButtonNames.value.includes(activeButton.value)
+})
 </script>
 
 <template>
@@ -164,7 +170,7 @@ const addDisabledVariable = ({value}) => {
       <label class="label">Background color</label>
       <color-picker v-model="cellBgColor"></color-picker>
 
-      <div class="flex-row flex-center">
+      <div class="flex-row flex-center" v-if="!fileListButton">
         <Checkbox
           inputId="gcode_preview"
           v-model="gcodeType"
@@ -190,7 +196,7 @@ const addDisabledVariable = ({value}) => {
       </label>
       <InputText v-model="description" fluid></InputText>
     </div>
-    <div class="form-row">
+    <div class="form-row" v-if="!fileListButton">
       <label class="label">Dimensions</label>
       <div class="flex-row">
         <InputGroup>
@@ -225,7 +231,7 @@ const addDisabledVariable = ({value}) => {
       </div>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" v-if="!fileListButton">
       <label class="label"
         >Text
         <a
@@ -235,7 +241,7 @@ const addDisabledVariable = ({value}) => {
           v-tooltip="'Templating documentation'"
           ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
-      <Textarea v-model="text" fluid></Textarea>
+      <Textarea v-model="text" fluid rows="5"></Textarea>
       <VariableSelect @change="addTextVariable"></VariableSelect>
     </div>
     <div class="form-row">
@@ -259,7 +265,7 @@ const addDisabledVariable = ({value}) => {
       </InputGroup>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" v-if="!fileListButton">
       <label class="label"
         >If
         <a
@@ -273,7 +279,7 @@ const addDisabledVariable = ({value}) => {
       <VariableSelect @change="addIfVariable"></VariableSelect>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" v-if="!fileListButton">
       <label class="label"
         >Disabled
         <a
@@ -287,7 +293,7 @@ const addDisabledVariable = ({value}) => {
       <VariableSelect @change="addDisabledVariable"></VariableSelect>
     </div>
 
-    <div class="form-row">
+    <div class="form-row" v-if="!fileListButton">
       <label class="label"
         >Actions
         <a

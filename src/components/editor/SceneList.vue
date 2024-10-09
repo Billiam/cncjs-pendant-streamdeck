@@ -29,7 +29,12 @@ const { scenes } = storeToRefs(sceneStore)
 const { sceneName } = storeToRefs(ui)
 
 const sortedScenes = computed(() => {
-  return Object.keys(scenes.value).sort((a, b) => a.localeCompare(b))
+  return [
+    'home',
+    ...Object.keys(scenes.value)
+      .filter((key) => key !== 'home')
+      .sort((a, b) => a.localeCompare(b)),
+  ]
 })
 
 const confirm = useConfirm()
@@ -122,16 +127,17 @@ const saveRenameScene = () => {
   renameSceneDialogOpen.value = false
 }
 
+const nonEditableScenes = ['home', 'fileList']
 const contextOptions = [
   {
     label: 'Delete',
     command: deleteScene,
-    disabled: () => selectedSceneTab.value === 'home',
+    disabled: () => nonEditableScenes.includes(selectedSceneTab.value),
   },
   {
     label: 'Rename',
     command: renameScene,
-    disabled: () => selectedSceneTab.value === 'home',
+    disabled: () => nonEditableScenes.includes(selectedSceneTab.value),
   },
 ]
 </script>

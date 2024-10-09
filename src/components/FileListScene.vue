@@ -1,10 +1,19 @@
-<script setup>
+<script>
 import { onBeforeMount } from 'vue'
 
 import { useFileList } from '@/lib/scene/file-list'
 import { useUiStore } from '@/stores/ui'
+</script>
 
+<script setup>
 import Cell from './Cell.vue'
+
+defineProps({
+  editor: {
+    type: Boolean,
+    default: false,
+  },
+})
 
 const { rows, columns } = useUiStore()
 

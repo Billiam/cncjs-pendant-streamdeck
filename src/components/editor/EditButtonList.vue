@@ -105,6 +105,7 @@ watch(buttonNames, (newList, oldList) => {
             class="remove-button"
             title="remove"
             @click="removeButton(buttonNames[index])"
+            v-if="!scene.readonly"
           ></button>
           <Cell
             :class="{ active: buttonNames[index] === activeButton }"
@@ -117,7 +118,7 @@ watch(buttonNames, (newList, oldList) => {
       </template>
     </div>
 
-    <div>
+    <div v-if="!scene.readonly">
       <div class="flex-row flex-center">
         <button-list v-model="newButtonName"></button-list>
         <Button

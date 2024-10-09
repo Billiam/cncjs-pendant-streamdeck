@@ -70,8 +70,6 @@ const edit = () => {
   pointer-events: none;
 
   border-radius: 3px;
-  //width: 100%;
-  //height: 100%;
   width: 144px;
   height: 144px;
 
@@ -80,7 +78,6 @@ const edit = () => {
 
   transition: border-radius 0.2s;
 
-  //
   &:hover {
     opacity: 1;
   }

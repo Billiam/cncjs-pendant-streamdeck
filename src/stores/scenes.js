@@ -1,5 +1,12 @@
 import { defineStore } from 'pinia'
 
+import {
+  downArrow,
+  fileButton,
+  folderButton,
+  previousFolder,
+  upArrow,
+} from '@/lib/scene/file-list'
 import { useButtonStore } from '@/stores/buttons'
 import { useUiStore } from '@/stores/ui'
 
@@ -13,11 +20,34 @@ export const useScenesStore = defineStore('scenes', {
     scenes: (state) => state._scenes,
     scene: (state) => (sceneName) => state._scenes[sceneName],
     sceneNames: (state) => Object.keys(state._scenes),
+    output: (state) => {
+      return Object.fromEntries(
+        Object.entries(state._scenes).filter(([key, scene]) => !scene.readonly),
+      )
+    },
   },
   actions: {
+    loadEditorScenes() {
+      this.scenes['fileList'] = {
+        readonly: true,
+        buttons: [
+          [
+            'fileListFile',
+            'fileListFolderButton',
+            'fileListPreviousFolder',
+            'fileListUpArrow',
+            'fileListDownArrow',
+          ],
+        ],
+      }
+    },
     setScenes(scenes) {
       if (scenes) {
         this._scenes = scenes
+      }
+      const { editor } = useUiStore()
+      if (editor) {
+        this.loadEditorScenes()
       }
     },
     addScene(scene) {
