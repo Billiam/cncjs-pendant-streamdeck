@@ -9,7 +9,7 @@ import Theme from '@/components/Theme.vue'
 </script>
 
 <script setup>
-defineProps(['child'])
+const props = defineProps(['child', 'editor'])
 
 const container = Container()
 const bootstrap = Bootstrap(container)
@@ -19,6 +19,9 @@ import { onMounted, onBeforeUnmount, provide, ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
 const uiStore = useUiStore()
+if (props.editor) {
+  uiStore.editor = true
+}
 
 const { rows, columns } = storeToRefs(uiStore)
 const buttonActions = ref()

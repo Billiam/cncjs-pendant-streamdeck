@@ -37,6 +37,7 @@ export const useUiStore = defineStore({
     _font: 'monospace',
     _fontSize: 12,
     _lineHeight: 1.1,
+    editor: false,
     feedrateInterval: 1,
     spindleInterval: 1,
     fileDetailsPath: null,
