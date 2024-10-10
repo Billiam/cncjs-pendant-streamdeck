@@ -379,7 +379,7 @@ body {
     height: 26px;
     border: 1px solid rgba(255, 255, 255, 0.7);
     background:
-      url('/icons/system-uicons/trash.png') no-repeat center,
+      url('icons/system-uicons/trash.png') no-repeat center,
       rgba(0, 0, 0, 0.7);
     background-size: 18px 18px;
     position: absolute;
