@@ -16,6 +16,8 @@ import Cell from '@/components/Cell.vue'
 </script>
 
 <script setup>
+import { useDynamicScene } from '@/lib/dynamic-scene'
+
 const sceneStore = useScenesStore()
 const ui = useUiStore()
 const editor = useEditorStore()
@@ -25,12 +27,7 @@ const { scenes } = storeToRefs(sceneStore)
 const { sceneName } = storeToRefs(ui)
 const { activeButton, activeColumn, activeRow } = storeToRefs(editor)
 
-const scene = computed(() => {
-  if (!sceneName.value) {
-    return
-  }
-  return sceneStore.scene(sceneName.value)
-})
+const { scene } = useDynamicScene()
 
 const buttonNames = computed(() => {
   if (activeColumn.value == null || activeRow.value == null || !scene.value) {
