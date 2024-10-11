@@ -34,18 +34,13 @@ const options = [cnc, gcode, ui].reduce((list, store) => {
     list.push(parentKey)
   }
 
-  Object.entries(store.$state)
-    .filter(([key]) => !key.startsWith('_'))
+  Object.entries(store)
+    .filter(([key]) => /^[^_$]/.test(key))
+    .filter(([_key, value]) => typeof value !== 'function')
     .forEach(([key, value]) => {
       parseValue(children, label, key, value)
     })
 
-  store._getters
-    .filter((getter) => !getter.startsWith('_'))
-    .forEach((getter) => {
-      const value = store[getter]
-      parseValue(children, label, getter, value)
-    })
   children.sort()
 
   return list
