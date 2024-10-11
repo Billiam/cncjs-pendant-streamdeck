@@ -1,5 +1,6 @@
 <script>
 import { storeToRefs } from 'pinia'
+import { computed } from 'vue'
 
 import { arrayWrap } from '@/lib/enumerable'
 import { useButtonStore } from '@/stores/buttons'
@@ -12,7 +13,7 @@ import CellOverlay from './CellOverlay.vue'
 <script setup>
 const buttonStore = useButtonStore()
 const ui = useUiStore()
-const { columns, rows } = storeToRefs(ui)
+const { columns, rows, textSize } = storeToRefs(ui)
 const { buttons: buttonConfig } = storeToRefs(buttonStore)
 
 defineProps({
@@ -24,6 +25,10 @@ defineProps({
     type: Boolean,
     default: false,
   },
+})
+
+const fontSize = computed(() => {
+  return `${textSize}em`
 })
 </script>
 
@@ -49,4 +54,8 @@ defineProps({
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.cell) {
+  font-size: v-bind(fontSize);
+}
+</style>

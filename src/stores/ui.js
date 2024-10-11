@@ -57,6 +57,7 @@ export const useUiStore = defineStore({
     _progressColor: 4,
     _rows: 3,
     sceneStack: ['home'],
+    textSize: 1,
     _textColor: 1,
     _textShadow: false,
     throttle: 0,

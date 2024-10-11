@@ -1,6 +1,6 @@
 <script>
 import { storeToRefs } from 'pinia'
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 
 import { useUiStore } from '@/stores/ui'
 
@@ -20,13 +20,13 @@ import FontSelect from '@/components/editor/FontSelect.vue'
 const ui = useUiStore()
 const {
   pageColor,
+  textSize,
 
   _bgColor: bgColor,
   _columns: columns,
   _rows: rows,
   _font: font,
   _lineHeight: lineHeight,
-  _fontSize: fontSize,
   _gcodeColors: gcodeColors,
   _gcodeLimit: gcodeLimit,
   _palette: palette,
@@ -53,6 +53,14 @@ const paletteOptions = [
     command: deletePaletteColor,
   },
 ]
+const textSizePercent = computed({
+  get() {
+    return textSize * 100
+  },
+  set(value) {
+    textSize.value = value * 0.01
+  },
+})
 </script>
 <template>
   <Fieldset legend="Button layout">
@@ -75,13 +83,11 @@ const paletteOptions = [
     </div>
 
     <div class="form-row">
-      <label class="label">Font size</label>
-      <InputNumber
-        v-model="fontSize"
-        :minFractionDigits="0"
-        :maxFractionDigits="2"
-        fluid
-      />
+      <label class="label">Text size</label>
+      <InputGroup>
+        <InputNumber :min="1" v-model="textSizePercent" />
+        <InputGroupAddon>%</InputGroupAddon>
+      </InputGroup>
     </div>
 
     <div class="form-row">

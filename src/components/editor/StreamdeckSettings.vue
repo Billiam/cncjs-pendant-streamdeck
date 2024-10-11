@@ -114,18 +114,15 @@ const addColor = () => {
 
     <div class="form-row">
       <label class="label">Font size</label>
-      <toggle-setting
-        v-model="streamdeckOverride.fontSize"
-        v-slot="{ enabled }"
-      >
+      <InputGroup>
         <InputNumber
           v-model="fontSize"
           :minFractionDigits="0"
           :maxFractionDigits="2"
-          :disabled="!enabled"
           fluid
         />
-      </toggle-setting>
+        <InputGroupAddon>px</InputGroupAddon>
+      </InputGroup>
     </div>
 
     <div class="form-row">
