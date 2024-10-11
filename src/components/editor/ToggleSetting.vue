@@ -4,6 +4,7 @@ import { ref } from 'vue'
 import { useVmodel } from '@/lib/v-model'
 
 import Checkbox from 'primevue/checkbox'
+import vTooltip from 'primevue/tooltip'
 </script>
 
 <script setup>
@@ -19,7 +20,11 @@ const { model } = useVmodel(props, emits)
 <template>
   <div class="toggle-row flex-stretch flex-row">
     <div class="column checkbox">
-      <Checkbox v-model="model" binary></Checkbox>
+      <Checkbox
+        v-model="model"
+        binary
+        v-tooltip.bottom="'Override UI setting'"
+      />
     </div>
     <div class="setting column" :class="{ disabled: !model }">
       <slot :enabled="model"></slot>
