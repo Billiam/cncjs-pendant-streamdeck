@@ -123,7 +123,7 @@ const textSizePercent = computed({
     </div>
 
     <div class="form-row">
-      <label class="label">Background color</label>
+      <label class="label">Button background color</label>
       <color-picker v-model="bgColor" />
     </div>
 

@@ -163,7 +163,7 @@ const addColor = () => {
     </div>
 
     <div class="form-row">
-      <label class="label">Background color</label>
+      <label class="label">Button background color</label>
       <toggle-setting v-model="streamdeckOverride.bgColor" v-slot="{ enabled }">
         <color-picker v-model="bgColor" :disabled="!enabled" />
       </toggle-setting>
