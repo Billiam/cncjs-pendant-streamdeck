@@ -28,7 +28,7 @@
     "@elgato-stream-deck/node": "^5.4.0",
     "@julusian/jpeg-turbo": "^2.0.0",
     "chalk": "^4.1.2",
-    "cncjs-pendant-streamdeck-validator": "^2.0.0",
+    "cncjs-pendant-streamdeck-validator": "^2.1.0",
     "commander": "^9.3.0",
     "hull.js": "andriiheonia/hull",
     "jsonschema": "^1.4.1",
