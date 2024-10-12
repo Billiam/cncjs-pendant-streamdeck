@@ -1,17 +1,23 @@
 <script>
+import { storeToRefs } from 'pinia'
 import { computed, onMounted, ref, watch } from 'vue'
 
 import { useArrayVmodel } from '@/lib/array-v-model'
+import { useButtonStore } from '@/stores/buttons'
 import { useScenesStore } from '@/stores/scenes'
 
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import RadioButton from 'primevue/radiobutton'
+import Select from 'primevue/select'
 import SelectButton from 'primevue/selectbutton'
 </script>
 
 <script setup>
 const sceneStore = useScenesStore()
+const buttonStore = useButtonStore()
+
+const { _userFlags: userFlags } = storeToRefs(buttonStore)
 
 const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
@@ -76,7 +82,7 @@ const booleanValue = computed({
 
 <template>
   <label class="label">User flag name</label>
-  <InputText v-model="option0" required fluid></InputText>
+  <Select v-model="option0" :options="userFlags" fluid editable></Select>
 
   <div class="value-options">
     <div class="flex-row flex-center">

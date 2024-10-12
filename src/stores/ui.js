@@ -100,6 +100,7 @@ export const useUiStore = defineStore({
         '_rows',
         '_textColor',
         '_textShadow',
+        'textSize',
         'throttle',
         'timeout',
       ]

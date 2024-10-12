@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+import { groupedActions } from '@/lib/grouped-actions'
 import {
   downArrow,
   fileButton,
@@ -35,6 +36,23 @@ export const useButtonStore = defineStore({
     },
     fileButtonNames: () => {
       return Object.keys(fileButtonMap)
+    },
+    _userFlags: (state) => {
+      const flags = Object.values(state._buttons).reduce((list, button) => {
+        button.actions
+          ?.filter((action) =>
+            groupedActions['User flags'].includes(action.action),
+          )
+          .forEach((action) => {
+            const flag = action.arguments?.[0]
+            if (flag != null) {
+              list.add(flag)
+            }
+          })
+        return list
+      }, new Set())
+
+      return Array.from(flags).sort()
     },
     output: (state) => {
       const fileButtonNames = state.fileButtonNames
