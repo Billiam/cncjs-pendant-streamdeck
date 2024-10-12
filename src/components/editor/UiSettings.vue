@@ -55,7 +55,7 @@ const paletteOptions = [
 ]
 const textSizePercent = computed({
   get() {
-    return textSize * 100
+    return textSize.value * 100
   },
   set(value) {
     textSize.value = value * 0.01

@@ -58,23 +58,26 @@ export default (container) => {
 
     uiStore.setStreamdeckConfig(config.streamdeckUi)
 
-    uiStore.setBrightness(uiConfig.brightness)
-    uiStore.setPalette(uiConfig.palette)
-    uiStore.setGrid(uiConfig.rows, uiConfig.columns)
-    uiStore.setThrottle(uiConfig.throttle)
-    uiStore.setGcodeLimit(uiConfig.gcodeLimit)
-    uiStore._textColor = uiConfig.textColor ?? uiStore._textColor
-    uiStore._textShadow = uiConfig.textShadow
-    uiStore._font = uiConfig.font ?? uiStore._font
-    uiStore._fontSize = uiConfig.fontSize ?? uiStore._fontSize
-    uiStore._lineHeight = uiConfig.lineHeight ?? uiStore._lineHeight
-    uiStore.pageColor = uiConfig.pageColor ?? uiStore._pageColor
-    uiStore.setGcodeColors(uiConfig.gcodeColors)
-    uiStore.setBgColor(uiConfig.bgColor)
-    uiStore.setProgressColor(uiConfig.progressColor)
-    uiStore.setTimeout(uiConfig.timeout)
-    connectionStore.setConfig({ ...config.cncjs })
-
+      uiStore.setBrightness(uiConfig.brightness)
+      uiStore.setPalette(uiConfig.palette)
+      uiStore.setGrid(uiConfig.rows, uiConfig.columns)
+      uiStore.setThrottle(uiConfig.throttle)
+      uiStore.setGcodeLimit(uiConfig.gcodeLimit)
+      uiStore.setTextSize(uiConfig.textSize ?? uiStore.textSize)
+      uiStore._textColor = uiConfig.textColor ?? uiStore._textColor
+      uiStore._textShadow = uiConfig.textShadow
+      uiStore._font = uiConfig.font ?? uiStore._font
+      uiStore._fontSize = uiConfig.fontSize ?? uiStore._fontSize
+      uiStore._lineHeight = uiConfig.lineHeight ?? uiStore._lineHeight
+      uiStore.pageColor = uiConfig.pageColor ?? uiStore._pageColor
+      uiStore.setGcodeColors(uiConfig.gcodeColors)
+      uiStore.setBgColor(uiConfig.bgColor)
+      uiStore.setProgressColor(uiConfig.progressColor)
+      uiStore.setTimeout(uiConfig.timeout)
+      connectionStore.setConfig({ ...config.cncjs })
+    } catch (e) {
+      console.error(e)
+    }
     await connectListeners()
 
     return true

@@ -247,6 +247,9 @@ export const useUiStore = defineStore({
     setGcodeLimit(limit) {
       this._gcodeLimit = limit
     },
+    setTextSize(size) {
+      this.textSize = size
+    },
     setTimeout(timeout) {
       this.timeout = timeout
     },
