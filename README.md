@@ -37,6 +37,7 @@ a handful from [Font Awesome](https://github.com/FortAwesome/Font-Awesome).
 - Manage alarms, hold, and pause events (like macro-triggered tool changes)
 - Custom configuration is [well documented](https://billiam.github.io/cncjs-pendant-streamdeck/)
 - [Configuration validator](https://billiam.github.io/cncjs-pendant-streamdeck/validator/)
+- Full GUI config editor
 
 ## Compatibility
 
@@ -118,10 +119,6 @@ Run the pendant
 ```
 cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 ```
-
-## To-do
-
-- Config builder
 
 ## Licenses and credits
 
