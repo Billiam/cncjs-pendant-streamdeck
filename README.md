@@ -7,7 +7,7 @@ A ridiculously configurable mobile web and Elgato Stream Deck pendant for CNCjs 
 
 ![Web view with a 3 x 5 grid layout of buttons for jogging cnc](assets/web.gif)
 
-![Stream Deck device with buttons with buttons for CNC ](assets/streamdeck.jpg)
+![Stream Deck device with buttons configured for CNC usage](assets/streamdeck.jpg)
 
 The web version acts as a prototype for the Stream Deck, and powerful and useful
 pendant as a side effect.
@@ -119,6 +119,28 @@ Run the pendant
 ```
 cncjs-pendant-streamdeck --directory /home/my-name/cncjs-pendant-streamdeck
 ```
+
+## Editor
+
+![Editor interface showing a "page" of buttons with a sidebar containing button configuration options](assets/editor.png)
+
+After installing the web version, visit `/grid/editor.html` in your browser to load the configuration editor.
+
+Update your connection information first, which can be done from the settings gear in the upper right corner, since this will
+allow you to see the cncjs state as normal from the editor.
+
+General interface settings, like the color palette used and CNC settings can be changed in the same settings popup.
+
+Afterward, you can add or remove scenes in the scene list, edit or add new buttons, and change their behavior.
+
+### Limitations
+
+* The editor does not know about your own custom icons, so they will not appear in the icon selector
+* To save your changes, you _must_ download the new configuration using the save icon in the upper right corner of the
+screen, and replace your existing configuration with this one on your cncjs device. You'll need to reload the pendant
+page or restart the pendant service (for Stream Deck) to see your changes.
+* The layout of the file list view, which uses cncjs's watch folders, cannot be edited. You can change the appearance of
+the buttons used in this view from the `fileList` scene in the scenes list.
 
 ## Licenses and credits
 
