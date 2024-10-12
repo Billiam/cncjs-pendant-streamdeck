@@ -1,33 +1,33 @@
 <script>
+import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
 import { storeToRefs } from 'pinia'
 import { computed, ref } from 'vue'
 
-import schema from 'cncjs-pendant-streamdeck-validator/dist/config.schema.json'
+import Color from '@/lib/color'
 import { useButtonStore } from '@/stores/buttons'
 import { useEditorStore } from '@/stores/editor'
 import { useUiStore } from '@/stores/ui'
-import Color from '@/lib/color'
 
+import Button from 'primevue/button'
+import Checkbox from 'primevue/checkbox'
+import Drawer from 'primevue/drawer'
+import InputGroup from 'primevue/inputgroup'
 import InputGroupAddon from 'primevue/inputgroupaddon'
 import InputNumber from 'primevue/inputnumber'
-import InputGroup from 'primevue/inputgroup'
 import InputText from 'primevue/inputtext'
-import Textarea from 'primevue/textarea'
-import Checkbox from 'primevue/checkbox'
-import vTooltip from 'primevue/tooltip'
 import Select from 'primevue/select'
-import Drawer from 'primevue/drawer'
-import Button from 'primevue/button'
+import Textarea from 'primevue/textarea'
+import vTooltip from 'primevue/tooltip'
 
-import IconSelector from '@/components/editor/IconSelector.vue'
-import ColorPicker from '@/components/editor/ColorPicker.vue'
 import Action from '@/components/editor/Action.vue'
+import ColorPicker from '@/components/editor/ColorPicker.vue'
+import IconSelector from '@/components/editor/IconSelector.vue'
 import VariableSelect from '@/components/editor/VariableSelect.vue'
 
-
 const actions = schema.definitions.action.properties.action.enum
+const pattern = '^.+$'
 const buttonTypes =
-  schema.properties.buttons.patternProperties['^.+$'].properties.type.enum
+  schema.properties.buttons.patternProperties[pattern].properties.type.enum
 
 const sortedAlignments = [
   'top left',
@@ -45,7 +45,6 @@ const sortedAlignments = [
 </script>
 
 <script setup>
-
 const color = Color()
 
 const editor = useEditorStore()
@@ -63,7 +62,7 @@ const buttonWriter = (
   field,
   defaultValue = '',
   filterShow = null,
-  filterSave = null
+  filterSave = null,
 ) => {
   return computed({
     get() {
@@ -106,7 +105,7 @@ const textSize = buttonWriter(
   'textSize',
   1,
   (value) => value * 100,
-  (value) => value * 0.01
+  (value) => value * 0.01,
 )
 const typeAttr = buttonWriter('type')
 const gcodeType = computed({
@@ -127,15 +126,14 @@ const setDimensions = (r, c) => {
   columns.value = c
 }
 const addTextVariable = ({ value }) => {
-  text.value += `{{ ${value } }}`
+  text.value += `{{ ${value} }}`
 }
-const appendWord = (source, word) =>
-  source + (source === '' ? '' : ' ') + word
+const appendWord = (source, word) => source + (source === '' ? '' : ' ') + word
 
 const addIfVariable = ({ value }) => {
   ifAttr.value = appendWord(ifAttr.value, value)
 }
-const addDisabledVariable = ({value}) => {
+const addDisabledVariable = ({ value }) => {
   disabledAttr.value = appendWord(disabledAttr.value, value)
 }
 const fileListButton = computed(() => {
@@ -200,20 +198,12 @@ const fileListButton = computed(() => {
       <label class="label">Dimensions</label>
       <div class="flex-row">
         <InputGroup>
-          <InputNumber
-            :min="1"
-            :max="uiRows"
-            v-model="rows"
-          />
+          <InputNumber :min="1" :max="uiRows" v-model="rows" />
           <InputGroupAddon>rows</InputGroupAddon>
         </InputGroup>
 
         <InputGroup>
-          <InputNumber
-            :min="1"
-            :max="uiColumns"
-            v-model="columns"
-          />
+          <InputNumber :min="1" :max="uiColumns" v-model="columns" />
           <InputGroupAddon>columns</InputGroupAddon>
         </InputGroup>
       </div>
