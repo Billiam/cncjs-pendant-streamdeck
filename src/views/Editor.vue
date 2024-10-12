@@ -50,7 +50,9 @@ const showSettings = ref(false)
 const defaultTab = ref('connection')
 const settingsTab = ref(defaultTab)
 watch([connected, socketConnected], ([conn, socket]) => {
-  defaultTab.value = conn && socket ? 'ui' : 'connection'
+  if (!showSettings.value) {
+    defaultTab.value = conn && socket ? 'ui' : 'connection'
+  }
 })
 
 const gap = computed(() => 10 * (isStreamdeck.value ? 2 : 1))
