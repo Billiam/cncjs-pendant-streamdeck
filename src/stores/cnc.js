@@ -74,6 +74,7 @@ export const useCncStore = defineStore({
     connected: false,
     connecting: false,
     socketConnected: false,
+    configMissing: false,
     token: null,
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,

@@ -80,7 +80,7 @@ export default () => {
       try {
         await connection.connect()
       } catch (e) {
-        console.error({ e })
+        console.error(e)
       }
       return connection.socket
     },

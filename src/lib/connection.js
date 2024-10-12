@@ -144,7 +144,6 @@ proto.connect = function () {
     this.socket = socket
 
     socket.on('connect_error', (e) => {
-      console.error(e.type, e)
       reject(new Error(e.description?.message))
     })
 

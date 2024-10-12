@@ -104,15 +104,15 @@ export const useUiStore = defineStore({
         'throttle',
         'timeout',
       ]
-      const config = {}
-      fields.forEach((field) => {
+
+      return fields.reduce((config, field) => {
         const saveField = field.startsWith('_') ? field.slice(1) : field
 
         if (state[field] != null) {
           config[saveField] = state[field]
         }
-      })
-      return config
+        return config
+      }, {})
     },
     _streamdeckOutput: (state) => {
       const config = {}

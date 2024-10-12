@@ -43,20 +43,25 @@ export default (container) => {
     const buttonStore = useButtonStore()
     const sceneStore = useScenesStore()
 
-    const config = (await container.get('config')) ?? {}
+    try {
+      let config = await container.get('config')
+      if (!config) {
+        cncStore.configMissing = true
+      }
+      config ??= {}
 
-    // initialize stores from config data
-    buttonStore.setButtons(config.buttons)
-    sceneStore.setScenes(config.scenes)
+      // initialize stores from config data
+      buttonStore.setButtons(config.buttons)
+      sceneStore.setScenes(config.scenes)
 
-    cncStore.setAxes(config.machine?.axes)
-    cncStore.setAxisSpeeds(config.machine?.axisSpeeds)
+      cncStore.setAxes(config.machine?.axes)
+      cncStore.setAxisSpeeds(config.machine?.axisSpeeds)
 
-    // TODO: make home scene configurable
-    uiStore.setScene('home')
-    const uiConfig = { ...config.ui }
+      // TODO: make home scene configurable
+      uiStore.setScene('home')
+      const uiConfig = { ...config.ui }
 
-    uiStore.setStreamdeckConfig(config.streamdeckUi)
+      uiStore.setStreamdeckConfig(config.streamdeckUi)
 
       uiStore.setBrightness(uiConfig.brightness)
       uiStore.setPalette(uiConfig.palette)
