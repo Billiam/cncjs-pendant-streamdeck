@@ -1,6 +1,13 @@
 import SparkMD5 from 'spark-md5'
 import { computed } from 'vue'
 
+import {
+  downArrow,
+  fileButton,
+  folderButton,
+  previousFolder,
+  upArrow,
+} from '@/lib/scene/file-list-buttons'
 import { useButtonStore } from '@/stores/buttons'
 import { useCncStore } from '@/stores/cnc'
 import { useFileListStore } from '@/stores/file-list'
@@ -16,33 +23,6 @@ const mergeConfigs = (...configs) => {
 const addKey = (config) => {
   config['key'] = SparkMD5.hash(JSON.stringify(config))
   return config
-}
-
-export const fileButton = {
-  text: 'filename',
-  textAlignment: 'bottom left',
-  icon: 'default/small_document.png',
-  bgColor: 5,
-}
-export const folderButton = {
-  text: 'folder path',
-  icon: 'default/small_folder.png',
-  textAlignment: 'bottom left',
-  bgColor: 4,
-}
-export const previousFolder = {
-  text: '..',
-  icon: 'default/small_folder_open_back.png',
-  textAlignment: 'bottom center',
-  bgColor: 4,
-}
-export const upArrow = {
-  icon: 'fluent-ui/caret_up.png',
-  bgColor: 7,
-}
-export const downArrow = {
-  icon: 'fluent-ui/caret_down.png',
-  bgColor: 7,
 }
 
 export const useFileList = () => {

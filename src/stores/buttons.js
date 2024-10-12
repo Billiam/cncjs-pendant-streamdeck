@@ -7,7 +7,7 @@ import {
   folderButton,
   previousFolder,
   upArrow,
-} from '@/lib/scene/file-list'
+} from '@/lib/scene/file-list-buttons'
 import { useUiStore } from '@/stores/ui'
 
 const fileButtonMap = {

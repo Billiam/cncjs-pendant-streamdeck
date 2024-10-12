@@ -9,7 +9,7 @@ export const useGcode = (config) => {
   const ui = useUiStore()
 
   const renderGcode = computed(
-    () => config.type === 'gcodePreview' && gcode.geometry,
+    () => config.value.type === 'gcodePreview' && gcode.geometry,
   )
 
   const { gcodeColors } = storeToRefs(ui)

@@ -58,7 +58,7 @@ export default class CliButton {
   }
 
   setup() {
-    const config = ref(config)
+    const config = ref(this.config)
 
     const { cellBgColor, cellProgressColor, cellActiveColor } = useColor(config)
 
@@ -71,17 +71,17 @@ export default class CliButton {
       textSvgAlignment,
       textSvgVerticalAlignment,
       textLines,
-    } = useText(this.config)
+    } = useText(config)
 
-    const width = (this.config.columns ?? 1) * this.size
-    const height = (this.config.rows ?? 1) * this.size
+    const width = (config.value.columns ?? 1) * this.size
+    const height = (config.value.rows ?? 1) * this.size
     this.buttonHandler = new CliButtonHandler(
-      this.config.actions,
+      config.value.actions,
       this.buttonActions,
     )
-    const { renderGcode, gcodeColors } = useGcode(this.config)
-    const { show, enabled } = useVisibility(this.config, this.buttonActions)
-    const { loading } = useLoading(this.config)
+    const { renderGcode, gcodeColors } = useGcode(config)
+    const { show, enabled } = useVisibility(config, this.buttonActions)
+    const { loading } = useLoading(config)
 
     this.show = show
     this.enabled = enabled
@@ -148,7 +148,7 @@ export default class CliButton {
       gcodeLine.value = index
     }
 
-    if (this.config.type === 'gcodePreview') {
+    if (config.value.type === 'gcodePreview') {
       this.watchEffect((onInvalidate) => {
         this.canvas = new Canvas(width - 10, height - 10)
 
@@ -162,7 +162,7 @@ export default class CliButton {
         const halted = () => halt
 
         const settings = {
-          animate: this.config.animated,
+          animate: config.value.animated,
           throttle: this.throttle,
           lineWidth: this.canvas.lineWidth,
           autosize: false,
@@ -200,8 +200,8 @@ export default class CliButton {
     this.watchEffect(() => {
       const time = performance.now()
       // eager load computed values for watch effect
-      const config = {
-        ...this.config,
+      const effectConfig = {
+        ...config.value,
         buttonSize: this.size,
         height,
         index: this.index,
@@ -225,7 +225,7 @@ export default class CliButton {
           show,
         }),
       }
-      throttledRender(time, config)
+      throttledRender(time, effectConfig)
     })
   }
 }

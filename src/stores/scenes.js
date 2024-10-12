@@ -1,12 +1,5 @@
 import { defineStore } from 'pinia'
 
-import {
-  downArrow,
-  fileButton,
-  folderButton,
-  previousFolder,
-  upArrow,
-} from '@/lib/scene/file-list'
 import { useButtonStore } from '@/stores/buttons'
 import { useUiStore } from '@/stores/ui'
 
