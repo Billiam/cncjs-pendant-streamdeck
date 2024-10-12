@@ -165,7 +165,11 @@ const contextOptions = [
           @hide="selectedSceneTab = null"
         />
       </Tabs>
-      <Button label="Add" @click="addSceneDialogOpen = true"></Button>
+      <Button
+        class="add-scene"
+        label="Add scene"
+        @click="addSceneDialogOpen = true"
+      ></Button>
     </div>
   </div>
 
@@ -251,5 +255,9 @@ const contextOptions = [
   margin-top: 2rem;
   display: flex;
   justify-content: space-between;
+}
+.add-scene:deep(.p-button-label) {
+  padding: 0 10px;
+  white-space: nowrap;
 }
 </style>
