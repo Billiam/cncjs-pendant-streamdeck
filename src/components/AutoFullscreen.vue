@@ -1,5 +1,6 @@
 <script setup>
 import { onMounted, onUnmounted } from 'vue'
+
 const deviceOrientation = () => {
   const toggle = screen?.orientation?.type?.includes('landscape')
     ? document.documentElement.requestFullscreen

@@ -8,11 +8,11 @@ export const getAccessToken = () => {
 }
 
 export const fetchConfig = async () => {
-  const response = await fetch('config.json')
   try {
-    return response.json()
+    const response = await fetch('config.json')
+    return await response.json()
   } catch (e) {
-    configError.value = true
+    // return {}
   }
 }
 
@@ -25,12 +25,9 @@ export const GcodeWorker = () => {
 }
 
 export const OutlineWorker = () => {
-  return new Worker(
-    new URL('../../outline-worker.js?worker', import.meta.url),
-    {
-      type: 'module',
-    }
-  )
+  return new Worker(new URL('../../outline-worker.js', import.meta.url), {
+    type: 'module',
+  })
 }
 
 export const onWorkerMessage = (fn) => {

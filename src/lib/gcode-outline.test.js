@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
+
 import {
-  orderByClosest,
   gcodeToPoints,
+  orderByClosest,
   pointsToGcode,
 } from '@/lib/gcode-outline'
 
@@ -49,7 +50,7 @@ G1 X11 Y12 F200
         [1, 2],
         [11, 12],
       ])
-    }
+    },
   )
 
   test.concurrent(
@@ -69,7 +70,7 @@ G2 X20Y0 I0 J-20.0
 
       expect.soft(xPoints).toStrictEqual([...xPoints].sort((a, b) => a - b))
       expect.soft(yPoints).toStrictEqual([...yPoints].sort((a, b) => b - a))
-    }
+    },
   )
 })
 
@@ -117,7 +118,7 @@ describe('pointsToGcode', () => {
       `G0 X0 Y0
 G04 P.5
 G0 X5 Y10
-G04 P.5`
+G04 P.5`,
     )
   })
 })

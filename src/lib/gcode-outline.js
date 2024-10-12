@@ -1,6 +1,7 @@
-import { parse } from '@/vendor/gcodetogeometry/gcodetogeometry'
-import { pointsOnBezierCurves } from 'points-on-curve'
 import hull from 'hull.js'
+import { pointsOnBezierCurves } from 'points-on-curve'
+
+import { parse } from '@/vendor/gcodetogeometry/gcodetogeometry'
 
 const appendNewPoint = (list, point) => {
   const lastPoint = list[list.length - 1]
@@ -18,7 +19,7 @@ const appendNewPoints = (list, ...points) => {
 export const gcodeToPoints = (gcode) => {
   // strip lines beginning with % or containing [
   const parsedGcode = parse(
-    gcode.replace(/^%.*/gm, '').replace(/^.*\[.*/gm, '')
+    gcode.replace(/^%.*/gm, '').replace(/^.*\[.*/gm, ''),
   )
 
   return parsedGcode.lines.reduce((points, line) => {
@@ -26,7 +27,7 @@ export const gcodeToPoints = (gcode) => {
       appendNewPoints(
         points,
         [line.start.x, line.start.y],
-        [line.end.x, line.end.y]
+        [line.end.x, line.end.y],
       )
     } else if (line.type === 'G2' || line.type === 'G3') {
       line.beziers.forEach((point) => {
@@ -39,14 +40,14 @@ export const gcodeToPoints = (gcode) => {
               [point.p3.x, point.p3.y],
             ],
             0.001,
-            0.01
+            0.01,
           )
           appendNewPoints(points, ...curvePoints)
         } else {
           appendNewPoints(
             points,
             [point.p0.x, point.p0.y],
-            [point.p3.x, point.p3.y]
+            [point.p3.x, point.p3.y],
           )
         }
       })
@@ -77,7 +78,7 @@ const fixedDigits = (number, limit = 4) =>
 
 export const pointsToGcode = (points, feedbackUnits) => {
   const pointGcode = points.map(
-    ([x, y]) => `G0 X${fixedDigits(x)} Y${fixedDigits(y)}`
+    ([x, y]) => `G0 X${fixedDigits(x)} Y${fixedDigits(y)}`,
   )
   const sleep = 'G04 P.5'
   pointGcode.splice(1, 0, sleep)
@@ -99,7 +100,7 @@ export const orderByClosest = (points, x, y) => {
     {
       index: 0,
       distance: Infinity,
-    }
+    },
   )
   const index = closestIndex.index
 

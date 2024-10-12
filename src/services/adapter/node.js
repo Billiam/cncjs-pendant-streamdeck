@@ -1,11 +1,15 @@
 import jwt from 'jsonwebtoken'
+
 import cliOptions from '../cli-options'
+
+const { performance: nodePerformance } = require('perf_hooks')
+const chalk = require('chalk')
 const fsModule = require('fs')
 const path = require('path')
+
 const { Worker } = require('worker_threads')
+
 const fs = fsModule.promises
-const chalk = require('chalk')
-const { performance: nodePerformance } = require('perf_hooks')
 
 const getUserHome = function () {
   return process.env[process.platform === 'win32' ? 'USERPROFILE' : 'HOME']
@@ -43,7 +47,7 @@ export const getAccessToken = async (secret, expiration) => {
   secret = await getSecret(secret)
   if (!secret) {
     console.error(
-      chalk.red('Secret is required, see --secret command line option')
+      chalk.red('Secret is required, see --secret command line option'),
     )
     process.exit(1)
   }

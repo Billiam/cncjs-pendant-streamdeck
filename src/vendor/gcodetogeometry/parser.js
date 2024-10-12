@@ -301,7 +301,7 @@ function peg$parse(input, options) {
   if ('startRule' in options) {
     if (!(options.startRule in peg$startRuleFunctions)) {
       throw new Error(
-        'Can\'t start parsing from rule "' + options.startRule + '".'
+        'Can\'t start parsing from rule "' + options.startRule + '".',
       )
     }
 
@@ -325,7 +325,7 @@ function peg$parse(input, options) {
     throw peg$buildStructuredError(
       [peg$otherExpectation(description)],
       input.substring(peg$savedPos, peg$currPos),
-      location
+      location,
     )
   }
 
@@ -437,7 +437,7 @@ function peg$parse(input, options) {
       peg$SyntaxError.buildMessage(expected, found),
       expected,
       found,
-      location
+      location,
     )
   }
 
@@ -1609,7 +1609,7 @@ function peg$parse(input, options) {
       peg$maxFailPos < input.length ? input.charAt(peg$maxFailPos) : null,
       peg$maxFailPos < input.length
         ? peg$computeLocation(peg$maxFailPos, peg$maxFailPos + 1)
-        : peg$computeLocation(peg$maxFailPos, peg$maxFailPos)
+        : peg$computeLocation(peg$maxFailPos, peg$maxFailPos),
     )
   }
 }

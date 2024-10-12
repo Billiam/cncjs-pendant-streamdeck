@@ -8,7 +8,7 @@ export default (getter) => {
     (newValue) => {
       refValue.value = newValue
     },
-    { immediate: true }
+    { immediate: true },
   )
   return refValue
 }

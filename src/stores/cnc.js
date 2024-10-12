@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia'
+
 // TODO: Take speeds and distances from config
 const jogDistances = {
   mm: [0.001, 0.01, 0.1, 1, 10, 20, 50, 100],
@@ -72,6 +73,8 @@ export const useCncStore = defineStore({
   state: () => ({
     connected: false,
     connecting: false,
+    socketConnected: false,
+    configMissing: false,
     token: null,
     runState: cncStates.IDLE,
     workflowState: workflowStates.IDLE,
@@ -120,13 +123,14 @@ export const useCncStore = defineStore({
       units: 'G21',
       wcs: 'G54',
     },
-    axes: ['x', 'y', 'z', 'a', 'b', 'c'],
+    axes: ['x', 'y', 'z'],
+    axisSpeeds: {},
 
     spindleRpm: 0,
     feedRate: 0,
 
-    activeCommands: {},
-    activeWorkers: {},
+    _activeCommands: {},
+    _activeWorkers: {},
   }),
 
   actions: {
@@ -139,6 +143,9 @@ export const useCncStore = defineStore({
     },
     setConnecting(connecting = true) {
       this.connecting = connecting
+    },
+    setSocketConnected(connected) {
+      this.socketConnected = connected
     },
     setToken(token) {
       this.token = token
@@ -182,7 +189,12 @@ export const useCncStore = defineStore({
     },
     setAxes(axes) {
       if (axes) {
-        this.axes = Object.freeze(axes)
+        this.axes = axes
+      }
+    },
+    setAxisSpeeds(speeds) {
+      if (speeds) {
+        this.axisSpeeds = speeds
       }
     },
     setVersion(version) {
@@ -205,7 +217,7 @@ export const useCncStore = defineStore({
       this.jogSpeed = listIncrease(
         this.jogSpeed,
         this.speeds,
-        this.speedFallback
+        this.speedFallback,
       )
     },
 
@@ -213,7 +225,7 @@ export const useCncStore = defineStore({
       this.jogSpeed = listDecrease(
         this.jogSpeed,
         this.speeds,
-        this.speedFallback
+        this.speedFallback,
       )
     },
     setError(error) {
@@ -284,31 +296,31 @@ export const useCncStore = defineStore({
       }, {})
     },
     addActiveCommand(commandId, taskId) {
-      this.activeCommands[commandId] = taskId
+      this._activeCommands[commandId] = taskId
     },
     clearActiveCommand(taskId) {
-      Object.keys(this.activeCommands).forEach((key) => {
-        if (this.activeCommands[key] === taskId) {
-          delete this.activeCommands[key]
+      Object.keys(this._activeCommands).forEach((key) => {
+        if (this._activeCommands[key] === taskId) {
+          delete this._activeCommands[key]
         }
       })
     },
     clearActiveCommands() {
-      Object.keys(this.activeCommands).forEach((key) => {
-        delete this.activeCommands[key]
+      Object.keys(this._activeCommands).forEach((key) => {
+        delete this._activeCommands[key]
       })
     },
     commandRunning(id) {
-      return !!this.activeCommands[id]
+      return !!this._activeCommands[id]
     },
     addActiveWorker(workerId) {
-      this.activeWorkers[workerId] = true
+      this._activeWorkers[workerId] = true
     },
     clearActiveWorker(workerId) {
-      delete this.activeWorkers[workerId]
+      delete this._activeWorkers[workerId]
     },
     workerRunning(workerId) {
-      return !!this.activeWorkers[workerId]
+      return !!this._activeWorkers[workerId]
     },
     async loadCommands() {
       if (!this.client) {
@@ -323,6 +335,20 @@ export const useCncStore = defineStore({
         lookup[command.title] = command.id
         return lookup
       }, {})
+    },
+    async listCommands() {
+      if (!this.commands) {
+        await this.loadCommands()
+      }
+
+      return this.commands
+    },
+    async listMacros() {
+      if (!this.macros) {
+        await this.loadMacros()
+      }
+
+      return this.macros
     },
     async runCommand(id) {
       if (!this.client) {
@@ -348,6 +374,11 @@ export const useCncStore = defineStore({
     },
   },
   getters: {
+    _output: (state) => {
+      const fields = ['axes', 'axisSpeeds']
+
+      return Object.fromEntries(fields.map((field) => [field, state[field]]))
+    },
     isRelativeMove: (state) => state.modal.distance === 'G91',
     distanceUnit: (state) => (state.modal.units === 'G21' ? 'mm' : 'in'),
     distances: (state) => jogDistances[state.distanceUnit],

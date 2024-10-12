@@ -6,7 +6,7 @@ export default ({ duration, fps, loop = false, callback }) => {
   const percentCallback = () => {
     const percent = Math.max(
       0,
-      Math.min(max, (Date.now() - startTime) / duration)
+      Math.min(max, (Date.now() - startTime) / duration),
     )
     callback(percent % (loop ? 1 : Infinity))
     if (percent < 1 || loop) {

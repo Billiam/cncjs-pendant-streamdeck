@@ -1,15 +1,15 @@
 <script>
-import vPointerHold from '@/directives/pointer-hold'
-import vMultiPointer from '@/directives/multi-pointer'
+import { inject } from 'vue'
 
-import { inject, defineEmits } from 'vue'
+import vMultiPointer from '@/directives/multi-pointer'
+import vPointerHold from '@/directives/pointer-hold'
 </script>
 
 <script setup>
+import { computed, onBeforeUnmount } from 'vue'
 import { useButton } from '@/lib/cell/button'
 import { useCncStore } from '@/stores/cnc'
 import { useUiStore } from '@/stores/ui'
-import { computed, onBeforeUnmount } from 'vue'
 
 const cnc = useCncStore()
 const ui = useUiStore()

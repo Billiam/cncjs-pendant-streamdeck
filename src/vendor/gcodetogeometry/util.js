@@ -270,7 +270,7 @@ util.scaleAndRotation = function (
   angle,
   length,
   re,
-  im
+  im,
 ) {
   var c = center,
     p = point,

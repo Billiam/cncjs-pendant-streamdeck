@@ -28,6 +28,7 @@
     "@elgato-stream-deck/node": "^5.4.0",
     "@julusian/jpeg-turbo": "^2.0.0",
     "chalk": "^4.1.2",
+    "cncjs-pendant-streamdeck-validator": "^2.0.0",
     "commander": "^9.3.0",
     "hull.js": "andriiheonia/hull",
     "jsonschema": "^1.4.1",
@@ -45,11 +46,14 @@
     "vue": "^3.2.33"
   },
   "devDependencies": {
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@vitejs/plugin-legacy": "^2.0.0",
     "@vitejs/plugin-vue": "^3.0.1",
+    "@primevue/themes": "^4.0.5",
     "cation": "https://github.com/billiam/Cation.git",
     "git-conventional-commits": "https://github.com/billiam/git-conventional-commits.git#custom-formatting",
-    "prettier": "^2.6.2",
+    "prettier": "^3.3.3",
+    "primevue": "^4.0.5",
     "sass": "^1.52.1",
     "vite": "^3.0.1",
     "vitest": "^2.0.5"

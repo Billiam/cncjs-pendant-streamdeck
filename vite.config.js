@@ -1,7 +1,7 @@
+import vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
 import { fileURLToPath, URL } from 'url'
 import { defineConfig, loadEnv } from 'vite'
-
-import vue from '@vitejs/plugin-vue'
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
@@ -18,7 +18,7 @@ export default defineConfig(({ command, mode }) => {
           './node_modules/engine.io-client/lib/xmlhttprequest.js',
         '@': fileURLToPath(new URL('./src', import.meta.url)),
         adapter: fileURLToPath(
-          new URL('./src/services/adapter/web.js', import.meta.url)
+          new URL('./src/services/adapter/web.js', import.meta.url),
         ),
       },
     },
@@ -35,6 +35,10 @@ export default defineConfig(({ command, mode }) => {
       outDir: '../dist/web',
       emptyOutDir: true,
       rollupOptions: {
+        input: {
+          index: resolve(__dirname, 'src/index.html'),
+          editor: resolve(__dirname, 'src/editor.html'),
+        },
         output: {
           assetFileNames: '[name][extname]',
           entryFileNames: '[name].js',

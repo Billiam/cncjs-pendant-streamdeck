@@ -1,8 +1,11 @@
-<script setup>
-import Color from '@/lib/color'
-import { useUiStore } from '@/stores/ui'
+<script>
 import { computed, onMounted, watchEffect } from 'vue'
 
+import Color from '@/lib/color'
+import { useUiStore } from '@/stores/ui'
+</script>
+
+<script setup>
 const ui = useUiStore()
 
 const color = Color()

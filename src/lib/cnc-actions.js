@@ -1,22 +1,27 @@
-import { useCncStore } from '@/stores/cnc'
+import { storeToRefs } from 'pinia'
+
 import { useRunGcode } from '@/lib/run-gcode'
+import { useCncStore } from '@/stores/cnc'
+import { useConnectionStore } from '@/stores/connection'
 import { useUiStore } from '@/stores/ui'
 
-export default (socket, port, machineConfig, actionBus, ackBus) => {
+export default (socket, actionBus, ackBus) => {
   const cnc = useCncStore()
   const ui = useUiStore()
-  const axisSpeeds = machineConfig?.axisSpeeds || {}
+  const connection = useConnectionStore()
+
+  const { axisSpeeds } = storeToRefs(cnc)
+  const { port } = storeToRefs(connection)
 
   const { runGcode, withRelative, withAbsolute } = useRunGcode(socket, port)
 
   const command = (...args) => {
-    socket.emit('command', port, ...args)
+    socket.emit('command', port.value, ...args)
   }
 
   const jog = (direction, axis) => {
     const distance = cnc.jogDistance
     const signedDistance = direction === '-' ? -distance : distance
-
     withRelative(() => {
       runGcode(`G0 ${axis}${signedDistance}`)
     })
@@ -49,7 +54,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
     // X = speed * direction * multiplier
     // Math.sqrt(x^2+y^2+z^2...)
     const diagonalComponent = Math.sqrt(
-      active.map(([, value]) => value ** 2).reduce((sum, val) => sum + val, 0)
+      active.map(([, value]) => value ** 2).reduce((sum, val) => sum + val, 0),
     )
     // X = (500 * -1 * 1)/D
     return active.map(([key, direction]) => {
@@ -109,7 +114,7 @@ export default (socket, port, machineConfig, actionBus, ackBus) => {
   const smoothJog = (direction, axis) => {
     const directionModifier = direction === '-' ? -1 : 1
 
-    const speedModifier = axisSpeeds?.[axis] ?? 1
+    const speedModifier = axisSpeeds.value?.[axis] ?? 1
     const v = directionModifier * speedModifier
 
     if (jogState.axes[axis] != null) {

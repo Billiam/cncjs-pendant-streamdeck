@@ -1,4 +1,15 @@
 {
   "semi": false,
-  "singleQuote": true
+  "singleQuote": true,
+  "plugins": ["@trivago/prettier-plugin-sort-imports"],
+
+  "importOrder": [
+    "^(@/|\\.)(.*?)(?<!\\.vue)$",
+    "^primevue/",
+    "^(@/|\\.).*\\.vue$"
+  ],
+  "importOrderSortSpecifiers": true,
+
+  "importOrderSeparation": true,
+  "importOrderCaseInsensitive": true
 }

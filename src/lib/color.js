@@ -1,5 +1,6 @@
-import { useUiStore } from '@/stores/ui'
 import tinycolor from 'tinycolor2'
+
+import { useUiStore } from '@/stores/ui'
 
 export default () => {
   const ui = useUiStore()
@@ -7,6 +8,21 @@ export default () => {
   const normalizeColor = (color) => {
     if (typeof color === 'number') {
       return ui.palette[color]
+    }
+    return color
+  }
+
+  const findColor = (color) => {
+    if (typeof color === 'number') {
+      return color
+    }
+    const lowerColor = color.toLowerCase()
+
+    const palette = Object.keys(ui.palette).find(
+      (key) => ui.palette[key].toLowerCase() === lowerColor,
+    )
+    if (palette != null) {
+      return palette * 1
     }
     return color
   }
@@ -23,12 +39,13 @@ export default () => {
   }
 
   const contrastColor = (color) => {
-    return tinycolor(color).isLight() ? '#000' : '#fff'
+    return tinycolor(color).isLight() ? '#000000' : '#ffffff'
   }
 
   return {
     highlightColor,
     normalizeColor,
+    findColor,
     contrastColor,
   }
 }

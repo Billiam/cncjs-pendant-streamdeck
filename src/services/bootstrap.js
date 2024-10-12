@@ -1,5 +1,6 @@
 import { useButtonStore } from '@/stores/buttons'
 import { useCncStore } from '@/stores/cnc'
+import { useConnectionStore } from '@/stores/connection'
 import { useFileListStore } from '@/stores/file-list'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
@@ -24,7 +25,7 @@ export default (container) => {
 
   const cleanup = async () => {
     const busPromises = ['actionBus', 'ackBus', 'connectionBus'].map(
-      (busName) => container.get(busName)
+      (busName) => container.get(busName),
     )
     const busses = await Promise.all(busPromises)
     busses.forEach((bus) => bus.all.clear())
@@ -32,47 +33,64 @@ export default (container) => {
     stateFeeder?.destroy()
     buttonActions?.destroy()
 
-    container.remove('stateFeeder')
-    container.remove('cncActions')
-    container.remove('buttonActions')
+    container.clearCache()
   }
 
   const initializeStores = async () => {
     const uiStore = useUiStore()
     const cncStore = useCncStore()
-    const fileListStore = useFileListStore()
+    const connectionStore = useConnectionStore()
     const buttonStore = useButtonStore()
     const sceneStore = useScenesStore()
 
-    const config = await container.get('config')
+    try {
+      let config = await container.get('config')
+      if (!config) {
+        cncStore.configMissing = true
+      }
+      config ??= {}
 
-    // initialize stores from config data
-    buttonStore.setButtons(Object.freeze(config.buttons))
-    sceneStore.setScenes(Object.freeze(config.scenes))
-    cncStore.setAxes(config.machine?.axes)
+      // initialize stores from config data
+      buttonStore.setButtons(config.buttons)
+      sceneStore.setScenes(config.scenes)
 
-    // TODO: make home scene configurable
-    uiStore.setScene('home')
-    const uiConfig = { ...config.ui }
+      cncStore.setAxes(config.machine?.axes)
+      cncStore.setAxisSpeeds(config.machine?.axisSpeeds)
 
-    if (import.meta.env.SSR) {
-      Object.assign(uiConfig, config.streamdeckUi || {})
+      // TODO: make home scene configurable
+      uiStore.setScene('home')
+      const uiConfig = { ...config.ui }
+
+      uiStore.setStreamdeckConfig(config.streamdeckUi)
+
+      uiStore.setBrightness(uiConfig.brightness)
+      uiStore.setPalette(uiConfig.palette)
+      uiStore.setGrid(uiConfig.rows, uiConfig.columns)
+      uiStore.setThrottle(uiConfig.throttle)
+      uiStore.setGcodeLimit(uiConfig.gcodeLimit)
+      uiStore.setTextSize(uiConfig.textSize ?? uiStore.textSize)
+      uiStore._textColor = uiConfig.textColor ?? uiStore._textColor
+      uiStore._textShadow = uiConfig.textShadow
+      uiStore._font = uiConfig.font ?? uiStore._font
+      uiStore._fontSize = uiConfig.fontSize ?? uiStore._fontSize
+      uiStore._lineHeight = uiConfig.lineHeight ?? uiStore._lineHeight
+      uiStore.pageColor = uiConfig.pageColor ?? uiStore._pageColor
+      uiStore.setGcodeColors(uiConfig.gcodeColors)
+      uiStore.setBgColor(uiConfig.bgColor)
+      uiStore.setProgressColor(uiConfig.progressColor)
+      uiStore.setTimeout(uiConfig.timeout)
+      connectionStore.setConfig({ ...config.cncjs })
+    } catch (e) {
+      console.error(e)
     }
+    await connectListeners()
 
-    uiStore.setBrightness(uiConfig.brightness)
-    uiStore.setPalette(uiConfig.palette)
-    uiStore.setGrid(uiConfig.rows, uiConfig.columns)
-    uiStore.setThrottle(uiConfig.throttle)
-    uiStore.setGcodeLimit(uiConfig.gcodeLimit)
-    uiStore.textColor = uiConfig.textColor ?? uiStore.textColor
-    uiStore.textShadow = uiConfig.textShadow
-    uiStore.font = uiConfig.font ?? uiStore.font
-    uiStore.fontSize = uiConfig.fontSize ?? uiStore.fontSize
-    uiStore.lineHeight = uiConfig.lineHeight ?? uiStore.lineHeight
-    uiStore.pageColor = uiConfig.pageColor ?? uiStore.pageColor
-    uiStore.setGcodeColors(uiConfig.gcodeColors)
-    uiStore.setBgColor(uiConfig.bgColor)
-    uiStore.setProgressColor(uiConfig.progressColor)
+    return true
+  }
+
+  const connectListeners = async () => {
+    const cncStore = useCncStore()
+    const fileListStore = useFileListStore()
 
     // more store population
     await Promise.all([
@@ -86,11 +104,11 @@ export default (container) => {
         cncStore.setToken(token)
       })(),
     ])
-    const socket = await container.get('socket')
     try {
+      const socket = await container.get('socket')
       await socket.connect()
     } catch (e) {
-      console.error('socket failed')
+      console.error('socket connection failed', e)
     }
 
     ;[stateFeeder, cncActions, buttonActions] = await Promise.all([
@@ -98,12 +116,12 @@ export default (container) => {
       container.get('cncActions'),
       container.get('buttonActions'),
     ])
-
-    return true
   }
 
   return {
+    addConnectionListeners,
     cleanup,
+    connectListeners,
     start,
   }
 }

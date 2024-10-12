@@ -1,14 +1,32 @@
-<script setup>
+<script>
+import { computed, onBeforeMount } from 'vue'
+
 import { useFileList } from '@/lib/scene/file-list'
 import { useUiStore } from '@/stores/ui'
-const { rows, columns } = useUiStore()
-import { onBeforeMount } from 'vue'
+</script>
+
+<script setup>
 import Cell from './Cell.vue'
+import { storeToRefs } from 'pinia'
+
+defineProps({
+  editor: {
+    type: Boolean,
+    default: false,
+  },
+})
+const ui = useUiStore()
+
+const { rows, columns, textSize } = storeToRefs(ui)
 
 const { buttons, loadFiles } = useFileList()
 
 onBeforeMount(() => {
   loadFiles()
+})
+
+const fontSize = computed(() => {
+  return `${textSize}em`
 })
 </script>
 
@@ -22,4 +40,8 @@ onBeforeMount(() => {
   </div>
 </template>
 
-<style scoped></style>
+<style scoped>
+:deep(.cell) {
+  font-size: v-bind(fontSize);
+}
+</style>

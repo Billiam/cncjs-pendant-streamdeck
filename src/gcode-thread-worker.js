@@ -1,4 +1,5 @@
 import { parse } from '@/vendor/gcodetogeometry/gcodetogeometry'
+
 const parentPort = require('worker_threads').parentPort
 
 const stringLimit = (str, limit) => {
