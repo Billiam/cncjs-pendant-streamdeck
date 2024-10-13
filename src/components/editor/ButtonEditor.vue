@@ -176,7 +176,9 @@ const fileListButton = computed(() => {
           :binary="true"
         />
 
-        <label class="label" for="gcode_preview"> Render gcode</label>
+        <label class="label" for="gcode_preview">Render gcode <span class="help"
+          v-tooltip="'Display currently loaded gcode in this button'"
+        ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></span></label>
       </div>
     </div>
 
