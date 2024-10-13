@@ -6,6 +6,7 @@ import { useConnectionStore } from '@/stores/connection'
 
 import Button from 'primevue/button'
 import Fieldset from 'primevue/fieldset'
+import InputGroup from 'primevue/inputgroup'
 import InputNumber from 'primevue/inputnumber'
 import InputText from 'primevue/inputtext'
 import Select from 'primevue/select'
@@ -19,8 +20,15 @@ const connection = useConnectionStore()
 const cnc = useCncStore()
 
 const baudOptions = [250000, 115200, 76800, 57600, 38400, 19200, 9600, 2400]
-const { baudRate, controllerType, port, secure, socketAddress, socketPort } =
-  storeToRefs(connection)
+const {
+  accessTokenExpiration,
+  baudRate,
+  controllerType,
+  port,
+  secure,
+  socketAddress,
+  socketPort,
+} = storeToRefs(connection)
 
 const container = inject('container')
 
@@ -71,6 +79,29 @@ const booleanOptions = [
   { value: true, label: 'true' },
   { value: false, label: 'false' },
 ]
+
+const expirationOptions = [
+  { label: 'hours', value: 'h' },
+  { label: 'days', value: 'd' },
+  { label: 'years', value: 'y' },
+]
+const expirationType = computed({
+  get() {
+    const type = accessTokenExpiration.value.match(/[dhy]$/)
+    return type ? type[0] : 'd'
+  },
+  set(value) {
+    accessTokenExpiration.value = `${expirationQuantity.value}${value}`
+  },
+})
+const expirationQuantity = computed({
+  get() {
+    return parseInt(accessTokenExpiration.value)
+  },
+  set(value) {
+    accessTokenExpiration.value = `${value}${expirationType.value}`
+  },
+})
 </script>
 
 <template>
@@ -102,7 +133,24 @@ const booleanOptions = [
           optionLabel="label"
           v-model="secure"
         ></SelectButton>
+
+        <label for="cnc_secure" class="label">Access token expiration</label>
+        <InputGroup>
+          <InputNumber
+            :useGrouping="false"
+            :min="0"
+            v-model="expirationQuantity"
+          ></InputNumber>
+
+          <SelectButton
+            :options="expirationOptions"
+            optionValue="value"
+            optionLabel="label"
+            v-model="expirationType"
+          ></SelectButton>
+        </InputGroup>
       </div>
+
       <div class="status">
         <img
           v-if="!socketConnected"

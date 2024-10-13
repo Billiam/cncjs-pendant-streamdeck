@@ -4,6 +4,7 @@ export const useConnectionStore = defineStore({
   id: 'connection',
 
   state: () => ({
+    accessTokenExpiration: '30d',
     baudRate: 115200,
     controllerType: 'Grbl',
     port: null,
@@ -14,6 +15,7 @@ export const useConnectionStore = defineStore({
   getters: {
     _output: (state) => {
       const fields = [
+        'accessTokenExpiration',
         'baudRate',
         'controllerType',
         'port',
@@ -33,6 +35,7 @@ export const useConnectionStore = defineStore({
       this.socketAddress = config.socketAddress ?? 'localhost'
       this.socketPort = config.socketPort ?? 8000
       this.controllerType = config.controllerType ?? 'Grbl'
+      this.accessTokenExpiration = config.accessTokenExpiration ?? '30d'
     },
   },
 })
