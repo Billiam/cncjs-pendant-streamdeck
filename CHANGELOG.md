@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.0.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.9.0...1.0.0?diff=split) (2024-10-12)
+
+### 🚀 Added
+
+* Add config editor ([b851465](https://github.com/billiam/cncjs-pendant-streamdeck/commit/b851465)), see readme
+* In the web view, font size now scales smoothly with page size and button column count
+* New `ui.textSize` option, which increases or decreases the size of text in buttons. Default is 1 (for 100%).
+* Show message when loading the web view if configuration cannot be found
+* Web view now has a favicon
+
 ## [0.9.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.8.0...0.9.0?diff=split) (2024-09-02)
 
 ### 🚀 Added
