@@ -74,6 +74,7 @@ const gridHeight = computed(
 const minWidth = computed(
   () => `(min-width: calc(${gridWidth.value}px + 20rem))`,
 )
+const maxWidth = computed(() => `calc(${gridWidth.value}px + 40rem)`)
 
 const { match } = useMediaQuery(minWidth)
 const isStreamdeck = computed({
@@ -207,6 +208,8 @@ body {
 }
 .page {
   padding-top: 30px;
+  max-width: v-bind(maxWidth);
+  margin: 0 auto;
 }
 .scene-settings {
   margin-top: 2rem;
