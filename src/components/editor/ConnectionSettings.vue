@@ -78,7 +78,7 @@ const booleanOptions = [
     <div class="flex-row form-columns">
       <div>
         <div class="flex-row">
-          <label for="cnc_socketPort" class="label">Socket Address</label>
+          <label for="cnc_socketPort" class="label">Socket address</label>
           <div class="current-url">
             {{ socketUrl }}
           </div>
@@ -88,7 +88,7 @@ const booleanOptions = [
           @change="(event) => (socketAddress = event.target.value)"
         ></InputText>
 
-        <label for="cnc_socketPort" class="label">Socket Port</label>
+        <label for="cnc_socketPort" class="label">Socket port</label>
         <InputNumber
           :useGrouping="false"
           :min="0"
