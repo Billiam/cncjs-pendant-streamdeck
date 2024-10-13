@@ -80,7 +80,7 @@ export const useCncStore = defineStore({
     workflowState: workflowStates.IDLE,
     feederState: feederStates.IDLE,
     locked: false,
-    client: null,
+    _client: null,
     macros: null,
     commands: null,
     elapsedTime: null,
@@ -135,7 +135,7 @@ export const useCncStore = defineStore({
 
   actions: {
     setClient(client) {
-      this.client = client
+      this._client = client
     },
     setConnected(connected) {
       this.connected = connected
@@ -286,7 +286,7 @@ export const useCncStore = defineStore({
       if (!this.client) {
         return
       }
-      const macros = await this.client.fetch('macros')
+      const macros = await this._client.fetch('macros')
       if (!macros) {
         return
       }
@@ -323,10 +323,10 @@ export const useCncStore = defineStore({
       return !!this._activeWorkers[workerId]
     },
     async loadCommands() {
-      if (!this.client) {
+      if (!this._client) {
         return
       }
-      const commands = await this.client.fetch('commands')
+      const commands = await this._client.fetch('commands')
       if (!commands) {
         return
       }
@@ -351,10 +351,10 @@ export const useCncStore = defineStore({
       return this.macros
     },
     async runCommand(id) {
-      if (!this.client) {
+      if (!this._client) {
         return
       }
-      const { taskId } = await this.client.post(`commands/run/${id}`)
+      const { taskId } = await this._client.post(`commands/run/${id}`)
       if (!taskId) {
         return
       }
