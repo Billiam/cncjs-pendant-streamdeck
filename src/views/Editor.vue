@@ -115,7 +115,7 @@ const isStreamdeck = computed({
       <Tabs v-model:value="settingsTab" fluid>
         <TabList>
           <Tab value="ui">UI</Tab>
-          <Tab value="streamdeck">Streamdeck</Tab>
+          <Tab value="streamdeck">Stream Deck</Tab>
           <Tab value="cnc">CNC</Tab>
           <Tab value="connection">Connection</Tab>
         </TabList>
@@ -169,7 +169,7 @@ const isStreamdeck = computed({
             inputId="use_streamdeck_display"
             v-model="isStreamdeck"
           ></ToggleSwitch>
-          <label for="use_streamdeck_display">Use streamdeck display</label>
+          <label for="use_streamdeck_display">Use stream deck display</label>
         </div>
       </div>
       <div class="column editor">

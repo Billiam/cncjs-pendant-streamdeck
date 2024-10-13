@@ -65,7 +65,7 @@ Full documentation can be found at <https://billiam.github.io/cncjs-pendant-stre
    ```
 5. Restart CNCjs
 
-### Streamdeck
+### Stream Deck
 
 Follow [Web](#web) steps above to generate create a configuration directory, `config.json` file, and button images.
 You can skip the `cncrc` step if you do not need the web interface.
