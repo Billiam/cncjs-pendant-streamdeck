@@ -28,7 +28,7 @@ export default () => {
   }
 
   const highlightColor = (color) => {
-    const amount = ui.isWeb ? 10 : 20
+    const amount = ui.web ? 10 : 20
 
     const normalized = tinycolor(normalizeColor(color))
     if (normalized.isDark()) {

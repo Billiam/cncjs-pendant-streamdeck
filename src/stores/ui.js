@@ -153,7 +153,6 @@ export const useUiStore = defineStore({
       }
       return new Date(state.fileDetails.ctime).toLocaleString()
     },
-    isWeb: (state) => state.web,
     displayBrightness: (state) => state.brightness,
     ...streamdeckGetters,
   },
