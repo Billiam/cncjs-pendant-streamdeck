@@ -283,7 +283,7 @@ export const useCncStore = defineStore({
       }
     },
     async loadMacros() {
-      if (!this.client) {
+      if (!this._client) {
         return
       }
       const macros = await this._client.fetch('macros')

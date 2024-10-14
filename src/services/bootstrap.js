@@ -1,3 +1,4 @@
+import cncApi from '@/lib/cnc-api'
 import { useButtonStore } from '@/stores/buttons'
 import { useCncStore } from '@/stores/cnc'
 import { useConnectionStore } from '@/stores/connection'
@@ -88,22 +89,27 @@ export default (container) => {
     return true
   }
 
-  const connectListeners = async () => {
+  const linkCncApi = async () => {
     const cncStore = useCncStore()
     const fileListStore = useFileListStore()
 
+    const apiClient = await container.get('cncApi')
+    fileListStore.setClient(apiClient)
+    cncStore.setClient(apiClient)
+  }
+
+  const connectListeners = async () => {
+    const cncStore = useCncStore()
+
     // more store population
     await Promise.all([
-      (async () => {
-        const apiClient = await container.get('cncApi')
-        fileListStore.setClient(apiClient)
-        cncStore.setClient(apiClient)
-      })(),
+      linkCncApi(),
       (async () => {
         const token = await container.get('accessToken')
         cncStore.setToken(token)
       })(),
     ])
+
     try {
       const socket = await container.get('socket')
       await socket.connect()
@@ -122,6 +128,7 @@ export default (container) => {
     addConnectionListeners,
     cleanup,
     connectListeners,
+    linkCncApi,
     start,
   }
 }

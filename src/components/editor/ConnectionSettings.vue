@@ -38,6 +38,8 @@ watch(
   [socketAddress, socketPort, secure],
   async ([addressValue, portValue, secureValue]) => {
     const currentConfig = await container.get('connectionConfig')
+    const bootstrap = await container.get('bootstrap')
+
     currentConfig.socketAddress = addressValue
     currentConfig.socketPort = portValue
     currentConfig.secure = secureValue
@@ -47,6 +49,9 @@ watch(
 
     const connection = await container.get('connection')
     connection.updateConfig(currentConfig)
+
+    await bootstrap.linkCncApi()
+
     connection.reconnect()
   },
 )
