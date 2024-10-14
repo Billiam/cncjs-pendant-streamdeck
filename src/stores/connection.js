@@ -11,6 +11,7 @@ export const useConnectionStore = defineStore({
     secure: false,
     socketPort: 8000,
     socketAddress: 'localhost',
+    _ports: [],
   }),
   getters: {
     _output: (state) => {

@@ -28,6 +28,7 @@ const {
   secure,
   socketAddress,
   socketPort,
+  _ports: ports,
 } = storeToRefs(connection)
 
 const container = inject('container')
@@ -176,11 +177,24 @@ const expirationQuantity = computed({
     <div class="flex-row form-columns">
       <div>
         <label for="cnc_port" class="label">Serial port</label>
-        <InputText
+        <Select
           id="cnc_port"
-          :value="port"
-          @change="(event) => (port = event.target.value)"
-        ></InputText>
+          :options="ports"
+          optionValue="port"
+          optionLabel="port"
+          filterable
+          editable
+          v-model="port"
+        >
+          <template #option="slotProps">
+            <div>
+              <div>{{ slotProps.option.port }}</div>
+              <div v-if="slotProps.option.manufacturer" class="manufacturer">
+                Manufacturer: {{ slotProps.option.manufacturer }}
+              </div>
+            </div>
+          </template>
+        </Select>
 
         <label for="cnc_baudRate" class="label">Baud rate</label>
         <Select :options="baudOptions" v-model="baudRate"></Select>
@@ -221,5 +235,8 @@ const expirationQuantity = computed({
 }
 .form-columns {
   justify-content: space-between;
+}
+.manufacturer {
+  font-style: italic;
 }
 </style>

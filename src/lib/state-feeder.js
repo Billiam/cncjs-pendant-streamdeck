@@ -1,6 +1,7 @@
 import { GcodeWorker, offWorkerEvent, onWorkerEvent } from 'adapter'
 
 import { useCncStore } from '@/stores/cnc'
+import { useConnectionStore } from '@/stores/connection'
 import { useGcodeStore } from '@/stores/gcode'
 import { useUiStore } from '@/stores/ui'
 
@@ -10,6 +11,7 @@ export default (socket, ackBus) => {
   const cnc = useCncStore()
   const ui = useUiStore()
   const gcode = useGcodeStore()
+  const connection = useConnectionStore()
 
   const listeners = {
     'Grbl:state': (data) => {
@@ -22,6 +24,9 @@ export default (socket, ackBus) => {
       cnc.setFeedrate(feedrate)
       cnc.setSpindleRpm(spindle)
       cnc.setRunState(data.status.activeState)
+    },
+    'serialport:list': (data) => {
+      connection._ports = data
     },
     'serialport:read': (data) => {
       switch (true) {
@@ -48,6 +53,7 @@ export default (socket, ackBus) => {
     },
     'serialport:open': () => {
       cnc.setConnected(true)
+      socket.emit('list')
     },
     'Grbl:settings': ({ parameters, settings, version }) => {
       cnc.setSettings(settings)
