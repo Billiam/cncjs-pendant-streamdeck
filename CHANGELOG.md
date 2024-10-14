@@ -1,5 +1,15 @@
 # Changelog
 
+## [1.1.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/1.0.0...1.1.0?diff=split) (2024-10-14)
+
+### 🚀 Added
+
+*  List accessible ports in connection config dialog ([8ae07db](https://github.com/billiam/cncjs-pendant-streamdeck/commit/8ae07db))
+
+### 🩹 Fixes
+
+*  Fix API calls failing after changing host details ([386b063](https://github.com/billiam/cncjs-pendant-streamdeck/commit/386b063))
+
 ## [1.0.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/0.9.0...1.0.0?diff=split) (2024-10-12)
 
 ### 🚀 Added
