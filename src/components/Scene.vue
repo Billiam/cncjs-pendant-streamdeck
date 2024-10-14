@@ -28,7 +28,7 @@ defineProps({
 })
 
 const fontSize = computed(() => {
-  return `${textSize}em`
+  return `${textSize.value}em`
 })
 </script>
 
