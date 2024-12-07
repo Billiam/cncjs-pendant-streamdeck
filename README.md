@@ -58,7 +58,7 @@ Full documentation can be found at <https://billiam.github.io/cncjs-pendant-stre
    ```
    "mountPoints": [
      {
-       "route": "grid",
+       "route": "/grid",
        "target": "/home/pi/cncjs-pendant-streamdeck"
      }
    ]
