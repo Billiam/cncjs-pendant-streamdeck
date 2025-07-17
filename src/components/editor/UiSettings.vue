@@ -166,7 +166,7 @@ const textSizePercent = computed({
             'Hard limit for the number of lines of gcode that will be processed. Affects rendering and boundary data.'
           "
         >
-          <img src="/icons/fluent-ui/question_circle.png" alt="help" />
+          <img src="icons/fluent-ui/question_circle.png" alt="help" />
         </span>
       </div>
       <InputGroup fluid>

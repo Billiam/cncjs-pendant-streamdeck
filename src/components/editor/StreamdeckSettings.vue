@@ -230,7 +230,7 @@ const addColor = () => {
             'Hard limit for the number of lines of gcode that will be processed. Affects rendering and boundary data.'
           "
         >
-          <img src="/icons/fluent-ui/question_circle.png" alt="help" />
+          <img src="icons/fluent-ui/question_circle.png" alt="help" />
         </span>
       </div>
       <toggle-setting
@@ -261,7 +261,7 @@ const addColor = () => {
             'Redraw each button at most once every throttle milliseconds. 0 for no throttle'
           "
         >
-          <img src="/icons/fluent-ui/question_circle.png" alt="help" />
+          <img src="icons/fluent-ui/question_circle.png" alt="help" />
         </span>
       </div>
       <InputGroup>
