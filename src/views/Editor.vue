@@ -95,14 +95,14 @@ const isStreamdeck = computed({
         v-tooltip.left="'Save configuration'"
         @click="saveConfig"
       >
-        <img class="icon" src="/icons/fluent-ui/save.png" />
+        <img class="icon" src="icons/fluent-ui/save.png" />
       </button>
       <button
         class="action-button"
         @click="showSettings = true"
         v-tooltip="'Settings'"
       >
-        <img class="icon" src="/icons/fluent-ui/settings.png" />
+        <img class="icon" src="icons/fluent-ui/settings.png" />
       </button>
     </div>
     <Dialog

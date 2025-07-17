@@ -178,7 +178,7 @@ const fileListButton = computed(() => {
 
         <label class="label" for="gcode_preview">Render gcode <span class="help"
           v-tooltip="'Display currently loaded gcode in this button'"
-        ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></span></label>
+        ><img src="icons/fluent-ui/question_circle.png" alt="help" /></span></label>
       </div>
     </div>
 
@@ -188,7 +188,7 @@ const fileListButton = computed(() => {
         <span class="help">
           <img
             class="help"
-            src="/icons/fluent-ui/question_circle.png"
+            src="icons/fluent-ui/question_circle.png"
             alt="help"
             v-tooltip="'Adds aria label and popup text on hover to the button'"
           />
@@ -231,7 +231,7 @@ const fileListButton = computed(() => {
           target="blank"
           class="help"
           v-tooltip="'Templating documentation'"
-          ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
+          ><img src="icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
       <Textarea v-model="text" fluid rows="5"></Textarea>
       <VariableSelect @change="addTextVariable"></VariableSelect>
@@ -265,7 +265,7 @@ const fileListButton = computed(() => {
           target="blank"
           class="help"
           v-tooltip="'Button condition documentation'"
-          ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
+          ><img src="icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
       <InputText v-model="ifAttr" fluid></InputText>
       <VariableSelect @change="addIfVariable"></VariableSelect>
@@ -279,7 +279,7 @@ const fileListButton = computed(() => {
           target="blank"
           class="help"
           v-tooltip="'Button condition documentation'"
-          ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
+          ><img src="icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
       <InputText v-model="disabledAttr" fluid></InputText>
       <VariableSelect @change="addDisabledVariable"></VariableSelect>
@@ -293,7 +293,7 @@ const fileListButton = computed(() => {
           target="blank"
           class="help"
           v-tooltip="'Button action documentation'"
-          ><img src="/icons/fluent-ui/question_circle.png" alt="help" /></a
+          ><img src="icons/fluent-ui/question_circle.png" alt="help" /></a
       ></label>
 
       <action

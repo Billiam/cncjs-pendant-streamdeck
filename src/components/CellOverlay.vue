@@ -54,7 +54,7 @@ const edit = () => {
     }"
   >
     <button class="btn" @click="edit">
-      <img src="/icons/fluent-ui/edit.png" />
+      <img src="icons/fluent-ui/edit.png" />
 
       {{ buttons.length }}
     </button>

@@ -161,13 +161,13 @@ const expirationQuantity = computed({
         <img
           v-if="!socketConnected"
           class="status-icon icon-bad"
-          src="/icons/fluent-ui/plug_disconnected.png "
+          src="icons/fluent-ui/plug_disconnected.png "
         />
 
         <img
           v-if="socketConnected"
           class="status-icon icon-ok"
-          src="/icons/system-uicons/lightning.png"
+          src="icons/system-uicons/lightning.png"
         />
       </div>
     </div>
@@ -204,13 +204,13 @@ const expirationQuantity = computed({
         <img
           v-if="!connected"
           class="status-icon icon-bad"
-          src="/icons/fluent-ui/plug_disconnected.png "
+          src="icons/fluent-ui/plug_disconnected.png "
         />
 
         <img
           v-if="connected"
           class="status-icon icon-ok"
-          src="/icons/system-uicons/lightning.png"
+          src="icons/system-uicons/lightning.png"
         />
       </div>
     </div>
