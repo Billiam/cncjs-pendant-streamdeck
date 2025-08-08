@@ -1,6 +1,6 @@
 import { openStreamDeck } from '@elgato-stream-deck/node'
 import path from 'path'
-import { createPinia, setActivePinia } from 'pinia'
+import { createPinia, setActivePinia, storeToRefs } from 'pinia'
 import Sharp from 'sharp'
 import { computed, ref, watch, watchEffect } from 'vue'
 
@@ -11,6 +11,7 @@ import { useFileList } from '@/lib/scene/file-list'
 import Bootstrap from '@/services/bootstrap'
 import Container from '@/services/container'
 import { useButtonStore } from '@/stores/buttons'
+import { useCncStore } from '@/stores/cnc'
 import { useScenesStore } from '@/stores/scenes'
 import { useUiStore } from '@/stores/ui'
 
@@ -45,6 +46,7 @@ const run = async () => {
   }
 
   const { buttons: buttonConfig } = useButtonStore()
+  const cnc = useCncStore()
   const sceneStore = useScenesStore()
   const ui = useUiStore()
   ui.setWeb(false)
@@ -54,6 +56,7 @@ const run = async () => {
   const iconDirectory = path.join(directory, 'icons')
   const { wake } = SleepScreen(uiConfig?.timeout, streamdeck)
   const { buttons: fileListButtons, loadFiles } = useFileList()
+  const { alarm, paused, hold } = storeToRefs(cnc)
 
   const renderBuffers = Array.from(Array(ui.rows * ui.columns)).map(() => ref())
 
@@ -192,6 +195,12 @@ const run = async () => {
 
   watchEffect(() => {
     streamdeck.setBrightness(ui.displayBrightness)
+  })
+
+  watch([alarm, paused, hold], ([alarm, paused, hold]) => {
+    if (alarm || paused || hold) {
+      wake()
+    }
   })
 
   streamdeck.on('down', (keyIndex) => {
