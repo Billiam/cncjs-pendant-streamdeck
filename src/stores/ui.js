@@ -1,4 +1,3 @@
-import { isObject } from 'lodash/lang'
 import { defineStore } from 'pinia'
 
 const streamdeckFields = [
