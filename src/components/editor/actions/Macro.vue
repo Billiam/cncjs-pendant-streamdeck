@@ -32,7 +32,7 @@ const { uuidArray } = useUuidModel(macroId, macroName)
 </script>
 
 <template>
-  <label class="label">Commands</label>
+  <label class="label">Macro</label>
   <Select
     v-model="uuidArray"
     v-bind="$attrs"
