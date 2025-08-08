@@ -1,5 +1,20 @@
 # Changelog
 
+## Unreleased
+
+### 🚀 Added
+
+##### `stream deck`
+
+*  Wake streamdeck on pause/hold/alarm ([9b03456](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9b03456))
+
+### 🩹 Fixes
+
+##### `editor`
+
+*  Fix incorrect label for macro action dropdown in editor ([582c474](https://github.com/billiam/cncjs-pendant-streamdeck/commit/582c474))
+
+
 ## [1.1.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/1.0.0...1.1.0?diff=split) (2024-10-14)
 
 ### 🚀 Added
