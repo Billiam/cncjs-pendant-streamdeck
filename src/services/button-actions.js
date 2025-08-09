@@ -33,6 +33,7 @@ const machineCommands = new Set([
   'absoluteMachinePosition',
   'clearGcode',
   'enterPosition',
+  'enterSpindleSpeed',
   'enterWcs',
   'gcode',
   'goto',
@@ -95,6 +96,14 @@ export default (actionBus, connectionBus) => {
       absoluteWorkPosition(`${axis}${result}`)
     })
   }
+
+  const enterSpindleSpeed = (direction, scene = 'numpad') => {
+    const label = `Spindle RPM`
+    store.ui.startInput(store.cnc.spindleRpm, label, scene, (result) => {
+      spindleRpm(direction, result)
+    })
+  }
+
   const completeInput = () => {
     store.ui.completeInput()
   }
@@ -180,6 +189,10 @@ export default (actionBus, connectionBus) => {
 
   const absoluteWorkPosition = (code) => {
     actionBus.emit('absoluteWorkPosition', code)
+  }
+
+  const spindleRpm = (direction, rpm) => {
+    actionBus.emit('spindleRpm', { direction, rpm })
   }
 
   const command = (cmd, ...args) => {
@@ -380,6 +393,7 @@ export default (actionBus, connectionBus) => {
     decreaseFeedrate,
     decreaseSpindle,
     enterPosition,
+    enterSpindleSpeed,
     enterWcs,
     fileDetails,
     loadDetailFile,
@@ -418,6 +432,7 @@ export default (actionBus, connectionBus) => {
     stopFeed,
     stopSmoothJog,
     swapScene,
+    spindleRpm,
     toggleFeedrateInterval,
     toggleSpindleInterval,
     toggleUserFlag,
