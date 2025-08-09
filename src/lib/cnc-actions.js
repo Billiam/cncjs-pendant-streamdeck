@@ -167,6 +167,16 @@ export default (socket, actionBus, ackBus) => {
     withAbsolute(() => runGcode(`G0 ${code}`))
   })
 
+  actionBus.on('spindleRpm', ({ direction, rpm }) => {
+    console.log({ direction, rpm })
+    if (rpm === 0) {
+      return runGcode('M5')
+    }
+    const dirCode = direction === 'CW' ? 'M3' : 'M4'
+
+    runGcode(`${dirCode} S${rpm}`)
+  })
+
   actionBus.on('command', (evt) => {
     command(evt.command, ...(evt.args || []))
   })

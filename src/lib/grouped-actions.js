@@ -17,6 +17,7 @@ export const groupedActions = {
     'decreaseSpindle',
     'toggleSpindleInterval',
     'resetSpindle',
+    'enterSpindleSpeed',
     'setRapids',
   ],
   'User flags': ['setUserFlag', 'clearUserFlag', 'toggleUserFlag'],
