@@ -1,14 +1,37 @@
 import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import fs from 'fs'
+import { join, resolve } from 'path'
 import { fileURLToPath, URL } from 'url'
 import { defineConfig, loadEnv } from 'vite'
+
+const removeConfigs = () => {
+  return {
+    name: 'remove-configs',
+    writeBundle: (outputOptions, inputOptions) => {
+      fs.readdirSync(outputOptions.dir).forEach((file) => {
+        if (/config(?!\.example).*\.json/.test(file)) {
+          fs.rmSync(join(outputOptions.dir, file))
+        }
+      })
+    },
+  }
+}
 
 // https://vitejs.dev/config/
 export default defineConfig(({ command, mode }) => {
   const env = loadEnv(mode, process.cwd(), '')
 
   const config = {
-    plugins: [vue()],
+    plugins: [
+      vue({
+        template: {
+          transformAssetUrls: {
+            includeAbsolute: false,
+          },
+        },
+      }),
+      removeConfigs(),
+    ],
     root: 'src',
     base: './',
     server: {},

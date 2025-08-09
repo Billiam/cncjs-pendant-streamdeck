@@ -1,9 +1,23 @@
 // https://vitejs.dev/config/
 import legacy from '@vitejs/plugin-legacy'
 import vue from '@vitejs/plugin-vue'
+import fs from 'fs'
 import path from 'path'
 import { fileURLToPath, URL } from 'url'
 import { defineConfig } from 'vite'
+
+const removeConfigs = () => {
+  return {
+    name: 'remove-configs',
+    writeBundle: (outputOptions, inputOptions) => {
+      fs.readdirSync(outputOptions.dir).forEach((file) => {
+        if (/config(?!\.example).*\.json/.test(file)) {
+          fs.rmSync(path.join(outputOptions.dir, file))
+        }
+      })
+    },
+  }
+}
 
 export default defineConfig(({ command, mode }) => {
   const pkg = require('./package.json')
@@ -38,7 +52,7 @@ export default defineConfig(({ command, mode }) => {
     legacy: {
       buildSsrCjsExternalHeuristics: true,
     },
-    plugins: [vue(), legacy({ targets: ['node 14'] })],
+    plugins: [vue(), legacy({ targets: ['node 14'] }), removeConfigs()],
     root: 'src',
     server: {},
     resolve: {
