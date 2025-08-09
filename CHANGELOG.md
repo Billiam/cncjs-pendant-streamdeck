@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## [1.2.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/1.1.0...1.2.0?diff=split) (2025-08-09)
 
 ### 🚀 Added
 
