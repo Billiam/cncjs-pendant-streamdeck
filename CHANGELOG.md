@@ -4,6 +4,8 @@
 
 ### 🚀 Added
 
+*  Add enterSpindleSpeed button ([c053f7b](https://github.com/billiam/cncjs-pendant-streamdeck/commit/c053f7b))
+
 ##### `stream deck`
 
 *  Wake streamdeck on pause/hold/alarm ([9b03456](https://github.com/billiam/cncjs-pendant-streamdeck/commit/9b03456))
@@ -13,7 +15,7 @@
 ##### `editor`
 
 *  Fix incorrect label for macro action dropdown in editor ([582c474](https://github.com/billiam/cncjs-pendant-streamdeck/commit/582c474))
-
+*  Allow icon rendering with alternative base URL ([4fa9f27](https://github.com/billiam/cncjs-pendant-streamdeck/commit/4fa9f27))
 
 ## [1.1.0](https://github.com/billiam/cncjs-pendant-streamdeck/compare/1.0.0...1.1.0?diff=split) (2024-10-14)
 
